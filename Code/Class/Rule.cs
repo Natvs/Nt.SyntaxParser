@@ -1,0 +1,57 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GrammarReader.Code.Class
+{
+    /// <summary>
+    /// Represents a grammar rule
+    /// </summary>
+    /// <param name="terminals">Terminals tokens of the grammar</param>
+    /// <param name="nonterminals">Non terminals tokens of the grammar</param>
+    public class Rule(TokensList terminals, TokensList nonterminals)
+    {
+        /// <summary>
+        /// Token that would derive into derivation
+        /// </summary>
+        public NonTerminal? Token { get; private set; }
+        /// <summary>
+        /// List of tokens that represent derivation
+        /// </summary>
+        public Derivation Derivation { get; } = new(terminals, nonterminals);
+
+       
+        /// <summary>
+        /// Sets the token to derive
+        /// </summary>
+        /// <param name="index">Index of the token in non terminals list</param>
+        /// <param name="line">Line the token have been parsed</param>
+        public void SetToken(int index, int line)
+        {
+            this.Token = new NonTerminal(index, line);
+        }
+
+        /// <summary>
+        /// Adds a terminal token to end of derivation
+        /// </summary>
+        /// <param name="index">Index of the token in terminals list</param>
+        /// <param name="line">Line the token have been parsed</param>
+        public void AddTerminal(int index, int line)
+        {
+            this.Derivation.Add(new Terminal(index, line));
+        }
+
+        /// <summary>
+        /// Adds a non terminal token to end of derivation
+        /// </summary>
+        /// <param name="index">Index of the token in non terminals list</param>
+        /// <param name="line">Line the token have been parsed</param>
+        public void AddNonTerminal(int index, int line)
+        {
+            this.Derivation.Add(new NonTerminal(index, line));
+        }
+
+    }
+}
