@@ -8,11 +8,11 @@ namespace GrammarReader.Code.Grammar
     {
         public List<Transition> Transitions { get; } = [];
         public State? DefaultState { get; private set; }
-        public Actions.Action? DefaulAction { get; private set; }
-        public Actions.Action? Action { get; }
+        public IAction? DefaulAction { get; private set; }
+        public IAction? Action { get; }
 
         public State() { }
-        public State(Actions.Action action)
+        public State(IAction action)
         {
             this.Action = action;
         }
@@ -22,7 +22,7 @@ namespace GrammarReader.Code.Grammar
             this.DefaultState = defaultState;
             return this;
         }
-        public State SetDefault(State defaultState, Actions.Action defaultAction)
+        public State SetDefault(State defaultState, IAction defaultAction)
         {
             this.DefaultState = defaultState;
             this.DefaulAction = defaultAction;
@@ -33,25 +33,41 @@ namespace GrammarReader.Code.Grammar
         {
             this.Transitions.Add(new Transition(value, state));
         }
-        public void AddTransition(string value, State state, Actions.Action action)
+        public void AddTransition(string value, State state, IAction action)
         {
             this.Transitions.Add(new Transition(value, state, action));
         }
 
-        public State Read(ParsedToken token, TokensList tokens)
+        /// <summary>
+        /// Reads a token and gets the next state
+        /// </summary>
+        /// <param name="token">Parsed token to read</param>
+        /// <param name="tokens">List of parsed tokens as a reference</param>
+        /// <returns>Next state of the automaton after reading the token</returns>
+        /// <exception cref="NoDefaultStateException">It might be that no default state was set for this state</exception>
+        public State Read(ParsedToken token, TokensList tokens, Rule? currentRule, out Rule? newRule)
         {
+            newRule = currentRule;
             if (DefaultState == null) throw new NoDefaultStateException();
             foreach (var transition in Transitions)
             {
                 if (transition.Value.Equals(tokens[token.Value].Name))
                 {
-                    transition.Action?.Perform(token);
-                    transition.NewState.Action?.Perform(token);
+                    newRule = PerformAction(transition.Action, token, newRule);
+                    newRule = PerformAction(transition.NewState.Action, token, newRule);                  
                     return transition.NewState;
                 }
             }
-            this.DefaulAction?.Perform(token);
+            newRule = PerformAction(DefaulAction, token, newRule);
+            newRule = PerformAction(DefaultState.Action, token, newRule);
             return this.DefaultState;
+        }
+
+        private static Rule? PerformAction(IAction? iaction, ParsedToken token, Rule? currentRule)
+        {
+            if (iaction is Actions.Action action) action.Perform(token);
+            else if (iaction is RuleAction ruleAction) return ruleAction.Perform(currentRule, token);
+            return currentRule;
         }
     }
 }

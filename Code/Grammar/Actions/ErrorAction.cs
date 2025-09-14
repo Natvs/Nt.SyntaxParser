@@ -13,7 +13,7 @@ namespace GrammarReader.Code.Grammar.Actions
 
         public override void Perform(ParsedToken word)
         {
-            throw new SyntaxError(word.Line);
+            throw new SyntaxError(tokens[word.Value].Name, word.Line);
         }
 
     }

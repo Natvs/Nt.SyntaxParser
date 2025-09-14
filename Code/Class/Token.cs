@@ -1,19 +1,16 @@
 ﻿namespace GrammarReader.Code.Class
 {
+    /// <summary>
+    /// Represents a token. A token is just a word.
+    /// </summary>
     public class Token
     {
-        #region Parameters
-
         public string Name { get; private set; }
 
-        #endregion
-
-        #region Constructors
         public Token(string name)
         {
             this.Name = name;
         }
-        #endregion
 
     }
 }

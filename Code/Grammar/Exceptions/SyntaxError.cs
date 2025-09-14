@@ -9,7 +9,7 @@ namespace GrammarReader.Code.Grammar.Exceptions
     public class SyntaxError : Exception
     {
 
-        public SyntaxError(int line) : base($"Syntax error in grammar at line {line}") { }
+        public SyntaxError(string name, int line) : base($"Syntax error in grammar at line {line}: unknown symbol {name}") { }
 
     }
 }

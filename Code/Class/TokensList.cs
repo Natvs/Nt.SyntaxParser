@@ -2,21 +2,16 @@
 
 namespace GrammarReader.Code.Class
 {
+    /// <summary>
+    /// Represents a list of tokens, where tokens are words.
+    /// </summary>
     public class TokensList : List<Token>
     {
-
-        #region Parameters
-
-        #endregion
-
-
-        #region Constructors
-
-        #endregion
-
-
-        #region Methods
-
+        /// <summary>
+        /// Adds a new token to the list.
+        /// </summary>
+        /// <param name="name">Name of the token to add</param>
+        /// <returns>Last index of the list once the token has been added</returns>
         public int Add(string name)
         {
             var token = new Token(name);
@@ -24,6 +19,11 @@ namespace GrammarReader.Code.Class
             return Count-1;
         }
 
+        /// <summary>
+        /// Check if a token is in the list
+        /// </summary>
+        /// <param name="name">Name of the token to look for</param>
+        /// <returns>True if the token is in the list, False if not</returns>
         public bool Contains(string name)
         {
             foreach (var token in this)
@@ -33,6 +33,12 @@ namespace GrammarReader.Code.Class
             return false;
         }
 
+        /// <summary>
+        /// Gets a token in this list by its string content.
+        /// </summary>
+        /// <param name="name">Name of the token to get</param>
+        /// <returns>First occurence of such token with the given name in the list</returns>
+        /// <exception cref="KeyNotFoundException">It might be that no token with the given name was found.</exception>
         public Token Get(string name)
         {
             foreach (var token in this)
@@ -42,6 +48,12 @@ namespace GrammarReader.Code.Class
             throw new KeyNotFoundException("No token " + name + " found in list");
         }
 
+        /// <summary>
+        /// Gets the index of a token by its string content
+        /// </summary>
+        /// <param name="name">Name of the token to get</param>
+        /// <returns>First occurence of such token indice with the given name</returns>
+        /// <exception cref="KeyNotFoundException">It might be that no token with the given name was found.</exception>
         public int IndexOf(string name)
         {
             for (var i = 0; i < Count; i++)
@@ -54,6 +66,10 @@ namespace GrammarReader.Code.Class
             throw new KeyNotFoundException("No token " + name + " found in list");
         }
 
+        /// <summary>
+        /// Gets a string of the tokens in this list.
+        /// </summary>
+        /// <returns>A string representation of tokens in this list</returns>
         public override string ToString()
         {
             var sb = new StringBuilder().Append('{');
@@ -65,8 +81,5 @@ namespace GrammarReader.Code.Class
             sb.Append('}');
             return sb.ToString();
         }
-
-        #endregion
-
     }
 }

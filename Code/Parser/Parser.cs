@@ -2,6 +2,10 @@
 
 namespace GrammarReader.Code.Parser
 {
+
+    /// <summary>
+    /// Represents a parser that can be customized
+    /// </summary>
     public class Parser
     {
 
@@ -45,7 +49,7 @@ namespace GrammarReader.Code.Parser
         /// <summary>
         /// Add all symbols in tokens list and set breaker symbols
         /// </summary>
-        /// <exception cref="EmptySymbolException"></exception>
+        /// <exception cref="EmptySymbolException">The symbols list might contain an empty string</exception>
         private void SetSymbols()
         {
             foreach (var symbol in this.Symbols)
@@ -107,13 +111,12 @@ namespace GrammarReader.Code.Parser
             line = 1;
             foreach (var c in content)
             {
-                if (c == '\n') 
-                { line += 1; }
-
                 if (isSymbol) HandleSymbol(c);
                 else if (Breaks.Contains(c)) HandleBreaks(c);
                 else if (c == '\0' || c == '\n' || Separators.Contains(c)) HandleSeparator(c);
                 else current += c;
+
+                if (c == '\n') line += 1;
             }
             return result;
         }
@@ -124,12 +127,17 @@ namespace GrammarReader.Code.Parser
 
         #region Private Methods
 
-        private List<char> NextSymbols(string start, int index)
+        /// <summary>
+        /// Gets a list of all characters that could happen after a sequence of letters among symbols list
+        /// </summary>
+        /// <param name="start">Sequence of letters (being the first letters of the word)</param>
+        /// <returns>List of all characters that can be found after the given sequence of letters (among symbols list)</returns>
+        private List<char> NextSymbols(string start)
         {
             var next = new List<char>();
             foreach (var symbol in this.Symbols)
             {
-                if (symbol.Length > index+1 && symbol.StartsWith(start)) next.Add(symbol[index+1]);
+                if (symbol.Length > start.Length && symbol.StartsWith(start)) next.Add(symbol[start.Length]);
             }
             return next;
         }
@@ -160,12 +168,12 @@ namespace GrammarReader.Code.Parser
 
         private void HandleSymbol(char c)
         {
-            var next = NextSymbols(current, current.Length - 1);
+            var next = NextSymbols(current);
             if (!next.Contains(c))
             {
-                isSymbol = false;
                 var index = result.Tokens.IndexOf(current);
                 result.Parsed.Add(new(index, line));
+                isSymbol = false;
                 current = "";
                 if (Breaks.Contains(c)) HandleBreaks(c);
                 else if (c == '\0' || c == '\n' || Separators.Contains(c)) HandleSeparator(c);

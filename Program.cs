@@ -7,17 +7,28 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        string? text = null;
-        string input = "";
-        var generator = new GrammarReader.Code.Grammar.Generator();
-        Console.WriteLine("Enter text to generate grammar");
-        while (text != "end")
+        bool continue_parsing = true;
+
+        while (continue_parsing)
         {
-            text = Console.ReadLine();
-            if (text != "end") input += text + "\n";
+            string? text = null;
+            string input = "";
+            var generator = new GrammarReader.Code.Grammar.Generator();
+            Console.WriteLine("Enter text to generate grammar");
+            while (text != "end")
+            {
+                text = Console.ReadLine();
+                if (text != "end") input += text + "\n";
+            }
+            Grammar grammar = generator.Generate(input);
+            Console.WriteLine(grammar.ToString());
+
+            continue_parsing = false;
+            Console.WriteLine();
+            Console.WriteLine("Continue parsing new grammar?");
+            var answer = Console.ReadLine();
+            if (answer == null) return;
+            if (answer.ToLower().Equals("y") || answer.ToLower().Equals("yes")) continue_parsing = true;
         }
-        Grammar grammar = generator.Generate(input);
-        Console.WriteLine(grammar.ToString());
-        Console.ReadLine();
     }
 }

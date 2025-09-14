@@ -53,5 +53,12 @@ namespace GrammarReader.Code.Class
             this.Derivation.Add(new NonTerminal(index, line));
         }
 
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.Append(Token == null ? "<<undefined>>" : nonterminals[Token.Index].Name);
+            sb.Append(" -> "); sb.Append(Derivation.ToString());
+            return sb.ToString();
+        }
     }
 }

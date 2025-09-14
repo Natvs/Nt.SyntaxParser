@@ -20,8 +20,9 @@ namespace GrammarReader.Code.Grammar.Actions
         /// <param name="word">Parsed token to add as new non terminal</param>
         public override void Perform(ParsedToken word)
         {
-            grammar.NonTerminals.Add(tokens[word.Value].Name);
+            grammar.AddNonTerminal(tokens[word.Value].Name);
         }
 
     }
+
 }
