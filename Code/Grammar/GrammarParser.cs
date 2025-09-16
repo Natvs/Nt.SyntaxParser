@@ -1,7 +1,8 @@
-﻿using GrammarReader.Code.Class;
-using GrammarReader.Code.Grammar.Actions;
+﻿using GrammarReader.Code.Grammar.Actions;
 using GrammarReader.Code.Grammar.Exceptions;
+using GrammarReader.Code.Grammar.Structures;
 using GrammarReader.Code.Parser;
+using GrammarReader.Code.Parser.Structures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,37 +12,74 @@ using System.Threading.Tasks;
 namespace GrammarReader.Code.Grammar
 {
 
-    public class Generator
+    public class GrammarParser
     {
 
         #region Properties
 
-        private Class.Grammar Grammar { get; set; } = new();
+        private Structures.Grammar Grammar { get; set; } = new();
+        private Automaton? PreAutomaton { get; set; }
         private Automaton? Automaton { get; set; }
+        private AutomatonContext AutomatonContext { get; } = new AutomatonContext();
         private Rule? CurrentRule { get; set; } = null;
+        private RegularExpression? CurrentRegex { get; set; } = null;
 
         #endregion
+
+        public string PreParse(string content)
+        {
+            var sb = new StringBuilder();
+
+            Parser.Parser parser = new([' '], ["import", ";"]);
+            var parsed = parser.Parse(content);
+
+            GeneratePreAutomaton(parsed.Tokens);
+            foreach(var token in parsed.Parsed)
+            {
+                try
+                {
+                    PreAutomaton?.Read(token, AutomatonContext);
+                    if (AutomatonContext.ImportedString != null)
+                    {
+                        sb.Append(AutomatonContext.ImportedString);
+                        AutomatonContext.ImportedString = null;
+                    }
+                }
+                catch (Exception e) { Console.Error.WriteLine(e.Message); }
+            }
+
+            var contentReader = new StringReader(content);
+            string? line;
+            while ((line = contentReader.ReadLine()) != null)
+            {
+                if (line.StartsWith("import") || line.StartsWith("IMPORT")) continue;
+                sb.AppendLine(line);
+            }
+            
+            return sb.ToString();
+        }
 
         /// <summary>
         /// Reads a string and generates a grammar structure from it
         /// </summary>
         /// <param name="content">String to read</param>
         /// <returns>A grammar data structure from the given string</returns>
-        public Class.Grammar Generate(string content)
+        public Structures.Grammar Generate(string content)
         {
+            content = PreParse(content);
+            Console.WriteLine("Pre parsed grammar string\n" + content);
+
             Parser.Parser parser = new([' '], [",", "=", "==", "+", "++", "-", "--", "*", "/", "{", "}", ":", ";", "<", ">"]);
             var parsed = parser.Parse(content);
-            Console.WriteLine("Parsed text: " + parsed.Parsed.ToString());
 
             GenerateAutomaton(parsed.Tokens);
-
             foreach (var token in parsed.Parsed)
             {
-                Rule? newRule = null;
                 try 
                 {
-                    Automaton?.Read(token, CurrentRule, out newRule);
-                    if (newRule != null) CurrentRule = newRule;
+                    Automaton?.Read(token, AutomatonContext);
+                    CurrentRule = AutomatonContext.Rule;
+                    CurrentRegex = AutomatonContext.RegularExpression;
                 }
                 catch (Exception e) { Console.Error.WriteLine(e.Message); }
             }
@@ -49,6 +87,19 @@ namespace GrammarReader.Code.Grammar
             return Grammar;
         }
 
+        private void GeneratePreAutomaton(TokensList tokens)
+        {
+            var ErrorAction = new ErrorAction(Grammar, tokens);
+
+            var initial = new State(); initial.SetDefault(initial);
+
+            PreAutomaton = new Automaton(tokens, initial);
+
+            var importState = new State().SetDefault(initial, new ImportFileAction(tokens));
+
+            initial.AddTransition("import", importState);
+            initial.AddTransition("IMPORT", importState);
+        }
 
         /// <summary>
         /// Generates an automaton that can read a grammar file
@@ -67,6 +118,7 @@ namespace GrammarReader.Code.Grammar
             GenerateNonTerminalStates(tokens, initial, error);
             GenerateAxiomStates(tokens, initial, error);
             GenerateNewRuleStates(tokens, initial, error);
+            GenerateRegExStates(tokens, initial, error);
         }
 
         private void GenerateTerminalsStates(TokensList tokens, State initial, State error)
@@ -109,11 +161,9 @@ namespace GrammarReader.Code.Grammar
 
         private void GenerateNewRuleStates(TokensList tokens, State initial, State error)
         {
-            var AddRuleAction = new AddNewRuleAction(Grammar, tokens);
-
             var newRuleState = new State().SetDefault(error);     
             var arrowState = new State().SetDefault(error);
-            var symbolState = new State().SetDefault(arrowState, AddRuleAction);
+            var symbolState = new State().SetDefault(arrowState, new AddNewRuleAction(Grammar, tokens));
             var derivationState = new State(); derivationState.SetDefault(derivationState, new AddRuleDerivationAction(Grammar, tokens));
             
 
@@ -123,6 +173,19 @@ namespace GrammarReader.Code.Grammar
             arrowState.AddTransition(">", derivationState);
             derivationState.AddTransition(";", initial);
             derivationState.AddTransition("|", derivationState, new AddSameRuleAction(Grammar));
+        }
+
+        private void GenerateRegExStates(TokensList tokens, State initial, State error)
+        {
+            var newRegExState = new State().SetDefault(error);
+            var equalState = new State().SetDefault(error);
+            var symbolState = new State().SetDefault(equalState, new AddNewRegExAction(Grammar, tokens));
+            var readState = new State(); readState.SetDefault(readState, new AddRegExSymbolsAction(Grammar, tokens));
+
+            initial.AddTransition("E", newRegExState);
+            newRegExState.AddTransition(":", symbolState);
+            equalState.AddTransition("=", readState);
+            readState.AddTransition(";", initial);
         }
 
     }

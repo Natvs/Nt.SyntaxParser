@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace GrammarReader.Code.Class
+namespace GrammarReader.Code.Parser.Structures
 {
     /// <summary>
     /// Represents a list of tokens, where tokens are words.
@@ -16,7 +16,7 @@ namespace GrammarReader.Code.Class
         {
             var token = new Token(name);
             Add(token);
-            return Count-1;
+            return Count - 1;
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace GrammarReader.Code.Class
         public override string ToString()
         {
             var sb = new StringBuilder().Append('{');
-            for (int i = 0; i < Count-1; i++)
+            for (int i = 0; i < Count - 1; i++)
             {
                 sb.Append(this[i].Name).Append(", ");
             }

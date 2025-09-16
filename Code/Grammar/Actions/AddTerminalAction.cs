@@ -1,4 +1,4 @@
-﻿using GrammarReader.Code.Class;
+﻿using GrammarReader.Code.Parser.Structures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace GrammarReader.Code.Grammar.Actions
     /// </summary>
     /// <param name="grammar">Grammar datas</param>
     /// <param name="tokens">List of all tokens</param>
-    public class AddTerminalAction(Class.Grammar grammar, TokensList tokens) : Action
+    public class AddTerminalAction(Structures.Grammar grammar, TokensList tokens) : Action
     {
         /// <summary>
         /// Adds a parsed token as new non terminal of the grammar
@@ -20,7 +20,7 @@ namespace GrammarReader.Code.Grammar.Actions
         /// <param name="word">Parsed token to add as new terminal</param>
         public override void Perform(ParsedToken word)
         {
-            grammar.AddTerminal(tokens[word.Value].Name);
+            grammar.AddTerminal(tokens[word.TokenIndex].Name);
         }
 
     }

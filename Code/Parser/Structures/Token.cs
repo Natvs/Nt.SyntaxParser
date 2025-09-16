@@ -1,4 +1,4 @@
-﻿namespace GrammarReader.Code.Class
+﻿namespace GrammarReader.Code.Parser.Structures
 {
     /// <summary>
     /// Represents a token. A token is just a word.
@@ -9,7 +9,7 @@
 
         public Token(string name)
         {
-            this.Name = name;
+            Name = name;
         }
 
     }

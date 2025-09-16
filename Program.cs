@@ -1,5 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using GrammarReader.Code.Class;
+using GrammarReader.Code.Grammar.Structures;
 using GrammarReader.Code.Parser;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -13,7 +13,7 @@ internal class Program
         {
             string? text = null;
             string input = "";
-            var generator = new GrammarReader.Code.Grammar.Generator();
+            var generator = new GrammarReader.Code.Grammar.GrammarParser();
             Console.WriteLine("Enter text to generate grammar");
             while (text != "end")
             {

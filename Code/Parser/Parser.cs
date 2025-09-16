@@ -111,6 +111,7 @@ namespace GrammarReader.Code.Parser
             line = 1;
             foreach (var c in content)
             {
+                if (c == '\r') continue; // Ignores carriage return
                 if (isSymbol) HandleSymbol(c);
                 else if (Breaks.Contains(c)) HandleBreaks(c);
                 else if (c == '\0' || c == '\n' || Separators.Contains(c)) HandleSeparator(c);
@@ -171,7 +172,7 @@ namespace GrammarReader.Code.Parser
             var next = NextSymbols(current);
             if (!next.Contains(c))
             {
-                var index = result.Tokens.IndexOf(current);
+                int index = result.Tokens.Contains(current) ? result.Tokens.IndexOf(current) : result.Tokens.Add(current);
                 result.Parsed.Add(new(index, line));
                 isSymbol = false;
                 current = "";

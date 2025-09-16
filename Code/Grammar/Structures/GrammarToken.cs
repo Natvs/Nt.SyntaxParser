@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GrammarReader.Code.Class
+namespace GrammarReader.Code.Grammar.Structures
 {
     public class GrammarToken(int index, int line)
     {

@@ -1,4 +1,4 @@
-﻿using GrammarReader.Code.Class;
+﻿using GrammarReader.Code.Parser.Structures;
 
 namespace GrammarReader.Code.Parser
 {

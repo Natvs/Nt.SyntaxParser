@@ -7,4 +7,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Include="bin\Debug\net8.0\test_grammar.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Code\Class\" />
+  </ItemGroup>
+
 </Project>

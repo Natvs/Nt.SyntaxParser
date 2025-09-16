@@ -1,11 +1,13 @@
 ﻿using GrammarReader.Code.Grammar.Exceptions;
+using GrammarReader.Code.Parser.Structures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace GrammarReader.Code.Class
+namespace GrammarReader.Code.Grammar.Structures
 {
     /// <summary>
     /// Represents datas of a language grammar
@@ -15,9 +17,10 @@ namespace GrammarReader.Code.Class
 
         public TokensList Terminals { get; } = [];
         public TokensList NonTerminals { get; } = [];
-        public int Axiom { get; private set; } = -1;
+        private int Axiom { get; set; } = -1;
 
-        public List<Rule> Rules { get; } = [];
+        private List<Rule> Rules { get; } = [];
+        private List<RegularExpression> RegularExpressions { get; } = [];
 
         #region Public Methods
 
@@ -40,9 +43,9 @@ namespace GrammarReader.Code.Class
         /// <exception cref="NotDeclaredTerminalException">The terminal may not exists in the list</exception>
         public int GetTerminalIndex(string name)
         {
-            for (int i = 0; i < Terminals.Count; i++) 
+            for (int i = 0; i < Terminals.Count; i++)
             {
-                if ((Terminals[i].Name == name)) return i;
+                if (Terminals[i].Name == name) return i;
             }
             throw new NotDeclaredTerminalException(name);
         }
@@ -68,7 +71,7 @@ namespace GrammarReader.Code.Class
         {
             for (int i = 0; i < NonTerminals.Count; i++)
             {
-                if ((NonTerminals[i].Name == name)) return i;
+                if (NonTerminals[i].Name == name) return i;
             }
             throw new NotDeclaredNonTerminalException(name);
         }
@@ -88,11 +91,12 @@ namespace GrammarReader.Code.Class
         {
             var rule = new Rule(Terminals, NonTerminals);
             Rules.Add(rule);
-            try { 
+            try
+            {
                 rule.SetToken(NonTerminals.IndexOf(nonTerminal), line);
                 return rule;
             }
-            catch (KeyNotFoundException) { Console.WriteLine("KeyNotFoundException detected!!!"); throw new NotDeclaredNonTerminalException(nonTerminal); }
+            catch (KeyNotFoundException) { throw new NotDeclaredNonTerminalException(nonTerminal); }
         }
         public Rule AddRule(int nonTerminalIndex, int line)
         {
@@ -100,6 +104,24 @@ namespace GrammarReader.Code.Class
             Rules.Add(rule);
             rule.SetToken(nonTerminalIndex, line);
             return rule;
+        }
+        public RegularExpression AddRegularExpression(string nonTerminal, int line)
+        {
+            var regex = new RegularExpression(NonTerminals);
+            RegularExpressions.Add(regex);
+            try
+            {
+                regex.SetToken(NonTerminals.IndexOf(nonTerminal), line);
+                return regex;
+            }
+            catch (KeyNotFoundException) { throw new NotDeclaredNonTerminalException(nonTerminal); }
+        }
+        public RegularExpression AddRegularExpression(int nonTerminalIndex, int line)
+        {
+            var regex = new RegularExpression(NonTerminals);
+            RegularExpressions.Add(regex);
+            regex.SetToken(nonTerminalIndex, line);
+            return regex;
         }
 
         #endregion
@@ -119,7 +141,13 @@ namespace GrammarReader.Code.Class
             if (Rules.Count > 0) sb.Append("\nRules\n");
             foreach (var rule in Rules)
             {
-                sb.Append(rule.ToString()).Append('\n');
+                sb.Append("  ").Append(rule.ToString()).Append('\n');
+            }
+
+            if (RegularExpressions.Count > 0) sb.Append("\nRegular expressions\n");
+            foreach (var regularExpression in RegularExpressions)
+            {
+                sb.Append("  ").Append(regularExpression.ToString()).Append('\n');
             }
 
             return sb.ToString();

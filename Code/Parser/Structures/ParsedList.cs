@@ -1,11 +1,10 @@
-﻿using GrammarReader.Code.Class;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GrammarReader.Code.Class
+namespace GrammarReader.Code.Parser.Structures
 {
 
     /// <summary>
@@ -23,9 +22,9 @@ namespace GrammarReader.Code.Class
             var sb = new StringBuilder().Append('{');
             for (int i = 0; i < Count - 1; i++)
             {
-                sb.Append(tokens[this[i].Value].Name).Append(", ");
+                sb.Append(tokens[this[i].TokenIndex].Name).Append(", ");
             }
-            if (Count > 0) sb.Append(tokens[this[Count - 1].Value].Name);
+            if (Count > 0) sb.Append(tokens[this[Count - 1].TokenIndex].Name);
             sb.Append('}');
             return sb.ToString();
         }

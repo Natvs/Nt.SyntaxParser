@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GrammarReader.Code.Parser.Structures;
 
-namespace GrammarReader.Code.Class
+namespace GrammarReader.Code.Grammar.Structures
 {
     /// <summary>
     /// Represents a rule derivation of tokens

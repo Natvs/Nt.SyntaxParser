@@ -1,9 +1,11 @@
-﻿using GrammarReader.Code.Class;
-using GrammarReader.Code.Grammar.Actions;
+﻿using GrammarReader.Code.Grammar.Actions;
 using GrammarReader.Code.Grammar.Exceptions;
+using GrammarReader.Code.Grammar.Structures;
+using GrammarReader.Code.Parser.Structures;
 
 namespace GrammarReader.Code.Grammar
 {
+
     public class State
     {
         public List<Transition> Transitions { get; } = [];
@@ -45,29 +47,29 @@ namespace GrammarReader.Code.Grammar
         /// <param name="tokens">List of parsed tokens as a reference</param>
         /// <returns>Next state of the automaton after reading the token</returns>
         /// <exception cref="NoDefaultStateException">It might be that no default state was set for this state</exception>
-        public State Read(ParsedToken token, TokensList tokens, Rule? currentRule, out Rule? newRule)
+        public State Read(ParsedToken token, TokensList tokens, AutomatonContext context)
         {
-            newRule = currentRule;
             if (DefaultState == null) throw new NoDefaultStateException();
             foreach (var transition in Transitions)
             {
-                if (transition.Value.Equals(tokens[token.Value].Name))
+                if (transition.Value.Equals(tokens[token.TokenIndex].Name))
                 {
-                    newRule = PerformAction(transition.Action, token, newRule);
-                    newRule = PerformAction(transition.NewState.Action, token, newRule);                  
+                    PerformAction(transition.Action, token, context);
+                    PerformAction(transition.NewState.Action, token, context);                  
                     return transition.NewState;
                 }
             }
-            newRule = PerformAction(DefaulAction, token, newRule);
-            newRule = PerformAction(DefaultState.Action, token, newRule);
+            PerformAction(DefaulAction, token, context);
+            PerformAction(DefaultState.Action, token, context);
             return this.DefaultState;
         }
 
-        private static Rule? PerformAction(IAction? iaction, ParsedToken token, Rule? currentRule)
+        private static void PerformAction(IAction? iaction, ParsedToken token, AutomatonContext context)
         {
             if (iaction is Actions.Action action) action.Perform(token);
-            else if (iaction is RuleAction ruleAction) return ruleAction.Perform(currentRule, token);
-            return currentRule;
+            else if (iaction is RuleAction ruleAction) context.Rule = ruleAction.Perform(context.Rule, token);
+            else if (iaction is RegExAction regexAction) context.RegularExpression = regexAction.Perform(context.RegularExpression, token);
+            else if (iaction is ImportAction importAction) context.ImportedString = importAction.Perform(token);
         }
     }
 }

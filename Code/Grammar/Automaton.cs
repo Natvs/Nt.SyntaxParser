@@ -1,5 +1,6 @@
-﻿using GrammarReader.Code.Class;
-using GrammarReader.Code.Grammar.Actions;
+﻿using GrammarReader.Code.Grammar.Actions;
+using GrammarReader.Code.Grammar.Structures;
+using GrammarReader.Code.Parser.Structures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,11 +23,17 @@ namespace GrammarReader.Code.Grammar
         /// Reads a token from the current state and updates current state to the next state
         /// </summary>
         /// <param name="token">Parsed token to read</param>
-        public void Read(ParsedToken token, Rule? currentRule, out Rule? newRule)
+        public void Read(ParsedToken token, AutomatonContext context)
         {
-            newRule = currentRule;
             if (CurrentState == null) { return; }
-            CurrentState = CurrentState.Read(token, tokens, currentRule, out newRule);
+            CurrentState = CurrentState.Read(token, tokens, context);
         }
+    }
+
+    public class AutomatonContext
+    {
+        public Rule? Rule { get; set; }
+        public RegularExpression? RegularExpression { get; set; }
+        public string? ImportedString { get; set; }
     }
 }

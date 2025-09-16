@@ -1,6 +1,4 @@
-﻿using GrammarReader.Code.Class;
-
-namespace GrammarReader.Code.Grammar.Exceptions
+﻿namespace GrammarReader.Code.Grammar.Exceptions
 {
     public class NotDeclaredSymbolException : Exception
     {

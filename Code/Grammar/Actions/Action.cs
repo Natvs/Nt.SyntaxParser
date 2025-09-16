@@ -1,9 +1,13 @@
-﻿using GrammarReader.Code.Class;
+﻿using GrammarReader.Code.Grammar.Structures;
+using GrammarReader.Code.Parser.Structures;
+using System.Text.RegularExpressions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Net.Quic;
 
 namespace GrammarReader.Code.Grammar.Actions
 {
@@ -25,8 +29,19 @@ namespace GrammarReader.Code.Grammar.Actions
 
     }
 
+    public abstract class ImportAction : IAction
+    {
+        public abstract string Perform(ParsedToken word);
+    }
+
     public abstract class RuleAction : IAction
     {
         public abstract Rule? Perform(Rule? rule, ParsedToken word);
     }
+
+    public abstract class RegExAction : IAction
+    {
+        public abstract RegularExpression? Perform(RegularExpression? regex, ParsedToken word);
+    }
+
 }

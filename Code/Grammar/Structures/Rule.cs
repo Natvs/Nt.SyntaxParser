@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GrammarReader.Code.Parser.Structures;
 
-namespace GrammarReader.Code.Class
+namespace GrammarReader.Code.Grammar.Structures
 {
+
     /// <summary>
     /// Represents a grammar rule
     /// </summary>
@@ -16,13 +18,13 @@ namespace GrammarReader.Code.Class
         /// <summary>
         /// Token that would derive into derivation
         /// </summary>
-        public NonTerminal? Token { get; private set; }
+        public NonTerminal? Token { get;  private set; }
         /// <summary>
         /// List of tokens that represent derivation
         /// </summary>
-        public Derivation Derivation { get; } = new(terminals, nonterminals);
+        private Derivation Derivation { get; } = new(terminals, nonterminals);
 
-       
+
         /// <summary>
         /// Sets the token to derive
         /// </summary>
@@ -30,7 +32,7 @@ namespace GrammarReader.Code.Class
         /// <param name="line">Line the token have been parsed</param>
         public void SetToken(int index, int line)
         {
-            this.Token = new NonTerminal(index, line);
+            Token = new NonTerminal(index, line);
         }
 
         /// <summary>
@@ -40,7 +42,7 @@ namespace GrammarReader.Code.Class
         /// <param name="line">Line the token have been parsed</param>
         public void AddTerminal(int index, int line)
         {
-            this.Derivation.Add(new Terminal(index, line));
+            Derivation.Add(new Terminal(index, line));
         }
 
         /// <summary>
@@ -50,9 +52,13 @@ namespace GrammarReader.Code.Class
         /// <param name="line">Line the token have been parsed</param>
         public void AddNonTerminal(int index, int line)
         {
-            this.Derivation.Add(new NonTerminal(index, line));
+            Derivation.Add(new NonTerminal(index, line));
         }
 
+        /// <summary>
+        /// Gets a string representing this rule
+        /// </summary>
+        /// <returns>String with the derivated symbol and derivation of the rule</returns>
         public override string ToString()
         {
             var sb = new StringBuilder();
