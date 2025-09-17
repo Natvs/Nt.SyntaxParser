@@ -1,4 +1,4 @@
-# GrammarReader
+# GrammarParser
 
 ## Introduction
 This project takes a grammar file as input and parses it to an abstract tree.
@@ -30,10 +30,14 @@ If you wish to include one of these symbols into your grammar, it must not be su
 You need to provide each non-terminal at least one derivation rule. The derivation can be any sequence of previously defined symbols.
 
 These rules have the following syntax:
-`R: non-terminal -> symbol1 symbol2 symbol3 ... ;`
+```
+R: non-terminal -> symbol1 symbol2 symbol3 ... ;
+```
 
 You can define multiple derivations for a same non-terminal with the syntax:
-`R: non-terminal -> symbol11 symbol12 ... | symbol21 symbol22 ...`
+```
+R: non-terminal -> symbol11 symbol12 ... | symbol21 symbol22 ...
+```
 
 You need to separate all your symbols by at least one white space. White spaces you write are ignored when parsing. 
 If you wish to include a white space as a symbol, you can use the escape symbol `\ `.
@@ -94,7 +98,8 @@ IMPORT grammar.txt
 ### Example of grammar file use case
 Consider the following grammar files.
 
-```const.txt
+File `const.txt`
+```
 N = {CONST, STRING, INT, FLOAT}
 
 R: CONST -> STRING | INT | FLOAT ;
@@ -104,7 +109,8 @@ E: INT = ( 0 | [0123456789]* ) ;
 E: FLOAT = [0123456789]+ ( ,[0123456789]+ )? ;
 ```
 
-```params.txt
+File `params.txt`
+```
 N = {PARAMS, TYPE, STRING}
 T = {;, ,}
 
