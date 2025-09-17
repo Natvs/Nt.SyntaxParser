@@ -1,6 +1,6 @@
 ﻿using GrammarReader.Domain.Grammar.Actions;
-using GrammarReader.Infrastructure.Parser;
-using GrammarReader.Infrastructure.Parser.Structures;
+using GrammarReader.Domain.Parser;
+using GrammarReader.Domain.Parser.Structures;
 using System.Text;
 
 namespace GrammarReader.Domain.Grammar

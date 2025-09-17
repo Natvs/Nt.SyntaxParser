@@ -1,4 +1,4 @@
-﻿namespace GrammarReader.Infrastructure.Parser.Structures
+﻿namespace GrammarReader.Domain.Parser.Structures
 {
     /// <summary>
     /// Represents a parsed token identified by its index in list of tokens

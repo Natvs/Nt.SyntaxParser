@@ -1,6 +1,6 @@
-﻿using GrammarReader.Infrastructure.Parser.Structures;
+﻿using GrammarReader.Domain.Parser.Structures;
 
-namespace GrammarReader.Infrastructure.Parser
+namespace GrammarReader.Domain.Parser
 {
     /// <summary>
     /// Contains results of a successive parsing. 

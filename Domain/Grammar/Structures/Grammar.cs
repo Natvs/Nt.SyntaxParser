@@ -1,5 +1,5 @@
 ﻿using GrammarReader.Domain.Grammar.Exceptions;
-using GrammarReader.Infrastructure.Parser.Structures;
+using GrammarReader.Domain.Parser.Structures;
 using System.Text;
 
 namespace GrammarReader.Domain.Grammar.Structures

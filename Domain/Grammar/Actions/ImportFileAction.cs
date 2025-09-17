@@ -1,6 +1,6 @@
 ﻿using GrammarReader.Domain.Grammar.Exceptions;
 using GrammarReader.Domain.Grammar.Structures;
-using GrammarReader.Infrastructure.Parser.Structures;
+using GrammarReader.Domain.Parser.Structures;
 using Microsoft.VisualBasic.FileIO;
 using System.Text;
 

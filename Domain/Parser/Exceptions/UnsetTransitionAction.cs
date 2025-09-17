@@ -1,4 +1,4 @@
-﻿namespace GrammarReader.Infrastructure.Parser.Exceptions
+﻿namespace GrammarReader.Domain.Parser.Exceptions
 {
     public class UnsetTransitionAction : Exception
     {

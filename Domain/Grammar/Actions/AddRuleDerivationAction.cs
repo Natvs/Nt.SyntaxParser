@@ -1,5 +1,5 @@
 ﻿using GrammarReader.Domain.Grammar.Structures;
-using GrammarReader.Infrastructure.Parser.Structures;
+using GrammarReader.Domain.Parser.Structures;
 
 namespace GrammarReader.Domain.Grammar.Actions
 {

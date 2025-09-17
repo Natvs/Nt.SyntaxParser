@@ -1,6 +1,6 @@
-﻿using GrammarReader.Infrastructure.Parser.Exceptions;
+﻿using GrammarReader.Domain.Parser.Exceptions;
 
-namespace GrammarReader.Infrastructure.Parser
+namespace GrammarReader.Domain.Parser
 {
 
     /// <summary>
@@ -42,8 +42,8 @@ namespace GrammarReader.Infrastructure.Parser
         /// <param name="symbols">List of symbols</param>
         public Parser(List<char> separators, List<string> symbols)
         {
-            this.Separators = separators;
-            this.Symbols = symbols;
+            Separators = separators;
+            Symbols = symbols;
             SetSymbols();
         }
 
@@ -53,7 +53,7 @@ namespace GrammarReader.Infrastructure.Parser
         /// <exception cref="EmptySymbolException">The symbols list might contain an empty string</exception>
         private void SetSymbols()
         {
-            foreach (string symbol in this.Symbols)
+            foreach (string symbol in Symbols)
             {
                 if (symbol.Length == 0) throw new EmptySymbolException();
                 if (!Breaks.Contains(symbol[0])) Breaks.Add(symbol[0]);
@@ -94,7 +94,7 @@ namespace GrammarReader.Infrastructure.Parser
             Symbols.Remove(symbol);
 
             bool breaks = false;
-            foreach (string sym in this.Symbols)
+            foreach (string sym in Symbols)
             {
                 if (sym.StartsWith(symbol[0].ToString())) { breaks = true; break; }
             }
@@ -141,7 +141,7 @@ namespace GrammarReader.Infrastructure.Parser
         private List<char> NextSymbols(string start)
         {
             var next = new List<char>();
-            foreach (string symbol in this.Symbols)
+            foreach (string symbol in Symbols)
             {
                 if (symbol.Length > start.Length && symbol.StartsWith(start)) next.Add(symbol[start.Length]);
             }
