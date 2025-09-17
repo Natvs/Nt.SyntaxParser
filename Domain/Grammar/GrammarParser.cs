@@ -1,9 +1,9 @@
-﻿using GrammarReader.Domain.Grammar.Actions;
-using GrammarReader.Domain.Parser;
-using GrammarReader.Domain.Parser.Structures;
+﻿using GrammarParser.Domain.Grammar.Actions;
+using GrammarParser.Domain.Parser;
+using GrammarParser.Domain.Parser.Structures;
 using System.Text;
 
-namespace GrammarReader.Domain.Grammar
+namespace GrammarParser.Domain.Grammar
 {
 
     public class GrammarParser

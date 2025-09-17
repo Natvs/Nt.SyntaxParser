@@ -1,7 +1,7 @@
-﻿using GrammarReader.Domain.Grammar.Structures;
-using GrammarReader.Domain.Parser.Structures;
+﻿using GrammarParser.Domain.Grammar.Structures;
+using GrammarParser.Domain.Parser.Structures;
 
-namespace GrammarReader.Domain.Grammar.Actions
+namespace GrammarParser.Domain.Grammar.Actions
 {
     public class AddRuleDerivationAction(Structures.Grammar grammar, TokensList tokens) : RuleAction
     {

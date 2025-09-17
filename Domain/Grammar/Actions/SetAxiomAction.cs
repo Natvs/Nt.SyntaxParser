@@ -1,6 +1,6 @@
-﻿using GrammarReader.Domain.Parser.Structures;
+﻿using GrammarParser.Domain.Parser.Structures;
 
-namespace GrammarReader.Domain.Grammar.Actions
+namespace GrammarParser.Domain.Grammar.Actions
 {
     /// <summary>
     /// Represents an action that sets grammar axiom

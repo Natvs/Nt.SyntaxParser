@@ -1,8 +1,8 @@
-﻿using GrammarReader.Domain.Grammar.Actions;
-using GrammarReader.Domain.Grammar.Exceptions;
-using GrammarReader.Domain.Parser.Structures;
+﻿using GrammarParser.Domain.Grammar.Actions;
+using GrammarParser.Domain.Grammar.Exceptions;
+using GrammarParser.Domain.Parser.Structures;
 
-namespace GrammarReader.Domain.Grammar
+namespace GrammarParser.Domain.Grammar
 {
 
     public class State

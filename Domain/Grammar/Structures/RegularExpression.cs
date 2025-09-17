@@ -1,7 +1,7 @@
-﻿using GrammarReader.Domain.Parser.Structures;
+﻿using GrammarParser.Domain.Parser.Structures;
 using System.Text;
 
-namespace GrammarReader.Domain.Grammar.Structures
+namespace GrammarParser.Domain.Grammar.Structures
 {
     public class RegularExpression(TokensList nonterminals)
     {

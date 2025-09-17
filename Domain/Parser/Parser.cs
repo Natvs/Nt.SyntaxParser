@@ -1,6 +1,6 @@
-﻿using GrammarReader.Domain.Parser.Exceptions;
+﻿using GrammarParser.Domain.Parser.Exceptions;
 
-namespace GrammarReader.Domain.Parser
+namespace GrammarParser.Domain.Parser
 {
 
     /// <summary>

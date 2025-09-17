@@ -1,4 +1,4 @@
-﻿namespace GrammarReader.Domain.Grammar.Structures
+﻿namespace GrammarParser.Domain.Grammar.Structures
 {
     public class ImportPath
     {

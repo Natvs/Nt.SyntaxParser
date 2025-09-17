@@ -1,4 +1,4 @@
-﻿namespace GrammarReader.Domain.Grammar.Exceptions
+﻿namespace GrammarParser.Domain.Grammar.Exceptions
 {
     public class RegisteredNonTerminalException : Exception
     {

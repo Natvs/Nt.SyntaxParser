@@ -1,4 +1,4 @@
-﻿namespace GrammarReader.Domain.Parser.Exceptions
+﻿namespace GrammarParser.Domain.Parser.Exceptions
 {
     public class RegisteredSymbolException : Exception
     {

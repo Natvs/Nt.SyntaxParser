@@ -1,6 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using GrammarReader.Domain.Grammar;
-using GrammarReader.Domain.Grammar.Structures;
+using GrammarParser.Domain.Grammar.Structures;
 
 internal class Program
 {
@@ -12,7 +11,7 @@ internal class Program
         {
             string? text = null;
             string input = "";
-            var generator = new GrammarParser();
+            var generator = new GrammarParser.Domain.Grammar.GrammarParser();
             Console.WriteLine("Enter text to generate grammar");
             while (text != "end")
             {

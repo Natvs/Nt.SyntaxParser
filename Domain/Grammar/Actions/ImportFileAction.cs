@@ -1,10 +1,10 @@
-﻿using GrammarReader.Domain.Grammar.Exceptions;
-using GrammarReader.Domain.Grammar.Structures;
-using GrammarReader.Domain.Parser.Structures;
+﻿using GrammarParser.Domain.Grammar.Exceptions;
+using GrammarParser.Domain.Grammar.Structures;
+using GrammarParser.Domain.Parser.Structures;
 using Microsoft.VisualBasic.FileIO;
 using System.Text;
 
-namespace GrammarReader.Domain.Grammar.Actions
+namespace GrammarParser.Domain.Grammar.Actions
 {
     /// <summary>
     /// Reads the performed token as a file name and gets its content

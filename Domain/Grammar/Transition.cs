@@ -1,6 +1,6 @@
-﻿using GrammarReader.Domain.Grammar.Actions;
+﻿using GrammarParser.Domain.Grammar.Actions;
 
-namespace GrammarReader.Domain.Grammar
+namespace GrammarParser.Domain.Grammar
 {
     /// <summary>
     /// Represents a transition in an automaton from a state to an other state

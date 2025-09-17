@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace GrammarReader.Domain.Parser.Structures
+namespace GrammarParser.Domain.Parser.Structures
 {
 
     /// <summary>

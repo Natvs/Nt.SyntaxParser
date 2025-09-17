@@ -1,6 +1,6 @@
-﻿using GrammarReader.Domain.Grammar.Structures;
+﻿using GrammarParser.Domain.Grammar.Structures;
 
-namespace GrammarReader.Domain.Grammar
+namespace GrammarParser.Domain.Grammar
 {
     public class AutomatonContext
     {
