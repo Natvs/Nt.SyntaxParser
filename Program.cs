@@ -20,7 +20,7 @@ internal class Program
                 text = Console.ReadLine();
                 if (text != "end") input += text + "\n";
             }
-            Grammar grammar = generator.Generate(input);
+            Grammar grammar = generator.Parse(input);
             Console.WriteLine(grammar.ToString());
 
             continue_parsing = false;

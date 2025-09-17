@@ -21,16 +21,19 @@ namespace GrammarReader.Code.Grammar
         private Automaton? PreAutomaton { get; set; }
         private Automaton? Automaton { get; set; }
         private AutomatonContext AutomatonContext { get; } = new AutomatonContext();
-        private Rule? CurrentRule { get; set; } = null;
-        private RegularExpression? CurrentRegex { get; set; } = null;
 
         #endregion
 
+        /// <summary>
+        /// Applies the pre-parser on a given grammar string
+        /// </summary>
+        /// <param name="content">String to pre-parse</param>
+        /// <returns>A pre-parsed string of the grammar</returns>
         public string PreParse(string content)
         {
             var sb = new StringBuilder();
 
-            Parser.Parser parser = new([' ', '\0', '\n', '\t'], ["import", "IMPORT", ";"]);
+            Parser.Parser parser = new([' ', '\0', '\n', '\t'], ["import", "IMPORT", "addtopath", "ADDTOPATH", ";"]);
             var parsed = parser.Parse(content);
 
             GeneratePreAutomaton(parsed.Tokens);
@@ -52,7 +55,8 @@ namespace GrammarReader.Code.Grammar
             string? line;
             while ((line = contentReader.ReadLine()) != null)
             {
-                if (line.StartsWith("import") || line.StartsWith("IMPORT")) continue;
+                if (line.StartsWith("import", StringComparison.CurrentCultureIgnoreCase)) continue;
+                if (line.StartsWith("addtopath", StringComparison.CurrentCultureIgnoreCase)) continue;
                 sb.AppendLine(line);
             }
             
@@ -64,7 +68,7 @@ namespace GrammarReader.Code.Grammar
         /// </summary>
         /// <param name="content">String to read</param>
         /// <returns>A grammar data structure from the given string</returns>
-        public Structures.Grammar Generate(string content)
+        public Structures.Grammar Parse(string content)
         {
             content = PreParse(content);
             Console.WriteLine("Pre parsed grammar string\n" + content);
@@ -78,8 +82,6 @@ namespace GrammarReader.Code.Grammar
                 try 
                 {
                     Automaton?.Read(token, AutomatonContext);
-                    CurrentRule = AutomatonContext.Rule;
-                    CurrentRegex = AutomatonContext.RegularExpression;
                 }
                 catch (Exception e) { Console.Error.WriteLine(e.Message); }
             }
@@ -93,10 +95,13 @@ namespace GrammarReader.Code.Grammar
 
             PreAutomaton = new Automaton(tokens, initial);
 
-            var importState = new State().SetDefault(initial, new ImportFileAction(tokens));
+            var addToPathState = new State().SetDefault(initial, new AddImportPathAction(tokens, AutomatonContext.ImportPath));
+            var importState = new State().SetDefault(initial, new ImportFileAction(tokens, AutomatonContext.ImportPath));
 
             initial.AddTransition("import", importState);
             initial.AddTransition("IMPORT", importState);
+            initial.AddTransition("addtopath", addToPathState);
+            initial.AddTransition("ADDTOPATH", addToPathState);
         }
 
         /// <summary>

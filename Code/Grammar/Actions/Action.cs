@@ -28,12 +28,6 @@ namespace GrammarReader.Code.Grammar.Actions
         public abstract void Perform(ParsedToken word);
 
     }
-
-    public abstract class ImportAction : IAction
-    {
-        public abstract string Perform(ParsedToken word);
-    }
-
     public abstract class RuleAction : IAction
     {
         public abstract Rule? Perform(Rule? rule, ParsedToken word);

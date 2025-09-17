@@ -184,6 +184,7 @@ namespace GrammarReader.Code.Parser
         private void HandleBreaks(char c)
         {
             int index;
+            if (!Symbols.Contains(c.ToString())) { current += c; isSymbol = false; return; }
             if (current.Length > 0)
             {
                 if (!result.Tokens.Contains(current)) index = result.Tokens.Add(current);
