@@ -8,17 +8,21 @@ namespace GrammarReader.Code.Grammar.Actions
         public override Rule? Perform(Rule? rule, ParsedToken word)
         {
             if (rule == null) throw new Exception("Attempting to write to a derivation of a non existent rule");
-            if (grammar.Terminals.Contains(tokens[word.TokenIndex].Name))
+
+            var token = tokens[word.TokenIndex].Name;
+            if (token.StartsWith("\\")) token = token.Substring(1); // Handles an escape char
+
+            if (grammar.Terminals.Contains(token))
             {
-                rule.AddTerminal(grammar.GetTerminalIndex(tokens[word.TokenIndex].Name), word.Line);
+                rule.AddTerminal(grammar.GetTerminalIndex(token), word.Line);
                 return rule;
             }
-            else if (grammar.NonTerminals.Contains(tokens[word.TokenIndex].Name))
+            else if (grammar.NonTerminals.Contains(token))
             {
-                rule.AddNonTerminal(grammar.GetNonTerminalIndex(tokens[word.TokenIndex].Name), word.Line);
+                rule.AddNonTerminal(grammar.GetNonTerminalIndex(token), word.Line);
                 return rule;
             }
-            throw new Exceptions.NotDeclaredSymbolException(tokens[word.TokenIndex].Name, word.Line);
+            throw new Exceptions.NotDeclaredSymbolException(token, word.Line);
         }
     }
 

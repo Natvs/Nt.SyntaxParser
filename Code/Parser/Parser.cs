@@ -14,6 +14,7 @@ namespace GrammarReader.Code.Parser
         private string current = "";
         private int line = 0;
         private bool isSymbol = false;
+        private bool isEscapeChar = false;
         private readonly ParserResult result = new();
 
         public List<char> Separators { get; } = [' '];
@@ -112,9 +113,13 @@ namespace GrammarReader.Code.Parser
             foreach (var c in content)
             {
                 if (c == '\r') continue; // Ignores carriage return
+
+                if (c == '\\') { isEscapeChar = true; continue; } // Handles escape chars
+                if (isEscapeChar) { HandleEscapeChar(c); continue; }
+
                 if (isSymbol) HandleSymbol(c);
                 else if (Breaks.Contains(c)) HandleBreaks(c);
-                else if (c == '\0' || c == '\n' || Separators.Contains(c)) HandleSeparator(c);
+                else if (Separators.Contains(c)) HandleSeparator(c);
                 else current += c;
 
                 if (c == '\n') line += 1;
@@ -143,15 +148,37 @@ namespace GrammarReader.Code.Parser
             return next;
         }
 
+        private void HandleEscapeChar(char c)
+        {
+            isEscapeChar = false;
+            int index;
+
+            // Parses the current string if non empty
+            if (current.Length != 0)
+            {
+                if (!result.Tokens.Contains(current)) index = result.Tokens.Add(current);
+                else index = result.Tokens.IndexOf(current);
+                result.Parsed.Add(new(index, line));
+            }
+
+            // Parses the escape token
+            if (!result.Tokens.Contains("\\" + c.ToString())) index = result.Tokens.Add("\\" + c.ToString());
+            else index = result.Tokens.IndexOf("\\" + c.ToString());
+            result.Parsed.Add(new(index, line));
+
+            current = "";
+        }
+
         private void HandleSeparator(char c)
         {
-            int index;
+            isSymbol = false;
             if (current.Length == 0) return;
+
+            int index;
             if (!result.Tokens.Contains(current)) index = result.Tokens.Add(current);
             else index = result.Tokens.IndexOf(current);
             result.Parsed.Add(new(index, line));
             current = "";
-            isSymbol = false;
         }
 
         private void HandleBreaks(char c)

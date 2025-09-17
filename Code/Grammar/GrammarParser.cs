@@ -30,7 +30,7 @@ namespace GrammarReader.Code.Grammar
         {
             var sb = new StringBuilder();
 
-            Parser.Parser parser = new([' '], ["import", ";"]);
+            Parser.Parser parser = new([' ', '\0', '\n', '\t'], ["import", "IMPORT", ";"]);
             var parsed = parser.Parse(content);
 
             GeneratePreAutomaton(parsed.Tokens);
@@ -69,7 +69,7 @@ namespace GrammarReader.Code.Grammar
             content = PreParse(content);
             Console.WriteLine("Pre parsed grammar string\n" + content);
 
-            Parser.Parser parser = new([' '], [",", "=", "==", "+", "++", "-", "--", "*", "/", "{", "}", ":", ";", "<", ">"]);
+            Parser.Parser parser = new([' ', '\0', '\n', '\t'], [":", ",", "=", "{", "}", ";", "-", ">", "+", "*"]);
             var parsed = parser.Parse(content);
 
             GenerateAutomaton(parsed.Tokens);
@@ -89,8 +89,6 @@ namespace GrammarReader.Code.Grammar
 
         private void GeneratePreAutomaton(TokensList tokens)
         {
-            var ErrorAction = new ErrorAction(Grammar, tokens);
-
             var initial = new State(); initial.SetDefault(initial);
 
             PreAutomaton = new Automaton(tokens, initial);
@@ -107,10 +105,10 @@ namespace GrammarReader.Code.Grammar
         /// <param name="tokens">List of tokens that can be read by the automaton</param>
         private void GenerateAutomaton(TokensList tokens)
         {
-            var ErrorAction = new ErrorAction(Grammar, tokens);
+            var errorAction = new ErrorAction(Grammar, tokens);
 
-            var initial = new State(); initial.SetDefault(initial, ErrorAction);
-            var error = new State(ErrorAction).SetDefault(initial);
+            var initial = new State(); initial.SetDefault(initial, errorAction);
+            var error = new State(errorAction).SetDefault(initial);
 
             Automaton = new Automaton(tokens, initial);
 
