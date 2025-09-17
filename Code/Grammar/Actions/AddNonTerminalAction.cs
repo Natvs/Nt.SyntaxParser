@@ -1,4 +1,5 @@
-﻿using GrammarReader.Code.Parser.Structures;
+﻿using GrammarReader.Code.Grammar.Exceptions;
+using GrammarReader.Code.Parser.Structures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,12 @@ namespace GrammarReader.Code.Grammar.Actions
         /// <param name="word">Parsed token to add as new non terminal</param>
         public override void Perform(ParsedToken word)
         {
-            grammar.AddNonTerminal(tokens[word.TokenIndex].Name);
+            try
+            {
+                grammar.AddNonTerminal(tokens[word.TokenIndex].Name);
+            }
+            catch (RegisteredNonTerminalException) { }
+            catch (RegisteredTerminalException) { }
         }
 
     }

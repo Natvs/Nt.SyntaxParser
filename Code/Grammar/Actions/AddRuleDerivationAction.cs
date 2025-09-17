@@ -10,7 +10,7 @@ namespace GrammarReader.Code.Grammar.Actions
             if (rule == null) throw new Exception("Attempting to write to a derivation of a non existent rule");
 
             var token = tokens[word.TokenIndex].Name;
-            if (token.StartsWith("\\")) token = token.Substring(1); // Handles an escape char
+            if (token.StartsWith('\\')) token = token.Substring(1); // Handles an escape char
 
             if (grammar.Terminals.Contains(token))
             {
@@ -30,8 +30,12 @@ namespace GrammarReader.Code.Grammar.Actions
     {
         public override RegularExpression? Perform(RegularExpression? regex, ParsedToken word)
         {
+
+            var token = tokens[word.TokenIndex].Name;
+            if (token.StartsWith('\\')) token = token.Substring(1); // Handles an escape char
+
             if (regex == null) throw new Exception("Attempting to add symbols to a non existent regular expression");            
-            regex.AddSymbols(tokens[word.TokenIndex].Name);
+            regex.AddSymbols(token);
             return regex;
         }
     }
