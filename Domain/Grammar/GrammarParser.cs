@@ -27,7 +27,7 @@ namespace GrammarParser.Domain.Grammar
         {
             var sb = new StringBuilder();
 
-            Parser parser = new([' ', '\0', '\n', '\t'], ["import", "IMPORT", "addtopath", "ADDTOPATH", ";"]);
+            Parser.Parser parser = new([' ', '\0', '\n', '\t'], ["import", "IMPORT", "addtopath", "ADDTOPATH", ";"]);
             ParserResult parsed = parser.Parse(content);
 
             GeneratePreAutomaton(parsed.Tokens);
@@ -67,7 +67,7 @@ namespace GrammarParser.Domain.Grammar
             content = PreParse(content);
             Console.WriteLine("Pre parsed grammar string\n" + content);
 
-            Parser parser = new([' ', '\0', '\n', '\t'], [":", ",", "=", "{", "}", ";", "-", ">", "+", "*"]);
+            Parser.Parser parser = new([' ', '\0', '\n', '\t'], [":", ",", "=", "{", "}", ";", "-", ">", "+", "*"]);
             ParserResult parsed = parser.Parse(content);
 
             GenerateAutomaton(parsed.Tokens);
