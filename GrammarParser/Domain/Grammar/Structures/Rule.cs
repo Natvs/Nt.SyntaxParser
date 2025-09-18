@@ -18,7 +18,7 @@ namespace GrammarParser.Domain.Grammar.Structures
         /// <summary>
         /// List of tokens that represent derivation
         /// </summary>
-        private Derivation Derivation { get; } = new(terminals, nonterminals);
+        public Derivation Derivation { get; } = new(terminals, nonterminals);
 
 
         /// <summary>

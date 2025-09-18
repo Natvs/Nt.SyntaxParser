@@ -58,7 +58,7 @@ namespace GrammarParser.Domain.Grammar
         }
 
         /// <summary>
-        /// Reads a string and generates a grammar structure from it
+        /// Reads a string and generates a grammar structure from it. Also applies pre-parsing on it.
         /// </summary>
         /// <param name="content">String to read</param>
         /// <returns>A grammar data structure from the given string</returns>

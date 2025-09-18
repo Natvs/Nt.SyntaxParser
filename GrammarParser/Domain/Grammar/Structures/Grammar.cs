@@ -12,10 +12,10 @@ namespace GrammarParser.Domain.Grammar.Structures
 
         public TokensList Terminals { get; } = [];
         public TokensList NonTerminals { get; } = [];
-        private int Axiom { get; set; } = -1;
+        public int Axiom { get; internal set; } = -1;
 
-        private List<Rule> Rules { get; } = [];
-        private List<RegularExpression> RegularExpressions { get; } = [];
+        public List<Rule> Rules { get; } = [];
+        public List<RegularExpression> RegularExpressions { get; } = [];
 
         #region Public Methods
 
@@ -24,7 +24,7 @@ namespace GrammarParser.Domain.Grammar.Structures
         /// </summary>
         /// <param name="name">Name of the terminal to add</param>
         /// <exception cref="RegisteredTerminalException">The terminal may already exists in the list of terminals</exception>
-        public void AddTerminal(string name)
+        internal void AddTerminal(string name)
         {
             if (Terminals.Contains(name)) throw new RegisteredTerminalException(name);
             if (NonTerminals.Contains(name)) throw new RegisteredNonTerminalException(name);
@@ -36,7 +36,7 @@ namespace GrammarParser.Domain.Grammar.Structures
         /// <param name="name">Name of the terminal</param>
         /// <returns>Index of the terminal in the grammar terminals list</returns>
         /// <exception cref="NotDeclaredTerminalException">The terminal may not exists in the list</exception>
-        public int GetTerminalIndex(string name)
+        internal int GetTerminalIndex(string name)
         {
             for (int i = 0; i < Terminals.Count; i++)
             {
@@ -50,7 +50,7 @@ namespace GrammarParser.Domain.Grammar.Structures
         /// </summary>
         /// <param name="name">Name of the non terminal to add</param>
         /// <exception cref="RegisteredNonTerminalException">The non terminal may already exists in the list of non terminals</exception>
-        public void AddNonTerminal(string name)
+        internal void AddNonTerminal(string name)
         {
             if (NonTerminals.Contains(name)) throw new RegisteredNonTerminalException(name);
             if (Terminals.Contains(name)) throw new RegisteredTerminalException(name);
@@ -62,7 +62,7 @@ namespace GrammarParser.Domain.Grammar.Structures
         /// <param name="name">Name of the non terminal</param>
         /// <returns>Index of the non terminal in the grammar non terminals list</returns>
         /// <exception cref="NotDeclaredTerminalException">The non terminal may not exists in the list</exception>
-        public int GetNonTerminalIndex(string name)
+        internal int GetNonTerminalIndex(string name)
         {
             for (int i = 0; i < NonTerminals.Count; i++)
             {
@@ -76,13 +76,13 @@ namespace GrammarParser.Domain.Grammar.Structures
         /// </summary>
         /// <param name="name">Name of the new axiom</param>
         /// <exception cref="NotDeclaredNonTerminalException">The axiom might not exist in the non terminals list of this grammar</exception>
-        public void SetAxiom(string name)
+        internal void SetAxiom(string name)
         {
             if (!NonTerminals.Contains(name)) throw new NotDeclaredNonTerminalException(name);
             Axiom = NonTerminals.IndexOf(name);
         }
 
-        public Rule AddRule(string nonTerminal, int line)
+        internal Rule AddRule(string nonTerminal, int line)
         {
             var rule = new Rule(Terminals, NonTerminals);
             Rules.Add(rule);
@@ -93,14 +93,14 @@ namespace GrammarParser.Domain.Grammar.Structures
             }
             catch (KeyNotFoundException) { throw new NotDeclaredNonTerminalException(nonTerminal); }
         }
-        public Rule AddRule(int nonTerminalIndex, int line)
+        internal Rule AddRule(int nonTerminalIndex, int line)
         {
             var rule = new Rule(Terminals, NonTerminals);
             Rules.Add(rule);
             rule.SetToken(nonTerminalIndex, line);
             return rule;
         }
-        public RegularExpression AddRegularExpression(string nonTerminal, int line)
+        internal RegularExpression AddRegularExpression(string nonTerminal, int line)
         {
             var regex = new RegularExpression(NonTerminals);
             RegularExpressions.Add(regex);
@@ -111,7 +111,7 @@ namespace GrammarParser.Domain.Grammar.Structures
             }
             catch (KeyNotFoundException) { throw new NotDeclaredNonTerminalException(nonTerminal); }
         }
-        public RegularExpression AddRegularExpression(int nonTerminalIndex, int line)
+        internal RegularExpression AddRegularExpression(int nonTerminalIndex, int line)
         {
             var regex = new RegularExpression(NonTerminals);
             RegularExpressions.Add(regex);

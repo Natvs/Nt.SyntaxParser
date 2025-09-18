@@ -10,6 +10,7 @@ namespace GrammarParser.Domain.Grammar
     /// <param name="initialState">Initial state of the automaton</param>
     public class Automaton(TokensList tokens, State initialState)
     {
+        public TokensList Tokens { get; } = tokens;
         public State CurrentState { get; private set; } = initialState;
 
         /// <summary>
@@ -19,7 +20,7 @@ namespace GrammarParser.Domain.Grammar
         public void Read(ParsedToken token, AutomatonContext context)
         {
             if (CurrentState == null) { return; }
-            CurrentState = CurrentState.Read(token, tokens, context);
+            CurrentState = CurrentState.Read(token, Tokens, context);
         }
     }
 }

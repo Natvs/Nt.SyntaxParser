@@ -7,6 +7,20 @@ namespace GrammarParser.Domain.Parser.Structures
     /// </summary>
     public class TokensList : List<Token>
     {
+
+        /// <summary>
+        /// Instantiates a list of tokens
+        /// </summary>
+        public TokensList() : base() { }
+        /// <summary>
+        /// Instantiates a list of tokens from a list of strings.
+        /// </summary>
+        /// <param name="list">List of string used to instantiate the tokens</param>
+        public TokensList(List<string> list)
+        {
+            foreach (var word in list) Add(new Token(word));
+        }
+
         /// <summary>
         /// Adds a new token to the list.
         /// </summary>

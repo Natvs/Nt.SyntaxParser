@@ -5,15 +5,15 @@ namespace GrammarParser.Domain.Grammar.Structures
 {
     public class RegularExpression(TokensList nonterminals)
     {
-        private NonTerminal? Token { get; set; }
-        private string RegExString { get; set; } = "";
+        public NonTerminal? Token { get; private set; }
+        public string RegExString { get; private set; } = "";
 
         /// <summary>
         /// Sets a non terminal that would derive into word matching the regular expression
         /// </summary>
         /// <param name="index">Index of the non terminal</param>
         /// <param name="line">Line the symbol has been parsed</param>
-        public void SetToken(int index, int line)
+        internal void SetToken(int index, int line)
         {
             Token = new NonTerminal(index, line);
         }
@@ -21,7 +21,7 @@ namespace GrammarParser.Domain.Grammar.Structures
         /// Adds a sequence of symbol to the regular expression
         /// </summary>
         /// <param name="symbols">Sequence of symbols to add</param>
-        public void AddSymbols(string symbols)
+        internal void AddSymbols(string symbols)
         {
             RegExString += symbols;
         }
