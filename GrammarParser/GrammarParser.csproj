@@ -9,15 +9,20 @@
 
   <ItemGroup>
     <Compile Remove="bin\**" />
+    <Compile Remove="GrammarParserTests\bin\**" />
+    <Compile Remove="GrammarParserTests\obj\**" />
+    <Compile Remove="Infrastructure\**" />
     <Compile Remove="Test\**" />
     <EmbeddedResource Remove="bin\**" />
+    <EmbeddedResource Remove="GrammarParserTests\bin\**" />
+    <EmbeddedResource Remove="GrammarParserTests\obj\**" />
+    <EmbeddedResource Remove="Infrastructure\**" />
     <EmbeddedResource Remove="Test\**" />
     <None Remove="bin\**" />
+    <None Remove="GrammarParserTests\bin\**" />
+    <None Remove="GrammarParserTests\obj\**" />
+    <None Remove="Infrastructure\**" />
     <None Remove="Test\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Infrastructure\" />
   </ItemGroup>
 
 </Project>
