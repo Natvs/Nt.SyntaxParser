@@ -1,7 +1,7 @@
-﻿using GrammarParser.Domain.Parser.Exceptions;
+﻿using GrammarParser.Domain.Parsing.Exceptions;
 using System;
 
-namespace GrammarParser.Domain.Parser
+namespace GrammarParser.Domain.Parsing
 {
 
     /// <summary>

@@ -1,4 +1,4 @@
-﻿namespace GrammarParser.Domain.Parser.Structures
+﻿namespace GrammarParser.Domain.Parsing.Structures
 {
     /// <summary>
     /// Represents a token. A token is just a word.

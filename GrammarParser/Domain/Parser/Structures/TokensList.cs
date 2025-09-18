@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace GrammarParser.Domain.Parser.Structures
+namespace GrammarParser.Domain.Parsing.Structures
 {
     /// <summary>
     /// Represents a list of tokens, where tokens are words.
@@ -34,6 +34,21 @@ namespace GrammarParser.Domain.Parser.Structures
         }
 
         /// <summary>
+        /// Add a range of tokens to the list.
+        /// </summary>
+        /// <param name="names">Names of the tokens to add</param>
+        /// <returns>Last index of the list once all the tokens have been added</returns>
+        public int AddRange(IEnumerable<string> names)
+        {
+            foreach (var name in names)
+            {
+                var token = new Token(name);
+                Add(token);
+            }
+            return Count - 1;
+        }
+
+        /// <summary>
         /// Check if a token is in the list
         /// </summary>
         /// <param name="name">Name of the token to look for</param>
@@ -42,7 +57,7 @@ namespace GrammarParser.Domain.Parser.Structures
         {
             foreach (Token token in this)
             {
-                if (token.Name == name) { return true; }
+                if (token.Name.Equals(name)) { return true; }
             }
             return false;
         }

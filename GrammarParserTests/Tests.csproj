@@ -10,8 +10,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="bin\**" />
     <Compile Remove="obj\**" />
+    <EmbeddedResource Remove="bin\**" />
     <EmbeddedResource Remove="obj\**" />
+    <None Remove="bin\**" />
     <None Remove="obj\**" />
   </ItemGroup>
 
@@ -28,6 +31,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GrammarParser\GrammarParser.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
 
 </Project>

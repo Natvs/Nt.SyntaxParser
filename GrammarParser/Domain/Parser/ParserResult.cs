@@ -1,6 +1,6 @@
-﻿using GrammarParser.Domain.Parser.Structures;
+﻿using GrammarParser.Domain.Parsing.Structures;
 
-namespace GrammarParser.Domain.Parser
+namespace GrammarParser.Domain.Parsing
 {
     /// <summary>
     /// Contains results of a successive parsing. 
