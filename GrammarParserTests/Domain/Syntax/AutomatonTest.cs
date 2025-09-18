@@ -1,5 +1,5 @@
-﻿using GrammarParser.Domain.Syntax;
-using GrammarParser.Domain.Parsing.Structures;
+﻿using GrammarParser.Parsing.Structures;
+using GrammarParser.Syntax;
 
 namespace GrammarParserTest.Domain.Syntax
 {

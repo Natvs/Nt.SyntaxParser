@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GrammarParser\GrammarParser.csproj" />
+    <ProjectReference Include="..\GrammarParser\Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

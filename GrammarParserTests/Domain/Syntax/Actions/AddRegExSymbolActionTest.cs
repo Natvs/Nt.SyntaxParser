@@ -1,12 +1,7 @@
-﻿using GrammarParser.Domain.Parsing.Structures;
-using GrammarParser.Domain.Syntax.Actions;
-using GrammarParser.Domain.Syntax.Exceptions;
-using GrammarParser.Domain.Syntax.Structures;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GrammarParser.Parsing.Structures;
+using GrammarParser.Syntax.Actions;
+using GrammarParser.Syntax.Exceptions;
+using GrammarParser.Syntax.Structures;
 
 namespace Tests.Domain.Syntax.Actions
 {

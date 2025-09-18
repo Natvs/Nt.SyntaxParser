@@ -1,6 +1,7 @@
-﻿using GrammarParser.Domain.Parsing.Structures;
-using GrammarParser.Domain.Syntax.Actions;
-using GrammarParser.Domain.Syntax.Structures;
+﻿using GrammarParser.Parsing.Structures;
+using GrammarParser.Syntax.Actions;
+using GrammarParser.Syntax.Structures;
+using GrammarParser.Syntax.Exceptions;
 
 
 namespace GrammarParserTest.Domain.Syntax.Actions
@@ -31,7 +32,7 @@ namespace GrammarParserTest.Domain.Syntax.Actions
             var tokens = new TokensList(["B"]);
             var action = new AddNewRegExAction(grammar, tokens);
 
-            Assert.Throws<GrammarParser.Domain.Syntax.Exceptions.NotDeclaredNonTerminalException>(() => { action.Perform(null, new ParsedToken(0, 0)); });
+            Assert.Throws<NotDeclaredNonTerminalException>(() => { action.Perform(null, new ParsedToken(0, 0)); });
         }
     }
 }

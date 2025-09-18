@@ -1,6 +1,6 @@
-﻿using GrammarParser.Domain.Syntax.Actions;
-using GrammarParser.Domain.Syntax.Structures;
-using GrammarParser.Domain.Parsing.Structures;
+﻿using GrammarParser.Syntax.Actions;
+using GrammarParser.Syntax.Structures;
+using GrammarParser.Parsing.Structures;
 
 namespace GrammarParserTest.Domain.Syntax.Actions
 {

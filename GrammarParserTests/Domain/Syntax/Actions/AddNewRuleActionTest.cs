@@ -1,7 +1,7 @@
-﻿using GrammarParser.Domain.Syntax.Actions;
-using GrammarParser.Domain.Syntax.Structures;
-using GrammarParser.Domain.Syntax.Exceptions;
-using GrammarParser.Domain.Parsing.Structures;
+﻿using GrammarParser.Syntax.Actions;
+using GrammarParser.Syntax.Structures;
+using GrammarParser.Parsing.Structures;
+using GrammarParser.Syntax.Exceptions;
 
 namespace GrammarParserTest.Domain.Syntax.Actions
 {
