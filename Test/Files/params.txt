@@ -1,7 +1,0 @@
-﻿N = {PARAMS, TYPE, STRING}
-T = {;, ,}
-
-R: PARAMS -> TYPE STRING \;
-		   | TYPE STRING , PARAMS \; ;
-
-E: TYPE = (int|double|char|string) ;
