@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using GrammarParser.Domain.Parser.Exceptions;
+using Xunit;
 
 namespace GrammarParserTest.Domain.Parser
 {
@@ -93,6 +94,32 @@ namespace GrammarParserTest.Domain.Parser
             var stringToParse = "a\\\\b";
             var expectedTokens = new List<string>(["a\\\\b"]);
             ParseString(parser, stringToParse, expectedTokens);
+        }
+
+        [Fact]
+        public void AddEmptySymbol_Test()
+        {
+            var parser = new GrammarParser.Domain.Parser.Parser([], []);
+            Assert.Throws<EmptySymbolException>(() => parser.AddSymbol(""));
+        }
+        [Fact]
+        public void AddExistingSymbol_Exception()
+        {
+            var parser = new GrammarParser.Domain.Parser.Parser([], ["*"]);
+            Assert.Throws<RegisteredSymbolException>(() => parser.AddSymbol("*"));
+        }
+
+        [Fact]
+        public void RemoveEmptySymbol_Test()
+        {
+            var parser = new GrammarParser.Domain.Parser.Parser([], []);
+            Assert.Throws<EmptySymbolException>(() => parser.RemoveSymbol(""));
+        }
+        [Fact]
+        public void RemoveNonExistingSymbol_Test()
+        {
+            var parser = new GrammarParser.Domain.Parser.Parser([], []);
+            Assert.Throws<UnregisteredSymbolException>(() => parser.RemoveSymbol("/"));
         }
 
         private static void ParseString(GrammarParser.Domain.Parser.Parser parser, string stringToParse, List<string> expectedTokens)
