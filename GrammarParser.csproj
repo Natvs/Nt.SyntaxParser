@@ -9,12 +9,11 @@
 
   <ItemGroup>
     <Compile Remove="bin\**" />
+    <Compile Remove="Test\**" />
     <EmbeddedResource Remove="bin\**" />
+    <EmbeddedResource Remove="Test\**" />
     <None Remove="bin\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Test\Files\test.txt" />
+    <None Remove="Test\**" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,4 +1,5 @@
 ﻿using GrammarParser.Domain.Parser.Exceptions;
+using System;
 
 namespace GrammarParser.Domain.Parser
 {
@@ -114,8 +115,8 @@ namespace GrammarParser.Domain.Parser
             {
                 if (c == '\r') continue; // Ignores carriage return
 
-                if (c == '\\') { isEscapeChar = true; continue; } // Handles escape chars
                 if (isEscapeChar) { HandleEscapeChar(c); continue; }
+                if (c == '\\') { isEscapeChar = true; continue; } // Handles escape chars
 
                 if (isSymbol) HandleSymbol(c);
                 else if (Breaks.Contains(c)) HandleBreaks(c);
@@ -124,6 +125,7 @@ namespace GrammarParser.Domain.Parser
 
                 if (c == '\n') line += 1;
             }
+            ParseCurrent(); // Parses the last token if not empty
             return result;
         }
 
@@ -151,48 +153,21 @@ namespace GrammarParser.Domain.Parser
         private void HandleEscapeChar(char c)
         {
             isEscapeChar = false;
-            int index;
-
-            // Parses the current string if non empty
-            if (current.Length != 0)
-            {
-                if (!result.Tokens.Contains(current)) index = result.Tokens.Add(current);
-                else index = result.Tokens.IndexOf(current);
-                result.Parsed.Add(new(index, line));
-            }
-
-            // Parses the escape token
-            if (!result.Tokens.Contains("\\" + c.ToString())) index = result.Tokens.Add("\\" + c.ToString());
-            else index = result.Tokens.IndexOf("\\" + c.ToString());
-            result.Parsed.Add(new(index, line));
-
-            current = "";
+            current += "\\" + c;
         }
 
         private void HandleSeparator(char c)
         {
             isSymbol = false;
-            if (current.Length == 0) return;
-
-            int index;
-            if (!result.Tokens.Contains(current)) index = result.Tokens.Add(current);
-            else index = result.Tokens.IndexOf(current);
-            result.Parsed.Add(new(index, line));
-            current = "";
+            ParseCurrent();
         }
 
         private void HandleBreaks(char c)
         {
-            int index;
             if (!Symbols.Contains(c.ToString())) { current += c; isSymbol = false; return; }
-            if (current.Length > 0)
-            {
-                if (!result.Tokens.Contains(current)) index = result.Tokens.Add(current);
-                else index = result.Tokens.IndexOf(current);
-                result.Parsed.Add(new(index, line));
-            }
-            current = c.ToString();
             isSymbol = true;
+            ParseCurrent();
+            current = c.ToString();
         }
 
         private void HandleSymbol(char c)
@@ -200,17 +175,29 @@ namespace GrammarParser.Domain.Parser
             List<char> next = NextSymbols(current);
             if (!next.Contains(c))
             {
-                int index = result.Tokens.Contains(current) ? result.Tokens.IndexOf(current) : result.Tokens.Add(current);
-                result.Parsed.Add(new(index, line));
                 isSymbol = false;
-                current = "";
+                ParseCurrent();
                 if (Breaks.Contains(c)) HandleBreaks(c);
-                else if (c == '\0' || c == '\n' || Separators.Contains(c)) HandleSeparator(c);
+                else if (Separators.Contains(c)) HandleSeparator(c);
                 else current = c.ToString();
             }
             else current += c.ToString();
         }
 
+        /// <summary>
+        /// Parses the current token (if not empty) and resets it to an empty string
+        /// </summary>
+        private void ParseCurrent()
+        {
+            if (current.Length > 0)
+            {
+                int index;
+                if (!result.Tokens.Contains(current)) index = result.Tokens.Add(current);
+                else index = result.Tokens.IndexOf(current);
+                result.Parsed.Add(new(index, line));
+                current = "";
+            }
+        }
         #endregion
 
 

@@ -5,6 +5,8 @@ VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrammarParser", "GrammarParser.csproj", "{DDE07865-F425-4627-B7E5-DA191D4A5EC8}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrammarParserTest", "..\Tests\GrammarParserTest.csproj", "{A67A1A99-19AA-499D-988B-D991991BF913}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{DDE07865-F425-4627-B7E5-DA191D4A5EC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDE07865-F425-4627-B7E5-DA191D4A5EC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDE07865-F425-4627-B7E5-DA191D4A5EC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A67A1A99-19AA-499D-988B-D991991BF913}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A67A1A99-19AA-499D-988B-D991991BF913}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A67A1A99-19AA-499D-988B-D991991BF913}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A67A1A99-19AA-499D-988B-D991991BF913}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
