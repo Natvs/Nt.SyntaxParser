@@ -1,7 +1,7 @@
 # GrammarParser
 
 ## Introduction
-This project takes a grammar file as input and parses it to an abstract tree.
+This project takes a grammar file as input and parses into a grammar structure.
 It aims to be used when creating new software languages.
 
 ## Grammar file
@@ -68,12 +68,12 @@ You can use regular expressions without having to previously define the symbols 
 E: non-terminal = regex ;
 ```
 
-As for rules, you can use any escape character, like `\;` as ';' marks the end of the regular expression.
+Unlike rules, the escape characters does not have the same meaning. See [official microsoft documentation](https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-language-quick-reference) to learn more about regex.
 
 ### Setting grammar first symbol
 The grammar needs a symbol to begin with for syntaxically defining if a string belongs to the grammar language. This symbol is called axiom and is defined with the syntax:
 ```
-A = axiom
+S = axiom
 ```
 The axiom can be any non-terminal, but only one of those.
 
