@@ -1,5 +1,4 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using GrammarParser.Parsing;
 using GrammarParser.Syntax;
 using GrammarParser.Syntax.Structures;
 internal class Program

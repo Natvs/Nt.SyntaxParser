@@ -1,5 +1,4 @@
 ﻿using GrammarParser.Parsing.Exceptions;
-using System;
 
 namespace GrammarParser.Parsing
 {

@@ -9,7 +9,7 @@ namespace GrammarParserTest.Domain.Parsing
         public void ParseSeparator_Test1()
         {
             var parser = new Parser([' '], []);
-            var stringToParse  = "a b c d e";
+            var stringToParse = "a b c d e";
             var expectedTokens = new List<string>(["a", "b", "c", "d", "e"]);
             ParseString(parser, stringToParse, expectedTokens);
         }
@@ -18,7 +18,7 @@ namespace GrammarParserTest.Domain.Parsing
         public void ParseSeparator_Test2()
         {
             var parser = new Parser(['-'], []);
-            var stringToParse  = "a-b--c---d----e";
+            var stringToParse = "a-b--c---d----e";
             var expectedTokens = new List<string>(["a", "b", "c", "d", "e"]);
             ParseString(parser, stringToParse, expectedTokens);
         }
@@ -27,7 +27,7 @@ namespace GrammarParserTest.Domain.Parsing
         public void ParseSymbols_Test1()
         {
             var parser = new Parser([' '], ["+", "-", "*", "/"]);
-            var stringToParse  = "a + b - c * d / e";
+            var stringToParse = "a + b - c * d / e";
             var expectedTokens = new List<string>(["a", "+", "b", "-", "c", "*", "d", "/", "e"]);
             ParseString(parser, stringToParse, expectedTokens);
         }
@@ -44,17 +44,17 @@ namespace GrammarParserTest.Domain.Parsing
         [Fact]
         public void ParseSymbols_Test3()
         {
-            var parser = new GrammarParser.Domain.Parsing.Parser([' '], ["+", "++", "+++"]);
-            var stringToParse  = "a+ b++ c+++";
+            var parser = new Parser([' '], ["+", "++", "+++"]);
+            var stringToParse = "a+ b++ c+++";
             var expectedTokens = new List<string>(["a", "+", "b", "++", "c", "+++"]);
-            ParseString(parser, stringToParse, expectedTokens);      
+            ParseString(parser, stringToParse, expectedTokens);
         }
 
         [Fact]
         public void ParseSymbols_Test4()
         {
             var parser = new Parser([], ["+", "++", "+++"]);
-            var stringToParse  = "a+b++c+++";
+            var stringToParse = "a+b++c+++";
             var expectedTokens = new List<string>(["a", "+", "b", "++", "c", "+++"]);
             ParseString(parser, stringToParse, expectedTokens);
         }
@@ -62,7 +62,7 @@ namespace GrammarParserTest.Domain.Parsing
         [Fact]
         public void ParseEscape_Test1()
         {
-            var parser = new Parsing.Parser([], []);
+            var parser = new Parser([], []);
             var stringToParse = "\\a";
             var expectedTokens = new List<string>(["\\a"]);
             ParseString(parser, stringToParse, expectedTokens);
@@ -71,7 +71,7 @@ namespace GrammarParserTest.Domain.Parsing
         [Fact]
         public void ParseEscape_Test2()
         {
-            var parser = new Parsing.Parser([], []);
+            var parser = new Parser([], []);
             var stringToParse = "a\\b";
             var expectedTokens = new List<string>(["a\\b"]);
             ParseString(parser, stringToParse, expectedTokens);
@@ -80,7 +80,7 @@ namespace GrammarParserTest.Domain.Parsing
         [Fact]
         public void ParseEscape_Test3()
         {
-            var parser = new Parsing.Parser([], []);
+            var parser = new Parser([], []);
             var stringToParse = "\\ab";
             var expectedTokens = new List<string>(["\\ab"]);
             ParseString(parser, stringToParse, expectedTokens);
