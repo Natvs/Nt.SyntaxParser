@@ -5,5 +5,7 @@
         public int Index { get; } = index;
         public int Line { get; } = line;
 
+        public override string ToString() => $"(Index: {Index}, Line: {Line})";
+
     }
 }

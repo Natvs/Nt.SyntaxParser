@@ -6,7 +6,7 @@ namespace GrammarParser.Syntax.Structures
     public class RegularExpression(TokensList nonterminals)
     {
         public NonTerminal? Token { get; private set; }
-        public string RegExString { get; private set; } = "";
+        public string Pattern { get; private set; } = "";
 
         /// <summary>
         /// Sets a non terminal that would derive into word matching the regular expression
@@ -23,7 +23,7 @@ namespace GrammarParser.Syntax.Structures
         /// <param name="symbols">Sequence of symbols to add</param>
         public void AddSymbols(string symbols)
         {
-            RegExString += symbols;
+            Pattern += symbols;
         }
 
         /// <summary>
@@ -33,8 +33,11 @@ namespace GrammarParser.Syntax.Structures
         public override string ToString()
         {
             var sb = new StringBuilder();
+
             if (Token != null) sb.Append(nonterminals[Token.Index].Name);
-            sb.Append(" = ").Append(RegExString);
+            else sb.Append("<<undefined>>");
+
+            sb.Append(" = ").Append(Pattern.Equals("") ? "<<empty>>" : Pattern);
             return sb.ToString();
         }
     }

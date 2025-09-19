@@ -2,11 +2,12 @@
 using System.Text;
 using GrammarParser.Parsing;
 using GrammarParser.Parsing.Structures;
+using GrammarParser.Syntax.Structures;
 
 namespace GrammarParser.Syntax
 {
 
-    public class FileParser
+    public class SyntaxParser
     {
 
         #region Properties
@@ -23,7 +24,7 @@ namespace GrammarParser.Syntax
         /// </summary>
         /// <param name="content">String to pre-parse</param>
         /// <returns>A pre-parsed string of the grammar</returns>
-        public string PreParse(string content)
+        public string PreParseString(string content)
         {
             var sb = new StringBuilder();
 
@@ -61,10 +62,10 @@ namespace GrammarParser.Syntax
         /// Reads a string and generates a grammar structure from it. Also applies pre-parsing on it.
         /// </summary>
         /// <param name="content">String to read</param>
-        /// <returns>A grammar data structure from the given string</returns>
-        public Structures.Grammar Parse(string content)
+        /// <returns>Grammar data structure from the given string</returns>
+        public Grammar ParseString(string content)
         {
-            content = PreParse(content);
+            content = PreParseString(content);
             Console.WriteLine("Pre parsed grammar string\n" + content);
 
             Parser parser = new([' ', '\0', '\n', '\t'], [":", ",", "=", "{", "}", ";", "-", ">", "+", "*"]);
@@ -81,6 +82,18 @@ namespace GrammarParser.Syntax
             }
 
             return Grammar;
+        }
+
+        /// <summary>
+        /// Reads a file and generates a grammar structure from it. Also applies pre-parsing on it.
+        /// </summary>
+        /// <param name="path">Path to the file</param>
+        /// <returns>Grammar structure from content of the given file</returns>
+        public Grammar ParseFile(string path)
+        {
+            if (!File.Exists(path)) throw new FileNotFoundException($"Cannot parse {path}. The file cannot be found.");
+            string content = File.ReadAllText(path);
+            return ParseString(content);
         }
 
         private void GeneratePreAutomaton(TokensList tokens)

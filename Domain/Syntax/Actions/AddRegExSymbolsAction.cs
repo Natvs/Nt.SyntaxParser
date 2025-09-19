@@ -11,8 +11,6 @@ namespace GrammarParser.Syntax.Actions
             if (regex == null) throw new NullRegexException("Attempting to add symbols to a non existent regular expression");
 
             string token = tokens[word.TokenIndex].Name;
-            if (token.StartsWith('\\')) token = token.Substring(1); // Handles an escape char
-
             regex.AddSymbols(token);
             return regex;
         }

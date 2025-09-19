@@ -11,14 +11,14 @@ internal class Program
         {
             string? text = null;
             string input = "";
-            var generator = new FileParser();
+            var generator = new SyntaxParser();
             Console.WriteLine("Enter text to generate grammar");
             while (text != "end")
             {
                 text = Console.ReadLine();
                 if (text != "end") input += text + "\n";
             }
-            Grammar grammar = generator.Parse(input);
+            Grammar grammar = generator.ParseString(input);
             Console.WriteLine(grammar.ToString());
 
             continue_parsing = false;

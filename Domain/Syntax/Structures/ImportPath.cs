@@ -13,5 +13,7 @@
         public ImportPath(List<string> paths) { Path = paths; }
 
         public List<string> Path { get; } = [];
+
+        public override string ToString() => string.Join(";", Path);
     }
 }

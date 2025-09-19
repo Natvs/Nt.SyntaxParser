@@ -22,13 +22,13 @@ namespace Tests.Domain.Syntax.Actions
             var newregex = action.Perform(regex, new(1, 0));
 
             Assert.Equal(regex, newregex);
-            Assert.Equal("ab*", regex.RegExString);
+            Assert.Equal("ab*", regex.Pattern);
         }
 
         [Fact]
         public void AddRegExSymbolAction_AddSymbolTest2()
         {
-            var tokens = new TokensList(["S", "a", "+", "(", "bc", ")", "*" ]);
+            var tokens = new TokensList(["S", "a", "+", "(", "bc", ")", "*"]);
 
             var grammar = new Grammar();
             grammar.NonTerminals.Add("S");
@@ -44,7 +44,7 @@ namespace Tests.Domain.Syntax.Actions
             }
 
             Assert.Equal(regex, newregex);
-            Assert.Equal("a+(bc)*", regex.RegExString);
+            Assert.Equal("a+(bc)*", regex.Pattern);
         }
 
         [Fact]
@@ -54,6 +54,24 @@ namespace Tests.Domain.Syntax.Actions
 
             var action = new AddRegExSymbolsAction(tokens);
             Assert.Throws<NullRegexException>(() => action.Perform(null, new(1, 0)));
+        }
+
+        [Fact]
+        public void AddRegExSymbolAction_EscapeTest1()
+        {
+            var tokens = new TokensList(["S", "\\a"]);
+
+            var grammar = new Grammar();
+            grammar.NonTerminals.Add("S");
+
+            var regex = new RegularExpression(grammar.NonTerminals);
+            regex.SetToken(0, 0);
+
+            var action = new AddRegExSymbolsAction(tokens);
+            var newregex = action.Perform(regex, new(1, 0));
+
+            Assert.Equal(regex, newregex);
+            Assert.Equal("\\a", regex.Pattern);
         }
     }
 }
