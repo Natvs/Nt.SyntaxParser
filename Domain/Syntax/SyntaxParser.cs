@@ -3,6 +3,7 @@ using System.Text;
 using GrammarParser.Parsing;
 using GrammarParser.Parsing.Structures;
 using GrammarParser.Syntax.Structures;
+using System.Runtime.InteropServices.Marshalling;
 
 namespace GrammarParser.Syntax
 {
@@ -12,10 +13,11 @@ namespace GrammarParser.Syntax
 
         #region Properties
 
-        private Structures.Grammar Grammar { get; set; } = new();
+        private Grammar Grammar { get; set; } = new();
         private Automaton? PreAutomaton { get; set; }
         private Automaton? Automaton { get; set; }
         private AutomatonContext AutomatonContext { get; } = new AutomatonContext();
+        private System.Action? AutomatonEndAction { get; set; }
 
         #endregion
 
@@ -34,16 +36,12 @@ namespace GrammarParser.Syntax
             GeneratePreAutomaton(parsed.Tokens);
             foreach (ParsedToken token in parsed.Parsed)
             {
-                try
+                PreAutomaton?.Read(token, AutomatonContext);
+                if (AutomatonContext.ImportedString != null)
                 {
-                    PreAutomaton?.Read(token, AutomatonContext);
-                    if (AutomatonContext.ImportedString != null)
-                    {
-                        sb.Append(AutomatonContext.ImportedString);
-                        AutomatonContext.ImportedString = null;
-                    }
+                    sb.Append(AutomatonContext.ImportedString);
+                    AutomatonContext.ImportedString = null;
                 }
-                catch (Exception e) { Console.Error.WriteLine(e.Message); }
             }
 
             var contentReader = new StringReader(content);
@@ -66,7 +64,6 @@ namespace GrammarParser.Syntax
         public Grammar ParseString(string content)
         {
             content = PreParseString(content);
-            Console.WriteLine("Pre parsed grammar string\n" + content);
 
             Parser parser = new([' ', '\0', '\n', '\t'], [":", ",", "=", "{", "}", ";", "-", ">", "+", "*"]);
             ParserResult parsed = parser.Parse(content);
@@ -74,12 +71,9 @@ namespace GrammarParser.Syntax
             GenerateAutomaton(parsed.Tokens);
             foreach (ParsedToken token in parsed.Parsed)
             {
-                try
-                {
-                    Automaton?.Read(token, AutomatonContext);
-                }
-                catch (Exception e) { Console.Error.WriteLine(e.Message); }
+                Automaton?.Read(token, AutomatonContext);
             }
+            AutomatonEndAction?.Invoke();
 
             return Grammar;
         }
@@ -123,6 +117,9 @@ namespace GrammarParser.Syntax
             State error = new State(errorAction).SetDefault(initial);
 
             Automaton = new Automaton(tokens, initial);
+            AutomatonEndAction = () => { 
+                if (Automaton.CurrentState != initial) throw new Exceptions.EndOfStringException();
+            };
 
             GenerateTerminalsStates(tokens, initial, error);
             GenerateNonTerminalStates(tokens, initial, error);

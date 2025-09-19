@@ -18,8 +18,15 @@ internal class Program
                 text = Console.ReadLine();
                 if (text != "end") input += text + "\n";
             }
-            Grammar grammar = generator.ParseString(input);
-            Console.WriteLine(grammar.ToString());
+            try
+            {
+                Grammar grammar = generator.ParseString(input);
+                Console.WriteLine("\nParsed grammar:\n" + grammar.ToString());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("\nError while parsing grammar:\n" + ex.Message);
+            }
 
             continue_parsing = false;
             Console.WriteLine();

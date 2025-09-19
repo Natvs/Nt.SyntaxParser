@@ -1,5 +1,6 @@
 ﻿using GrammarParser.Parsing.Structures;
 using GrammarParser.Syntax;
+using GrammarParser.Syntax.Exceptions;
 using GrammarParser.Syntax.Structures;
 using System;
 using System.Collections.Generic;
@@ -191,13 +192,8 @@ namespace Tests.Domain.Syntax
         public void SyntaxParser_AxiomTest2()
         {
             var parser = new SyntaxParser();
-            var grammar = parser.ParseString("S=A");
 
-            Assert.Empty(grammar.Terminals);
-            Assert.Empty(grammar.NonTerminals);
-            Assert.Equal(-1, grammar.Axiom);
-            Assert.Empty(grammar.Rules);
-            Assert.Empty(grammar.RegularExpressions);
+            Assert.Throws<NotDeclaredNonTerminalException>(() => parser.ParseString("S=A"));
         }
 
         #endregion
@@ -266,6 +262,27 @@ namespace Tests.Domain.Syntax
             Assert.Empty(grammar.RegularExpressions);
         }
 
+        [Fact]
+        public void SyntaxParser_RuleUndefinedSymbolTest1()
+        {
+            var parser = new SyntaxParser();
+            Assert.Throws<NotDeclaredNonTerminalException>( () => parser.ParseString("T={a}\nR:A -> a;"));
+        }
+
+        [Fact]
+        public void SyntaxParser_RuleUndefinedSymbolTest2()
+        {
+            var parser = new SyntaxParser();
+            Assert.Throws<UnknownSymbolException>( () => parser.ParseString("N={A}\nR:A -> a;"));
+        }
+
+        [Fact]
+        public void SyntaxParser_RuleUndefinedSymbolTest3()
+        {
+            var parser = new SyntaxParser();
+            Assert.Throws<UnknownSymbolException>(() => parser.ParseString("N={A}\nT={a}\nR:A -> a B;"));
+        }
+
         #endregion
 
         #region Regular Expressions
@@ -297,6 +314,13 @@ namespace Tests.Domain.Syntax
                 (new(0, 2), "\"[a-zA-Z_]*\""),
                 (new(1, 3), "\"[0-9]+\"")
             ]);
+        }
+
+        [Fact]
+        public void SyntaxParser_RegexUndefinedSymbolTest()
+        {
+            var parser = new SyntaxParser();
+            Assert.Throws<NotDeclaredNonTerminalException>(() => parser.ParseString("E:VAR = \"[a-zA-Z_]*\";"));
         }
 
         #endregion
@@ -332,6 +356,70 @@ namespace Tests.Domain.Syntax
                 (new(3, 7), "\"a+\""),
                 (new(4, 8), "\"b+\"")
             ]);
+        }
+
+        [Fact]
+        public void SyntaxParser_Test2()
+        {
+            var parser = new SyntaxParser();
+            Assert.Throws<EndOfStringException>(() => parser.ParseString("N=")); // Missing non-terminals declaration
+        }
+
+        [Fact]
+        public void SyntaxParser_Test3()
+        {
+
+           var parser = new SyntaxParser();
+           Assert.Throws<EndOfStringException>(() => parser.ParseString("N={S}\nT={a}\nR: S ->")); // Missing rule derivation
+        }
+
+        [Fact]
+        public void SyntaxParser_Test4()
+        {
+            var parser = new SyntaxParser();
+            Assert.Throws<EndOfStringException>(() => parser.ParseString("N={S}\nE:S =")); // Missing regex pattern
+        }
+
+        [Fact]
+        public void SyntaxParser_Test5()
+        {
+            var parser = new SyntaxParser();
+            Assert.Throws<EndOfStringException>(() => parser.ParseString("N={S}\nT={a}\nR:S -> a")); // Missing semicolon
+        }
+
+        [Fact]
+        public void SyntaxParser_Test6()
+        {
+            var parser = new SyntaxParser();
+            Assert.Throws<EndOfStringException>(() => parser.ParseString("N={S}\nE: S = a+")); // Missing semicolon
+        }
+
+        [Fact]
+        public void SyntaxParser_Test7()
+        {
+            var parser = new SyntaxParser();
+            Assert.Throws<SyntaxError>(() => parser.ParseString("ERROR"));
+        }
+
+        [Fact]
+        public void SyntaxParser_Test8()
+        {
+            var parser = new SyntaxParser();
+            Assert.Throws<SyntaxError>(() => parser.ParseString("S +"));
+        }
+
+        [Fact]
+        public void SyntaxParser_Test9()
+        {
+            var parser = new SyntaxParser();
+            Assert.Throws<SyntaxError>(() => parser.ParseString("T={a b}"));
+        }
+
+        [Fact]
+        public void SyntaxParser_Test10()
+        {
+            var parser = new SyntaxParser();
+            Assert.Throws<SyntaxError>(() => parser.ParseString("N={A}\nT={a}\nR: A -* a"));
         }
 
         #endregion
