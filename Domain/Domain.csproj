@@ -5,11 +5,12 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <PackageId>Nt.SyntaxParser.19.09.25.Test</PackageId>
-    <Version>1.0.0</Version>
+    <PackageId>Nt.SyntaxParser.21.09.25.Test</PackageId>
+    <AssemblyName>Nt.SyntaxParser</AssemblyName>
+    <RootNamespace>Nt.SyntaxParser</RootNamespace>
+    <Version>1.0.1</Version>
     <Authors>Natvs</Authors>
     <Company>Natvs</Company>
-    <RepositoryUrl>https://github.com/Natvs/Nt.SyntaxParser</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,6 +20,10 @@
     <EmbeddedResource Remove="obj\**" />
     <None Remove="bin\**" />
     <None Remove="obj\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Nt.SyntaxParser.19.09.25.Test" Version="1.0.0" />
   </ItemGroup>
 
 </Project>

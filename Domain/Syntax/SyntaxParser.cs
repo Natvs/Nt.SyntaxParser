@@ -1,11 +1,10 @@
-﻿using GrammarParser.Syntax.Actions;
-using System.Text;
-using GrammarParser.Parsing;
-using GrammarParser.Parsing.Structures;
-using GrammarParser.Syntax.Structures;
-using System.Runtime.InteropServices.Marshalling;
+﻿using System.Text;
+using Nt.SyntaxParser.Parsing;
+using Nt.SyntaxParser.Parsing.Structures;
+using Nt.SyntaxParser.Syntax.Actions;
+using Nt.SyntaxParser.Syntax.Structures;
 
-namespace GrammarParser.Syntax
+namespace Nt.SyntaxParser.Syntax
 {
 
     public class SyntaxParser
@@ -117,7 +116,8 @@ namespace GrammarParser.Syntax
             State error = new State(errorAction).SetDefault(initial);
 
             Automaton = new Automaton(tokens, initial);
-            AutomatonEndAction = () => { 
+            AutomatonEndAction = () =>
+            {
                 if (Automaton.CurrentState != initial) throw new Exceptions.EndOfStringException();
             };
 

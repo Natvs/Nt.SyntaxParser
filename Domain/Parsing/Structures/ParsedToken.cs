@@ -1,4 +1,4 @@
-﻿namespace GrammarParser.Parsing.Structures
+﻿namespace Nt.SyntaxParser.Parsing.Structures
 {
     /// <summary>
     /// Represents a parsed token identified by its index in list of tokens

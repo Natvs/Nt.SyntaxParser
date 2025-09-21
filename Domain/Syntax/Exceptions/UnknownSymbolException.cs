@@ -1,4 +1,4 @@
-﻿namespace GrammarParser.Syntax.Exceptions
+﻿namespace Nt.SyntaxParser.Syntax.Exceptions
 {
     public class UnknownSymbolException : Exception
     {

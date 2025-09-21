@@ -1,10 +1,10 @@
-﻿using GrammarParser.Syntax.Exceptions;
+﻿using Nt.SyntaxParser.Syntax.Exceptions;
 using Microsoft.VisualBasic.FileIO;
 using System.Text;
-using GrammarParser.Parsing.Structures;
-using GrammarParser.Syntax.Structures;
+using Nt.SyntaxParser.Parsing.Structures;
+using Nt.SyntaxParser.Syntax.Structures;
 
-namespace GrammarParser.Syntax.Actions
+namespace Nt.SyntaxParser.Syntax.Actions
 {
     /// <summary>
     /// Reads the performed token as a file name and gets its content

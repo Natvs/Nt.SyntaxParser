@@ -1,4 +1,4 @@
-﻿namespace GrammarParser.Parsing.Exceptions
+﻿namespace Nt.SyntaxParser.Parsing.Exceptions
 {
     public class EmptySymbolException : Exception
     {

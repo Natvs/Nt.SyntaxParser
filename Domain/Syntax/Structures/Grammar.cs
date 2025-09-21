@@ -1,8 +1,8 @@
 ﻿using System.Text;
-using GrammarParser.Parsing.Structures;
-using GrammarParser.Syntax.Exceptions;
+using Nt.SyntaxParser.Parsing.Structures;
+using Nt.SyntaxParser.Syntax.Exceptions;
 
-namespace GrammarParser.Syntax.Structures
+namespace Nt.SyntaxParser.Syntax.Structures
 {
     /// <summary>
     /// Represents datas of a language grammar

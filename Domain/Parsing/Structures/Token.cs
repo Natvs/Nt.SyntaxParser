@@ -1,4 +1,4 @@
-﻿namespace GrammarParser.Parsing.Structures
+﻿namespace Nt.SyntaxParser.Parsing.Structures
 {
     /// <summary>
     /// Represents a token. A token is just a word.

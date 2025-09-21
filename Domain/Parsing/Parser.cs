@@ -1,6 +1,6 @@
-﻿using GrammarParser.Parsing.Exceptions;
+﻿using Nt.SyntaxParser.Parsing.Exceptions;
 
-namespace GrammarParser.Parsing
+namespace Nt.SyntaxParser.Parsing
 {
 
     /// <summary>

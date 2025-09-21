@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using GrammarParser.Syntax;
-using GrammarParser.Syntax.Structures;
+// See https://aka.ms/new-console-template for more information
+using Nt.SyntaxParser.Syntax.Structures;
+using Nt.SyntaxParser.Syntax;
 internal class Program
 {
     private static void Main(string[] args)
@@ -37,3 +38,4 @@ internal class Program
         }
     }
 }
+

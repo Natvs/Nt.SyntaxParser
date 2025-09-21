@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace GrammarParser.Syntax.Exceptions
+namespace Nt.SyntaxParser.Syntax.Exceptions
 {
     public class SyntaxError : Exception
     {

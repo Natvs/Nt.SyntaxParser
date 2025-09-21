@@ -1,7 +1,7 @@
-﻿using GrammarParser.Parsing.Structures;
-using GrammarParser.Syntax.Exceptions;
+﻿using Nt.SyntaxParser.Parsing.Structures;
+using Nt.SyntaxParser.Syntax.Exceptions;
 
-namespace GrammarParser.Syntax.Actions
+namespace Nt.SyntaxParser.Syntax.Actions
 {
     /// <summary>
     /// Represents an action that adds new non terminal

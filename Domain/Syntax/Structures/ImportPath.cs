@@ -1,4 +1,4 @@
-﻿namespace GrammarParser.Syntax.Structures
+﻿namespace Nt.SyntaxParser.Syntax.Structures
 {
     public class ImportPath
     {

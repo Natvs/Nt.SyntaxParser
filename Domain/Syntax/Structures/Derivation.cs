@@ -1,7 +1,7 @@
-﻿using GrammarParser.Parsing.Structures;
+﻿using Nt.SyntaxParser.Parsing.Structures;
 using System.Text;
 
-namespace GrammarParser.Syntax.Structures
+namespace Nt.SyntaxParser.Syntax.Structures
 {
     /// <summary>
     /// Represents a rule derivation of tokens

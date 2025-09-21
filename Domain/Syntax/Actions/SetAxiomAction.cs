@@ -1,6 +1,6 @@
-﻿using GrammarParser.Parsing.Structures;
+﻿using Nt.SyntaxParser.Parsing.Structures;
 
-namespace GrammarParser.Syntax.Actions
+namespace Nt.SyntaxParser.Syntax.Actions
 {
     /// <summary>
     /// Represents an action that sets grammar axiom

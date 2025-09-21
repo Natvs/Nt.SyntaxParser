@@ -1,7 +1,7 @@
-﻿using GrammarParser.Syntax.Exceptions;
-using GrammarParser.Parsing.Structures;
+﻿using Nt.SyntaxParser.Syntax.Exceptions;
+using Nt.SyntaxParser.Parsing.Structures;
 
-namespace GrammarParser.Syntax.Actions
+namespace Nt.SyntaxParser.Syntax.Actions
 {
     public class ErrorAction(TokensList tokens) : Action
     {

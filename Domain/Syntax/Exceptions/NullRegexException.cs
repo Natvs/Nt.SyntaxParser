@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GrammarParser.Syntax.Exceptions
+namespace Nt.SyntaxParser.Syntax.Exceptions
 {
     public class NullRegexException : Exception
     {

@@ -1,8 +1,8 @@
-﻿using GrammarParser.Parsing.Structures;
-using GrammarParser.Syntax.Actions;
-using GrammarParser.Syntax.Exceptions;
+﻿using Nt.SyntaxParser.Parsing.Structures;
+using Nt.SyntaxParser.Syntax.Actions;
+using Nt.SyntaxParser.Syntax.Exceptions;
 
-namespace GrammarParser.Syntax
+namespace Nt.SyntaxParser.Syntax
 {
 
     public class State
