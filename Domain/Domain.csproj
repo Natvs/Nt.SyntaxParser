@@ -5,24 +5,20 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <PackageId>Nt.SyntaxParser.19.09.25.Test</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Natvs</Authors>
+    <Company>Natvs</Company>
+    <RepositoryUrl>https://github.com/Natvs/Nt.SyntaxParser</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="bin\**" />
-    <Compile Remove="GrammarParserTests\bin\**" />
-    <Compile Remove="GrammarParserTests\obj\**" />
-    <Compile Remove="Infrastructure\**" />
-    <Compile Remove="Test\**" />
+    <Compile Remove="obj\**" />
     <EmbeddedResource Remove="bin\**" />
-    <EmbeddedResource Remove="GrammarParserTests\bin\**" />
-    <EmbeddedResource Remove="GrammarParserTests\obj\**" />
-    <EmbeddedResource Remove="Infrastructure\**" />
-    <EmbeddedResource Remove="Test\**" />
+    <EmbeddedResource Remove="obj\**" />
     <None Remove="bin\**" />
-    <None Remove="GrammarParserTests\bin\**" />
-    <None Remove="GrammarParserTests\obj\**" />
-    <None Remove="Infrastructure\**" />
-    <None Remove="Test\**" />
+    <None Remove="obj\**" />
   </ItemGroup>
 
 </Project>
