@@ -5,12 +5,17 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <PackageId>Nt.SyntaxParser.21.09.25.Test</PackageId>
+    <PackageId>Nt.SyntaxParser</PackageId>
     <AssemblyName>Nt.SyntaxParser</AssemblyName>
     <RootNamespace>Nt.SyntaxParser</RootNamespace>
-    <Version>1.0.1</Version>
+    <Version>1.0.0</Version>
     <Authors>Natvs</Authors>
-    <Company>Natvs</Company>
+    <Description>Library containing tools for syntax parsing.
+Includes a grammar string parser and a simple text parser.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/Natvs/Nt.SyntaxParser</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>parser ; grammar</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +25,13 @@
     <EmbeddedResource Remove="obj\**" />
     <None Remove="bin\**" />
     <None Remove="obj\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
