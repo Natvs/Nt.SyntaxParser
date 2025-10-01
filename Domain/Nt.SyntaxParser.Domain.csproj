@@ -34,8 +34,4 @@ Includes a grammar string parser and a simple text parser.</Description>
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Nt.SyntaxParser.19.09.25.Test" Version="1.0.0" />
-  </ItemGroup>
-
 </Project>
