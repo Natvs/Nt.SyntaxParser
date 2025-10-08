@@ -1,4 +1,10 @@
 ﻿namespace Nt.SyntaxParser.Syntax.Structures
 {
-    public class Terminal(int index, int line) : GrammarToken(index, line) { }
+    public class Terminal : GrammarToken
+    {
+        public Terminal(int index, int line): base(index, line)
+        {
+            this.Type = GrammarTokenType.Terminal;
+        }
+    }
 }

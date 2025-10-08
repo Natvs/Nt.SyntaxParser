@@ -1,7 +1,14 @@
 ﻿namespace Nt.SyntaxParser.Syntax.Structures
 {
+    public enum GrammarTokenType
+    {
+        NonTerminal,
+        Terminal
+    }
+
     public class GrammarToken(int index, int line)
     {
+        public GrammarTokenType Type { get; protected set; }
         public int Index { get; } = index;
         public int Line { get; } = line;
 
