@@ -1,6 +1,7 @@
 ﻿using Nt.SyntaxParser.Parsing.Structures;
 using Nt.SyntaxParser.Syntax.Exceptions;
 using Nt.SyntaxParser.Syntax.Structures;
+using System.Collections.ObjectModel;
 
 namespace Nt.SyntaxParser.Tests.Syntax
 {
@@ -15,38 +16,40 @@ namespace Nt.SyntaxParser.Tests.Syntax
             }
         }
 
-        private static void AssertRules(List<Rule> rules, List<(NonTerminal, List<GrammarToken>)> referenceList)
+        private static bool DerivationEquals(Derivation derivation, List<GrammarToken> referenceList)
+        {
+            if (referenceList.Count != derivation.Count) return false;
+            for (int i = 0; i < derivation.Count; i++)
+            {
+                if (referenceList[i].Index != derivation[i].Index) return false;
+                if (referenceList[i].Line != derivation[i].Line) return false;
+            }
+            return true;
+        }
+
+        private static void AssertRules(ICollection<Rule> rules, List<(NonTerminal, List<GrammarToken>)> referenceList)
         {
             Assert.Equal(referenceList.Count, rules.Count);
-            for (int i = 0; i < rules.Count; i++)
+            foreach (var reference in referenceList)
             {
-                var rule = rules[i];
-                var reference = referenceList[i];
-                Assert.NotNull(rule.Token);
-                Assert.Equal(reference.Item1.Index, rule.Token.Index);
-                Assert.Equal(reference.Item1.Line, rule.Token.Line);
-
-                Assert.Equal(reference.Item2.Count, rule.Derivation.Count);
-                for (int j = 0; j < rule.Derivation.Count; j++)
-                {
-                    Assert.Equal(reference.Item2[j].Index, rule.Derivation[j].Index);
-                    Assert.Equal(reference.Item2[j].Line, rule.Derivation[j].Line);
-                }
+                Assert.Contains(rules, rule =>
+                    rule.Token != null
+                    && rule.Token.Index == reference.Item1.Index
+                    && rule.Token.Line == reference.Item1.Line
+                    && DerivationEquals(rule.Derivation, reference.Item2));
             }
         }
 
-        private static void AssertRegex(List<RegularExpression> regexList, List<(NonTerminal, string)> referenceList)
+        private static void AssertRegex(ICollection<RegularExpression> regexList, List<(NonTerminal, string)> referenceList)
         {
             Assert.Equal(referenceList.Count, regexList.Count);
-            for (int i = 0; i < regexList.Count; i++)
+            foreach (var reference in referenceList)
             {
-                var regex = regexList[i];
-                var reference = referenceList[i];
-
-                Assert.NotNull(regex.Token);
-                Assert.Equal(reference.Item1.Index, regex.Token.Index);
-                Assert.Equal(reference.Item1.Line, regex.Token.Line);
-                Assert.Equal(reference.Item2, regex.Pattern);
+                Assert.Contains(regexList, regex => 
+                    regex.Token != null
+                    && regex.Token.Index == reference.Item1.Index
+                    && regex.Token.Line == reference.Item1.Line
+                    && regex.Pattern == reference.Item2);
             }
         }
 

@@ -5,10 +5,10 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <PackageId>Nt.SyntaxParser</PackageId>
+    <PackageId>Prod.Nt.SyntaxParser</PackageId>
     <AssemblyName>Nt.SyntaxParser</AssemblyName>
     <RootNamespace>Nt.SyntaxParser</RootNamespace>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>Natvs</Authors>
     <Description>Library containing tools for syntax parsing.
 Includes a grammar string parser and a simple text parser.</Description>
@@ -16,6 +16,7 @@ Includes a grammar string parser and a simple text parser.</Description>
     <RepositoryUrl>https://github.com/Natvs/Nt.SyntaxParser</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>parser ; grammar</PackageTags>
+    <PackageReleaseNotes>Fix parser not resetting grammar when mulitple parse on the same instance of parser</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

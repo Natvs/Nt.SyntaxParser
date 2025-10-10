@@ -20,6 +20,15 @@ namespace Nt.SyntaxParser.Syntax
 
         #endregion
 
+        private void Reset()
+        {
+            Grammar = new Grammar();
+            PreAutomaton = null;
+            Automaton = null;
+            AutomatonContext.Reset();
+            AutomatonEndAction = null;
+        }
+
         /// <summary>
         /// Applies the pre-parser on a given grammar string
         /// </summary>
@@ -27,6 +36,7 @@ namespace Nt.SyntaxParser.Syntax
         /// <returns>A pre-parsed string of the grammar</returns>
         public string PreParseString(string content)
         {
+            Reset();
             var sb = new StringBuilder();
 
             Parser parser = new([' ', '\0', '\n', '\t'], ["import", "IMPORT", "addtopath", "ADDTOPATH", ";"]);

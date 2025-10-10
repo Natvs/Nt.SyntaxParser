@@ -14,8 +14,8 @@ namespace Nt.SyntaxParser.Syntax.Structures
         public TokensList NonTerminals { get; } = [];
         public int Axiom { get; internal set; } = -1;
 
-        public List<Rule> Rules { get; } = [];
-        public List<RegularExpression> RegularExpressions { get; } = [];
+        public HashSet<Rule> Rules { get; } = [];
+        public HashSet<RegularExpression> RegularExpressions { get; } = [];
 
         #region Public Methods
 
