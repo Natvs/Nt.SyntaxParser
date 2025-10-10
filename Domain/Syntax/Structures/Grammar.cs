@@ -4,6 +4,7 @@ using Nt.SyntaxParser.Syntax.Exceptions;
 
 namespace Nt.SyntaxParser.Syntax.Structures
 {
+
     /// <summary>
     /// Represents datas of a language grammar
     /// </summary>
@@ -14,8 +15,8 @@ namespace Nt.SyntaxParser.Syntax.Structures
         public TokensList NonTerminals { get; } = [];
         public int Axiom { get; internal set; } = -1;
 
-        public HashSet<Rule> Rules { get; } = [];
-        public HashSet<RegularExpression> RegularExpressions { get; } = [];
+        public RulesSet Rules { get; } = [];
+        public RegExpSet RegularExpressions { get; } = [];
 
         #region Public Methods
 
