@@ -14,6 +14,8 @@
 
         public List<string> Path { get; } = [];
 
+        internal void Reset() { Path.Clear(); }
+
         public override string ToString() => string.Join(";", Path);
     }
 }
