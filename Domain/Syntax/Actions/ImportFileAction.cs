@@ -1,10 +1,10 @@
-﻿using Nt.SyntaxParser.Syntax.Exceptions;
-using Microsoft.VisualBasic.FileIO;
+﻿using Microsoft.VisualBasic.FileIO;
 using System.Text;
-using Nt.SyntaxParser.Parsing.Structures;
-using Nt.SyntaxParser.Syntax.Structures;
+using Nt.Syntax.Exceptions;
+using Nt.Parsing.Structures;
+using Nt.Syntax.Structures;
 
-namespace Nt.SyntaxParser.Syntax.Actions
+namespace Nt.Syntax.Actions
 {
     /// <summary>
     /// Reads the performed token as a file name and gets its content

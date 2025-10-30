@@ -1,8 +1,8 @@
-﻿using Nt.SyntaxParser.Syntax.Exceptions;
-using Nt.SyntaxParser.Parsing.Structures;
-using Nt.SyntaxParser.Syntax.Structures;
+﻿using Nt.Syntax.Exceptions;
+using Nt.Parsing.Structures;
+using Nt.Syntax.Structures;
 
-namespace Nt.SyntaxParser.Syntax.Actions
+namespace Nt.Syntax.Actions
 {
     public class AddSameRuleAction(Grammar grammar) : RuleAction
     {

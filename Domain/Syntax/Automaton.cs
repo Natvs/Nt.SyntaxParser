@@ -1,6 +1,6 @@
-﻿using Nt.SyntaxParser.Parsing.Structures;
+﻿using Nt.Parsing.Structures;
 
-namespace Nt.SyntaxParser.Syntax
+namespace Nt.Syntax
 {
 
     /// <summary>

@@ -1,9 +1,9 @@
-﻿using Nt.SyntaxParser.Parsing.Structures;
-using Nt.SyntaxParser.Syntax.Exceptions;
-using Nt.SyntaxParser.Syntax.Structures;
+﻿using Nt.Parsing.Structures;
+using Nt.Syntax.Exceptions;
+using Nt.Syntax.Structures;
 using System.Collections.ObjectModel;
 
-namespace Nt.SyntaxParser.Tests.Syntax
+namespace Nt.Syntax.Tests
 {
     public class SyntaxParserTest
     {
@@ -58,7 +58,7 @@ namespace Nt.SyntaxParser.Tests.Syntax
         [Fact]
         public void SyntaxParser_ParseNonTerminalTest()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             var grammar = parser.ParseString("N = {A}");
 
             AssertTokens(grammar.NonTerminals, ["A"]);
@@ -71,7 +71,7 @@ namespace Nt.SyntaxParser.Tests.Syntax
         [Fact]
         public void SyntaxParser_ParseNonTerminalsTest1()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             var grammar = parser.ParseString("N = {A, B, C, D}");
 
             AssertTokens(grammar.NonTerminals, ["A", "B", "C", "D"]);
@@ -84,7 +84,7 @@ namespace Nt.SyntaxParser.Tests.Syntax
         [Fact]
         public void SyntaxParser_ParseNonTerminalsTest2()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             var grammar = parser.ParseString("N = {A, B}\nN={C, D}");
 
             AssertTokens(grammar.NonTerminals, ["A", "B", "C", "D"]);
@@ -101,7 +101,7 @@ namespace Nt.SyntaxParser.Tests.Syntax
         [Fact]
         public void SyntaxParser_ParseTerminalTest()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             var grammar = parser.ParseString("T = {a}");
 
             AssertTokens(grammar.Terminals, ["a"]);
@@ -115,7 +115,7 @@ namespace Nt.SyntaxParser.Tests.Syntax
         [Fact]
         public void SyntaxParser_ParseTerminalsTest1()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             var grammar = parser.ParseString("T = {a, b, c, d}");
 
             AssertTokens(grammar.Terminals, ["a", "b", "c", "d"]);
@@ -128,7 +128,7 @@ namespace Nt.SyntaxParser.Tests.Syntax
         [Fact]
         public void SyntaxParser_ParseTerminalsTest2()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             var grammar = parser.ParseString("T = {a, b}\nT={c, d}");
 
             AssertTokens(grammar.Terminals, ["a", "b", "c", "d"]);
@@ -145,7 +145,7 @@ namespace Nt.SyntaxParser.Tests.Syntax
         [Fact]
         public void SyntaxParser_ParseTerminalsAndNonTerminalsTest1()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             var grammar = parser.ParseString("N = {A, B}\nT = {a, b}");
 
             AssertTokens(grammar.NonTerminals, ["A", "B"]);
@@ -158,7 +158,7 @@ namespace Nt.SyntaxParser.Tests.Syntax
         [Fact]
         public void SyntaxParser_ParseTerminalsAndNonTerminalsTest2()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             var grammar = parser.ParseString("T = {a, b}\nN = {A, B}\nT={c, d}\nN={C, D}");
 
             AssertTokens(grammar.NonTerminals, ["A", "B", "C", "D"]);
@@ -175,7 +175,7 @@ namespace Nt.SyntaxParser.Tests.Syntax
         [Fact]
         public void SyntaxParser_AxiomTest1()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             var grammar = parser.ParseString("N={A}\nS=A");
 
             Assert.Empty(grammar.Terminals);
@@ -188,7 +188,7 @@ namespace Nt.SyntaxParser.Tests.Syntax
         [Fact]
         public void SyntaxParser_AxiomTest2()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
 
             Assert.Throws<NotDeclaredNonTerminalException>(() => parser.ParseString("S=A"));
         }
@@ -200,7 +200,7 @@ namespace Nt.SyntaxParser.Tests.Syntax
         [Fact]
         public void SyntaxParser_SingleRuleTest()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             var grammar = parser.ParseString("N={A}\nT={a}\nR:A -> a;");
 
             AssertTokens(grammar.NonTerminals, ["A"]);
@@ -213,7 +213,7 @@ namespace Nt.SyntaxParser.Tests.Syntax
         [Fact]
         public void SyntaxParser_MultipleUniqueRules()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             var grammar = parser.ParseString("N={A}\nT={a, b}\nR: A -> a | b;");
 
             AssertTokens(grammar.NonTerminals, ["A"]);
@@ -228,7 +228,7 @@ namespace Nt.SyntaxParser.Tests.Syntax
         [Fact]
         public void SyntaxParser_MultipleRulesTest1()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             var grammar = parser.ParseString("N={A,B}\nT={a,b}\nR:A -> a B;\nR:B -> b;");
 
             AssertTokens(grammar.NonTerminals, ["A", "B"]);
@@ -244,7 +244,7 @@ namespace Nt.SyntaxParser.Tests.Syntax
         [Fact]
         public void SyntaxParser_MultipleUniqueRulesTest()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             var grammar = parser.ParseString("N={A,B}\nT={a,b,c,d}\nR:A -> a B | c;\nR:B -> b | d A;");
 
             AssertTokens(grammar.NonTerminals, ["A", "B"]);
@@ -262,21 +262,21 @@ namespace Nt.SyntaxParser.Tests.Syntax
         [Fact]
         public void SyntaxParser_RuleUndefinedSymbolTest1()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             Assert.Throws<NotDeclaredNonTerminalException>(() => parser.ParseString("T={a}\nR:A -> a;"));
         }
 
         [Fact]
         public void SyntaxParser_RuleUndefinedSymbolTest2()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             Assert.Throws<UnknownSymbolException>(() => parser.ParseString("N={A}\nR:A -> a;"));
         }
 
         [Fact]
         public void SyntaxParser_RuleUndefinedSymbolTest3()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             Assert.Throws<UnknownSymbolException>(() => parser.ParseString("N={A}\nT={a}\nR:A -> a B;"));
         }
 
@@ -287,7 +287,7 @@ namespace Nt.SyntaxParser.Tests.Syntax
         [Fact]
         public void SyntaxParser_SingleRegexTest()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             var grammar = parser.ParseString("N={VAR}\nE:VAR = \"[a-zA-Z_]*\";");
 
             Assert.Empty(grammar.Terminals);
@@ -300,7 +300,7 @@ namespace Nt.SyntaxParser.Tests.Syntax
         [Fact]
         public void SyntaxParser_MultipleRegexTest()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             var grammar = parser.ParseString("N={VAR, NUM}\nE:VAR = \"[a-zA-Z_]*\";\nE:NUM = \"[0-9]+\";");
 
             Assert.Empty(grammar.Terminals);
@@ -316,7 +316,7 @@ namespace Nt.SyntaxParser.Tests.Syntax
         [Fact]
         public void SyntaxParser_RegexUndefinedSymbolTest()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             Assert.Throws<NotDeclaredNonTerminalException>(() => parser.ParseString("E:VAR = \"[a-zA-Z_]*\";"));
         }
 
@@ -327,7 +327,7 @@ namespace Nt.SyntaxParser.Tests.Syntax
         [Fact]
         public void SyntaxParser_Test1()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             var grammar = parser.ParseString("N={S,A,B,C,D}" +
                 "\nT={a,b,c}" +
                 "\nS=S" +
@@ -358,7 +358,7 @@ namespace Nt.SyntaxParser.Tests.Syntax
         [Fact]
         public void SyntaxParser_Test2()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             Assert.Throws<EndOfStringException>(() => parser.ParseString("N=")); // Missing non-terminals declaration
         }
 
@@ -366,56 +366,56 @@ namespace Nt.SyntaxParser.Tests.Syntax
         public void SyntaxParser_Test3()
         {
 
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             Assert.Throws<EndOfStringException>(() => parser.ParseString("N={S}\nT={a}\nR: S ->")); // Missing rule derivation
         }
 
         [Fact]
         public void SyntaxParser_Test4()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             Assert.Throws<EndOfStringException>(() => parser.ParseString("N={S}\nE:S =")); // Missing regex pattern
         }
 
         [Fact]
         public void SyntaxParser_Test5()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             Assert.Throws<EndOfStringException>(() => parser.ParseString("N={S}\nT={a}\nR:S -> a")); // Missing semicolon
         }
 
         [Fact]
         public void SyntaxParser_Test6()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             Assert.Throws<EndOfStringException>(() => parser.ParseString("N={S}\nE: S = a+")); // Missing semicolon
         }
 
         [Fact]
         public void SyntaxParser_Test7()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             Assert.Throws<SyntaxError>(() => parser.ParseString("ERROR"));
         }
 
         [Fact]
         public void SyntaxParser_Test8()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             Assert.Throws<SyntaxError>(() => parser.ParseString("S +"));
         }
 
         [Fact]
         public void SyntaxParser_Test9()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             Assert.Throws<SyntaxError>(() => parser.ParseString("T={a b}"));
         }
 
         [Fact]
         public void SyntaxParser_Test10()
         {
-            var parser = new SyntaxParser.Syntax.SyntaxParser();
+            var parser = new SyntaxParser();
             Assert.Throws<SyntaxError>(() => parser.ParseString("N={A}\nT={a}\nR: A -* a"));
         }
 

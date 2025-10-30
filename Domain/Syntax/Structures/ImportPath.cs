@@ -1,4 +1,4 @@
-﻿namespace Nt.SyntaxParser.Syntax.Structures
+﻿namespace Nt.Syntax.Structures
 {
     public class ImportPath
     {

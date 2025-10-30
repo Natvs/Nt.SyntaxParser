@@ -1,5 +1,5 @@
-﻿using Nt.SyntaxParser.Parsing;
-using Nt.SyntaxParser.Parsing.Exceptions;
+﻿using Nt.Parsing;
+using Nt.Parsing.Exceptions;
 
 namespace Nt.SyntaxParser.Tests.Parsing
 {

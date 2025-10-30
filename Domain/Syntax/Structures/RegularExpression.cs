@@ -1,7 +1,7 @@
-﻿using Nt.SyntaxParser.Parsing.Structures;
+﻿using Nt.Parsing.Structures;
 using System.Text;
 
-namespace Nt.SyntaxParser.Syntax.Structures
+namespace Nt.Syntax.Structures
 {
     public class RegularExpression(TokensList nonterminals)
     {

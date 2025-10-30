@@ -1,7 +1,6 @@
-﻿using Nt.SyntaxParser.Syntax;
-using Nt.SyntaxParser.Parsing.Structures;
+﻿using Nt.Parsing.Structures;
 
-namespace Nt.SyntaxParser.Tests.Syntax
+namespace Nt.Syntax.Tests
 {
     public class AutomatonTest
     {

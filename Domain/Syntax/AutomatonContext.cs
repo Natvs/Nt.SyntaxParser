@@ -1,6 +1,6 @@
-﻿using Nt.SyntaxParser.Syntax.Structures;
+﻿using Nt.Syntax.Structures;
 
-namespace Nt.SyntaxParser.Syntax
+namespace Nt.Syntax
 {
     public class AutomatonContext
     {

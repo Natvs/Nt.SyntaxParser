@@ -1,7 +1,7 @@
-﻿using Nt.SyntaxParser.Parsing.Structures;
-using Nt.SyntaxParser.Syntax.Structures;
+﻿using Nt.Parsing.Structures;
+using Nt.Syntax.Structures;
 
-namespace Nt.SyntaxParser.Syntax.Actions
+namespace Nt.Syntax.Actions
 {
     public class AddImportPathAction(TokensList tokens, ImportPath path) : IAction
     {

@@ -1,10 +1,10 @@
 ﻿using System.Text;
-using Nt.SyntaxParser.Parsing;
-using Nt.SyntaxParser.Parsing.Structures;
-using Nt.SyntaxParser.Syntax.Actions;
-using Nt.SyntaxParser.Syntax.Structures;
+using Nt.Parsing;
+using Nt.Parsing.Structures;
+using Nt.Syntax.Actions;
+using Nt.Syntax.Structures;
 
-namespace Nt.SyntaxParser.Syntax
+namespace Nt.Syntax
 {
 
     public class SyntaxParser

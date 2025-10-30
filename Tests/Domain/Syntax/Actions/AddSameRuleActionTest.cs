@@ -1,8 +1,7 @@
-﻿using Nt.SyntaxParser.Syntax.Actions;
-using Nt.SyntaxParser.Syntax.Structures;
-using Nt.SyntaxParser.Syntax.Exceptions;
+﻿using Nt.Syntax.Structures;
+using Nt.Syntax.Exceptions;
 
-namespace Tests.Domain.Syntax.Actions
+namespace Nt.Syntax.Actions.Tests
 {
     public class AddSameRuleActionTest
     {

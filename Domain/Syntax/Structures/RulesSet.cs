@@ -1,7 +1,7 @@
 ﻿using System.Text;
-using Nt.SyntaxParser.Parsing.Structures;
+using Nt.Parsing.Structures;
 
-namespace Nt.SyntaxParser.Syntax.Structures
+namespace Nt.Syntax.Structures
 {
     public class RulesSet(): HashSet<Rule>
     {

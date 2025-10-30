@@ -1,8 +1,8 @@
 ﻿using System.Text;
-using Nt.SyntaxParser.Parsing.Structures;
-using Nt.SyntaxParser.Syntax.Exceptions;
+using Nt.Parsing.Structures;
+using Nt.Syntax.Exceptions;
 
-namespace Nt.SyntaxParser.Syntax.Structures
+namespace Nt.Syntax.Structures
 {
 
     /// <summary>

@@ -1,7 +1,7 @@
-﻿using Nt.SyntaxParser.Syntax.Exceptions;
-using Nt.SyntaxParser.Parsing.Structures;
+﻿using Nt.Syntax.Exceptions;
+using Nt.Parsing.Structures;
 
-namespace Nt.SyntaxParser.Syntax.Actions
+namespace Nt.Syntax.Actions
 {
     public class ErrorAction(TokensList tokens) : Action
     {

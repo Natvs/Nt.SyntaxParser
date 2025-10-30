@@ -1,4 +1,4 @@
-﻿namespace Nt.SyntaxParser.Parsing.Exceptions
+﻿namespace Nt.Parsing.Exceptions
 {
     public class UnregisteredSymbolException : Exception
     {
