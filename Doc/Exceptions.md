@@ -26,7 +26,7 @@ This project contains several custom exceptions to handle errors that may occur 
 |`UnknownSymbolException`| A rule derivation contains a symbol that was not previously declared as terminal or non-terminal. |
 
 # Internal errors
-If you see one of these errors, please report it as a bug on the [GitHub repository]
+If you see one of these errors, please report it as a bug on the [GitHub repository](https://github.com/Natvs/Nt.SyntaxParser/discussions).
 - `NoDefaultStateException`
 - `NullRegexException`
 - `NullRuleException`
