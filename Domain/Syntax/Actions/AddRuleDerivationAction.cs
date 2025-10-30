@@ -23,7 +23,7 @@ namespace Nt.Syntax.Actions
                 rule.AddNonTerminal(grammar.GetNonTerminalIndex(token), word.Line);
                 return rule;
             }
-            throw new Exceptions.UnknownSymbolException(token, word.Line);
+            throw new UnknownSymbolException(token, word.Line);
         }
     }
 }

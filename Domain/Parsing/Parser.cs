@@ -17,9 +17,9 @@ namespace Nt.Parsing
         private bool isEscapeChar = false;
         private readonly ParserResult result = new();
 
-        public List<char> Separators { get; } = [' '];
-        public List<char> Breaks { get; } = [];
-        public List<string> Symbols { get; private set; } = ["(", ")", ";", "?", "!", ".", ",", "+=", "+", "-=", "-", "==", "="];
+        private List<char> Separators { get; } = [' '];
+        private List<char> Breaks { get; } = [];
+        private List<string> Symbols { get; set; } = [];
 
         #endregion
 
