@@ -1,9 +1,10 @@
 ﻿using System.Text;
-using Nt.SyntaxParser.Parsing.Structures;
-using Nt.SyntaxParser.Syntax.Exceptions;
+using Nt.Parsing.Structures;
+using Nt.Syntax.Exceptions;
 
-namespace Nt.SyntaxParser.Syntax.Structures
+namespace Nt.Syntax.Structures
 {
+
     /// <summary>
     /// Represents datas of a language grammar
     /// </summary>
@@ -14,8 +15,8 @@ namespace Nt.SyntaxParser.Syntax.Structures
         public TokensList NonTerminals { get; } = [];
         public int Axiom { get; internal set; } = -1;
 
-        public List<Rule> Rules { get; } = [];
-        public List<RegularExpression> RegularExpressions { get; } = [];
+        public RulesSet Rules { get; } = [];
+        public RegExpSet RegularExpressions { get; } = [];
 
         #region Public Methods
 

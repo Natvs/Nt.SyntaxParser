@@ -1,9 +1,8 @@
-﻿using Nt.SyntaxParser.Syntax.Actions;
-using Nt.SyntaxParser.Syntax.Exceptions;
-using Nt.SyntaxParser.Syntax.Structures;
-using Nt.SyntaxParser.Parsing.Structures;
+﻿using Nt.Syntax.Exceptions;
+using Nt.Syntax.Structures;
+using Nt.Parsing.Structures;
 
-namespace Nt.SyntaxParser.Tests.Syntax.Actions
+namespace Nt.Syntax.Actions.Tests
 {
     public class AddRegExSymbolActionTest
     {

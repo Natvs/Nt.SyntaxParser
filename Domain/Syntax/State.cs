@@ -1,8 +1,8 @@
-﻿using Nt.SyntaxParser.Parsing.Structures;
-using Nt.SyntaxParser.Syntax.Actions;
-using Nt.SyntaxParser.Syntax.Exceptions;
+﻿using Nt.Parsing.Structures;
+using Nt.Syntax.Actions;
+using Nt.Syntax.Exceptions;
 
-namespace Nt.SyntaxParser.Syntax
+namespace Nt.Syntax
 {
 
     public class State

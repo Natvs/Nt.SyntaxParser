@@ -1,9 +1,9 @@
-﻿using Nt.SyntaxParser.Parsing.Structures;
-using Nt.SyntaxParser.Syntax.Actions;
-using Nt.SyntaxParser.Syntax.Structures;
-using Nt.SyntaxParser.Syntax.Exceptions;
+﻿using Nt.Parsing.Structures;
+using Nt.Syntax.Actions;
+using Nt.Syntax.Structures;
+using Nt.Syntax.Exceptions;
 
-namespace Nt.SyntaxParser.Tests.Syntax.Actions
+namespace Nt.Syntax.Actions.Tests
 {
     public class ErrorActionTest
     {

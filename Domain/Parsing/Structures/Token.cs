@@ -1,4 +1,4 @@
-﻿namespace Nt.SyntaxParser.Parsing.Structures
+﻿namespace Nt.Parsing.Structures
 {
     /// <summary>
     /// Represents a token. A token is just a word.
@@ -11,6 +11,8 @@
         {
             Name = name;
         }
+
+        public override string ToString() => Name;
 
     }
 }

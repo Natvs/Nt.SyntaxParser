@@ -1,6 +1,6 @@
-﻿using Nt.SyntaxParser.Parsing.Structures;
+﻿using Nt.Parsing.Structures;
 
-namespace Nt.SyntaxParser.Parsing
+namespace Nt.Parsing
 {
     /// <summary>
     /// Contains results of a successive parsing. 

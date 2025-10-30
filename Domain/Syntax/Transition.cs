@@ -1,6 +1,6 @@
-﻿using Nt.SyntaxParser.Syntax.Actions;
+﻿using Nt.Syntax.Actions;
 
-namespace Nt.SyntaxParser.Syntax
+namespace Nt.Syntax
 {
     /// <summary>
     /// Represents a transition in an automaton from a state to an other state

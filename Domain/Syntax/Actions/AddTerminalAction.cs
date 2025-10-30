@@ -1,7 +1,7 @@
-﻿using Nt.SyntaxParser.Parsing.Structures;
-using Nt.SyntaxParser.Syntax.Exceptions;
+﻿using Nt.Parsing.Structures;
+using Nt.Syntax.Exceptions;
 
-namespace Nt.SyntaxParser.Syntax.Actions
+namespace Nt.Syntax.Actions
 {
     /// <summary>
     /// Represents an action that adds new terminal

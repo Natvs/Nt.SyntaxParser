@@ -1,8 +1,8 @@
-﻿using Nt.SyntaxParser.Syntax.Exceptions;
-using Nt.SyntaxParser.Parsing.Structures;
-using Nt.SyntaxParser.Syntax.Structures;
+﻿using Nt.Syntax.Exceptions;
+using Nt.Parsing.Structures;
+using Nt.Syntax.Structures;
 
-namespace Nt.SyntaxParser.Syntax.Actions
+namespace Nt.Syntax.Actions
 {
     public class AddRuleDerivationAction(Grammar grammar, TokensList tokens) : RuleAction
     {
@@ -23,7 +23,7 @@ namespace Nt.SyntaxParser.Syntax.Actions
                 rule.AddNonTerminal(grammar.GetNonTerminalIndex(token), word.Line);
                 return rule;
             }
-            throw new Exceptions.UnknownSymbolException(token, word.Line);
+            throw new UnknownSymbolException(token, word.Line);
         }
     }
 }

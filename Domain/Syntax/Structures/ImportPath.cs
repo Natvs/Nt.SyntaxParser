@@ -1,4 +1,4 @@
-﻿namespace Nt.SyntaxParser.Syntax.Structures
+﻿namespace Nt.Syntax.Structures
 {
     public class ImportPath
     {
@@ -13,6 +13,8 @@
         public ImportPath(List<string> paths) { Path = paths; }
 
         public List<string> Path { get; } = [];
+
+        internal void Reset() { Path.Clear(); }
 
         public override string ToString() => string.Join(";", Path);
     }

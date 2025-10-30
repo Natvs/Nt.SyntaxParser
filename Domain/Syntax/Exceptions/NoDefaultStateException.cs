@@ -1,4 +1,4 @@
-﻿namespace Nt.SyntaxParser.Syntax.Exceptions
+﻿namespace Nt.Syntax.Exceptions
 {
     public class NoDefaultStateException : Exception
     {
