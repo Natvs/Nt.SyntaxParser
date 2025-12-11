@@ -3,7 +3,7 @@ using Nt.Syntax.Structures;
 
 namespace Nt.Syntax.Actions
 {
-    public class AddNewRegExAction(Grammar grammar, TokensList tokens) : RegExAction
+    public class AddNewRegExAction(Grammar grammar, SymbolsList tokens) : RegExAction
     {
         public override RegularExpression? Perform(RegularExpression? regex, ParsedToken word)
         {

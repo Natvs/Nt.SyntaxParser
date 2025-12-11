@@ -10,7 +10,7 @@ namespace Nt.Syntax.Actions
     /// Reads the performed token as a file name and gets its content
     /// </summary>
     /// <param name="tokens">List of unique parsed tokens</param>
-    public class ImportFileAction(TokensList tokens, ImportPath importPath) : IAction
+    public class ImportFileAction(SymbolsList tokens, ImportPath importPath) : IAction
     {
         public string Perform(ParsedToken word)
         {

@@ -8,7 +8,7 @@ namespace Nt.Syntax.Actions.Tests
         [Fact]
         public void AddImportPathAction_Test1()
         {
-            var tokens = new TokensList(["dir"]);
+            var tokens = new SymbolsList(["dir"]);
             var path = new ImportPath();
             var action = new AddImportPathAction(tokens, path);
             action.Perform(new ParsedToken(0, 0));
@@ -20,7 +20,7 @@ namespace Nt.Syntax.Actions.Tests
         [Fact]
         public void AddImportPathAction_Test2()
         {
-            var tokens = new TokensList(["dir1", "dir2", "dir3"]);
+            var tokens = new SymbolsList(["dir1", "dir2", "dir3"]);
             var path = new ImportPath();
             var action = new AddImportPathAction(tokens, path);
             for (int i = 0; i < tokens.Count; i++) action.Perform(new ParsedToken(i, 0));

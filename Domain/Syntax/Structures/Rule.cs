@@ -10,7 +10,7 @@ namespace Nt.Syntax.Structures
     /// </summary>
     /// <param name="terminals">Terminals tokens of the grammar</param>
     /// <param name="nonterminals">Non terminals tokens of the grammar</param>
-    public class Rule(TokensList terminals, TokensList nonterminals)
+    public class Rule(SymbolsList terminals, SymbolsList nonterminals)
     {
         /// <summary>
         /// Token that would derive into derivation

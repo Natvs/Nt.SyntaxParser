@@ -3,7 +3,7 @@ using Nt.Syntax.Structures;
 
 namespace Nt.Syntax.Actions
 {
-    public class AddNewRuleAction(Grammar grammar, TokensList tokens) : RuleAction
+    public class AddNewRuleAction(Grammar grammar, SymbolsList tokens) : RuleAction
     {
         /// <summary>
         /// Adds the symbol of a rule

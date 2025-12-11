@@ -57,7 +57,7 @@ namespace Nt.Parsing
             {
                 if (symbol.Length == 0) throw new EmptySymbolException();
                 if (!Breaks.Contains(symbol[0])) Breaks.Add(symbol[0]);
-                result.Tokens.Add(symbol);
+                result.Symbols.Add(symbol);
             }
         }
 
@@ -191,8 +191,8 @@ namespace Nt.Parsing
             if (current.Length > 0)
             {
                 int index;
-                if (!result.Tokens.Contains(current)) index = result.Tokens.Add(current);
-                else index = result.Tokens.IndexOf(current);
+                if (!result.Symbols.Contains(current)) index = result.Symbols.Add(current);
+                else index = result.Symbols.IndexOf(current);
                 result.Parsed.Add(new(index, line));
                 current = "";
             }

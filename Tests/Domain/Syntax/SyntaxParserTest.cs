@@ -7,7 +7,7 @@ namespace Nt.Syntax.Tests
 {
     public class SyntaxParserTest
     {
-        private static void AssertTokens(TokensList tokens, List<string> reference)
+        private static void AssertTokens(SymbolsList tokens, List<string> reference)
         {
             Assert.Equal(reference.Count, tokens.Count);
             for (int i = 0; i < tokens.Count; i++)

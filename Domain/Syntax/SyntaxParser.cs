@@ -42,7 +42,7 @@ namespace Nt.Syntax
             Parser parser = new([' ', '\0', '\n', '\t'], ["import", "IMPORT", "addtopath", "ADDTOPATH", ";"]);
             ParserResult parsed = parser.Parse(content);
 
-            GeneratePreAutomaton(parsed.Tokens);
+            GeneratePreAutomaton(parsed.Symbols);
             foreach (ParsedToken token in parsed.Parsed)
             {
                 PreAutomaton?.Read(token, AutomatonContext);
@@ -77,7 +77,7 @@ namespace Nt.Syntax
             Parser parser = new([' ', '\0', '\n', '\t'], [":", ",", "=", "{", "}", ";", "-", ">", "+", "*"]);
             ParserResult parsed = parser.Parse(content);
 
-            GenerateAutomaton(parsed.Tokens);
+            GenerateAutomaton(parsed.Symbols);
             foreach (ParsedToken token in parsed.Parsed)
             {
                 Automaton?.Read(token, AutomatonContext);
@@ -99,7 +99,7 @@ namespace Nt.Syntax
             return ParseString(content);
         }
 
-        private void GeneratePreAutomaton(TokensList tokens)
+        private void GeneratePreAutomaton(SymbolsList tokens)
         {
             var initial = new State(); initial.SetDefault(initial);
 
@@ -118,7 +118,7 @@ namespace Nt.Syntax
         /// Generates an automaton that can read a grammar file
         /// </summary>
         /// <param name="tokens">List of tokens that can be read by the automaton</param>
-        private void GenerateAutomaton(TokensList tokens)
+        private void GenerateAutomaton(SymbolsList tokens)
         {
             var errorAction = new ErrorAction(tokens);
 
@@ -138,7 +138,7 @@ namespace Nt.Syntax
             GenerateRegExStates(tokens, initial, error);
         }
 
-        private void GenerateTerminalsStates(TokensList tokens, State initial, State error)
+        private void GenerateTerminalsStates(SymbolsList tokens, State initial, State error)
         {
             State terminalState = new State().SetDefault(error);
             State affectationState = new State().SetDefault(error);
@@ -152,7 +152,7 @@ namespace Nt.Syntax
             endState.AddTransition(",", newState);
         }
 
-        private void GenerateNonTerminalStates(TokensList tokens, State initial, State error)
+        private void GenerateNonTerminalStates(SymbolsList tokens, State initial, State error)
         {
             State nonTerminalState = new State().SetDefault(error);
             State affectationState = new State().SetDefault(error);
@@ -166,7 +166,7 @@ namespace Nt.Syntax
             endState.AddTransition(",", newState);
         }
 
-        private void GenerateAxiomStates(TokensList tokens, State initial, State error)
+        private void GenerateAxiomStates(SymbolsList tokens, State initial, State error)
         {
             State axiomState = new State().SetDefault(error);
             State affectationState = new State().SetDefault(initial, new SetAxiomAction(Grammar, tokens));
@@ -176,7 +176,7 @@ namespace Nt.Syntax
 
         }
 
-        private void GenerateNewRuleStates(TokensList tokens, State initial, State error)
+        private void GenerateNewRuleStates(SymbolsList tokens, State initial, State error)
         {
             State newRuleState = new State().SetDefault(error);
             State arrowState = new State().SetDefault(error);
@@ -192,7 +192,7 @@ namespace Nt.Syntax
             derivationState.AddTransition("|", derivationState, new AddSameRuleAction(Grammar));
         }
 
-        private void GenerateRegExStates(TokensList tokens, State initial, State error)
+        private void GenerateRegExStates(SymbolsList tokens, State initial, State error)
         {
             State newRegExState = new State().SetDefault(error);
             State equalState = new State().SetDefault(error);

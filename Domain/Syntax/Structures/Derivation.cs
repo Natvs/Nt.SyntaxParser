@@ -8,7 +8,7 @@ namespace Nt.Syntax.Structures
     /// </summary>
     /// <param name="terminals">Terminal tokens of the rule</param>
     /// <param name="nonterminals">Non terminal tokens of the rule</param>
-    public class Derivation(TokensList terminals, TokensList nonterminals) : List<GrammarToken>
+    public class Derivation(SymbolsList terminals, SymbolsList nonterminals) : List<GrammarToken>
     {
         /// <summary>
         /// Gets a string representing the list of tokens in derivation

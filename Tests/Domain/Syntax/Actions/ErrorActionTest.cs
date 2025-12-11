@@ -10,7 +10,7 @@ namespace Nt.Syntax.Actions.Tests
         [Fact]
         public void ErrorAction_Test()
         {
-            var tokens = new TokensList(["a"]);
+            var tokens = new SymbolsList(["a"]);
             var action = new ErrorAction(tokens);
 
             Assert.Throws<SyntaxError>(() => action.Perform(new ParsedToken(0, 1)));
@@ -22,7 +22,7 @@ namespace Nt.Syntax.Actions.Tests
         [Fact]
         public void SetAxiomAction_Test1()
         {
-            var tokens = new TokensList(["A", "B", "C"]);
+            var tokens = new SymbolsList(["A", "B", "C"]);
             var grammar = new Grammar();
             grammar.NonTerminals.AddRange(["A", "B", "C"]);
 
@@ -35,7 +35,7 @@ namespace Nt.Syntax.Actions.Tests
         [Fact]
         public void SetAxiomAction_Test2()
         {
-            var tokens = new TokensList(["A", "B", "C"]);
+            var tokens = new SymbolsList(["A", "B", "C"]);
             var grammar = new Grammar();
             grammar.NonTerminals.AddRange(["A", "B"]);
 

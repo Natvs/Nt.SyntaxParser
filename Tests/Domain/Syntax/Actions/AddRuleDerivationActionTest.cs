@@ -9,7 +9,7 @@ namespace Nt.Syntax.Actions.Tests
         [Fact]
         public void AddRuleDerivationAction_AddTerminalTest()
         {
-            var tokens = new TokensList(["S", "a"]);
+            var tokens = new SymbolsList(["S", "a"]);
 
             var grammar = new Grammar();
             grammar.NonTerminals.Add("S");
@@ -32,7 +32,7 @@ namespace Nt.Syntax.Actions.Tests
         [Fact]
         public void AddRuleDerivationAction_AddNonTerminalTest()
         {
-            var tokens = new TokensList(["S", "A"]);
+            var tokens = new SymbolsList(["S", "A"]);
 
             var grammar = new Grammar();
             grammar.NonTerminals.AddRange(["S", "A"]);
@@ -53,7 +53,7 @@ namespace Nt.Syntax.Actions.Tests
         [Fact]
         public void AddRuleDerivationAction_AddUnregisteredSymbolTest()
         {
-            var tokens = new TokensList(["S", "a"]);
+            var tokens = new SymbolsList(["S", "a"]);
 
             var grammar = new Grammar();
             grammar.NonTerminals.Add("S");
@@ -69,7 +69,7 @@ namespace Nt.Syntax.Actions.Tests
         [Fact]
         public void AddRuleDerivationAction_NullRuleTest()
         {
-            var tokens = new TokensList(["S", "a"]);
+            var tokens = new SymbolsList(["S", "a"]);
             var grammar = new Grammar();
 
             var action = new AddRuleDerivationAction(grammar, tokens);

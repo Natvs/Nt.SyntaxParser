@@ -9,7 +9,7 @@ namespace Nt.Syntax.Actions.Tests
         public void AddNonTerminalAction_Test()
         {
             var grammar = new Grammar();
-            var tokens = new TokensList(["A"]);
+            var tokens = new SymbolsList(["A"]);
             var action = new AddNonTerminalAction(grammar, tokens);
             action.Perform(new ParsedToken(0, 0));
 

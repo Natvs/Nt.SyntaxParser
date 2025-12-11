@@ -10,7 +10,7 @@ namespace Nt.Syntax.Actions.Tests
         public void AddTerminalAction_Test()
         {
             var grammar = new Grammar();
-            var tokens = new TokensList(["a"]);
+            var tokens = new SymbolsList(["a"]);
             var action = new AddTerminalAction(grammar, tokens);
             action.Perform(new ParsedToken(0, 0));
 
@@ -25,7 +25,7 @@ namespace Nt.Syntax.Actions.Tests
         public void ImportFileAction_EmptyPathTest1()
         {
             var filename = "../../../Resources/test_file.txt";
-            var tokens = new TokensList([filename]);
+            var tokens = new SymbolsList([filename]);
             var path = new ImportPath();
 
             var action = new ImportFileAction(tokens, path);
@@ -39,7 +39,7 @@ namespace Nt.Syntax.Actions.Tests
         public void ImportFileAction_EmptyPathTest2()
         {
             var filename = "../../../Resources/non_existent_file.txt";
-            var tokens = new TokensList([filename]);
+            var tokens = new SymbolsList([filename]);
             var path = new ImportPath();
 
             var action = new ImportFileAction(tokens, path);
@@ -51,7 +51,7 @@ namespace Nt.Syntax.Actions.Tests
         public void ImportFileAction_EmptyPathTest3()
         {
             var filename = "../not/an/existing/path";
-            var tokens = new TokensList([filename]);
+            var tokens = new SymbolsList([filename]);
             var path = new ImportPath();
 
             var action = new ImportFileAction(tokens, path);
@@ -64,7 +64,7 @@ namespace Nt.Syntax.Actions.Tests
         {
             var folderpath = "../../../Resources";
             var filename = "test_file.txt";
-            var tokens = new TokensList([filename]);
+            var tokens = new SymbolsList([filename]);
             var path = new ImportPath([folderpath]);
 
             var action = new ImportFileAction(tokens, path);
@@ -79,7 +79,7 @@ namespace Nt.Syntax.Actions.Tests
         {
             var folderpath = "../../../Resources";
             var filename = "non_existent_file.txt";
-            var tokens = new TokensList([filename]);
+            var tokens = new SymbolsList([filename]);
             var path = new ImportPath([folderpath]);
 
             var action = new ImportFileAction(tokens, path);
@@ -92,7 +92,7 @@ namespace Nt.Syntax.Actions.Tests
         {
             var folderpath = "../../../Resources";
             var filename = "test_file.txt";
-            var tokens = new TokensList([folderpath + "/" + filename]);
+            var tokens = new SymbolsList([folderpath + "/" + filename]);
             var path = new ImportPath([folderpath]);
 
             var action = new ImportFileAction(tokens, path);

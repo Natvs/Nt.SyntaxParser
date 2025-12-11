@@ -10,7 +10,7 @@ namespace Nt.Parsing
         /// <summary>
         /// List of unique symbols that the parser read. These words are referenced by parsed tokens.
         /// </summary>
-        public TokensList Tokens { get; } = [];
+        public SymbolsList Symbols { get; } = [];
 
         /// <summary>
         /// List of tokens that have been parsed. Value of a parsed token refers to the index in tokens list.
@@ -19,7 +19,7 @@ namespace Nt.Parsing
 
         public ParserResult()
         {
-            Parsed = new(Tokens);
+            Parsed = new(Symbols);
         }
 
     }

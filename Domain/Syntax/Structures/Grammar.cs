@@ -11,8 +11,9 @@ namespace Nt.Syntax.Structures
     public class Grammar
     {
 
-        public TokensList Terminals { get; } = [];
-        public TokensList NonTerminals { get; } = [];
+        public SymbolsList Terminals { get; } = [];
+        public SymbolsList NonTerminals { get; } = [];
+        public SymbolsList RegExSymbols { get; } = [];
         public int Axiom { get; internal set; } = -1;
 
         public RulesSet Rules { get; } = [];
@@ -105,6 +106,7 @@ namespace Nt.Syntax.Structures
         {
             var regex = new RegularExpression(NonTerminals);
             RegularExpressions.Add(regex);
+            RegExSymbols.Add(nonTerminal);
             try
             {
                 regex.SetToken(NonTerminals.IndexOf(nonTerminal), line);
@@ -114,6 +116,9 @@ namespace Nt.Syntax.Structures
         }
         internal RegularExpression AddRegularExpression(int nonTerminalIndex, int line)
         {
+            var token = NonTerminals[nonTerminalIndex];
+            RegExSymbols.Add(token.Name);
+
             var regex = new RegularExpression(NonTerminals);
             RegularExpressions.Add(regex);
             regex.SetToken(nonTerminalIndex, line);
@@ -132,6 +137,7 @@ namespace Nt.Syntax.Structures
 
             sb.Append("Terminals: ").Append(Terminals.ToString()).Append('\n');
             sb.Append("Non terminals: ").Append(NonTerminals.ToString()).Append('\n');
+            //sb.Append("   RegEx symbols: ").Append(RegExSymbols.ToString()).Append('\n');
             if (Axiom > -1) sb.Append("Axiom: ").Append(NonTerminals[Axiom].Name).Append('\n');
 
             if (Rules.Count > 0) sb.Append("\nRules\n");

@@ -8,9 +8,9 @@ namespace Nt.Syntax
     /// </summary>
     /// <param name="tokens">List of tokens that this automaton can read</param>
     /// <param name="initialState">Initial state of the automaton</param>
-    public class Automaton(TokensList tokens, State initialState)
+    public class Automaton(SymbolsList tokens, State initialState)
     {
-        public TokensList Tokens { get; } = tokens;
+        public SymbolsList Tokens { get; } = tokens;
         public State CurrentState { get; private set; } = initialState;
 
         /// <summary>

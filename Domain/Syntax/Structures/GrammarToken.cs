@@ -1,4 +1,6 @@
-﻿namespace Nt.Syntax.Structures
+﻿using Nt.Parsing.Structures;
+
+namespace Nt.Syntax.Structures
 {
     public enum GrammarTokenType
     {

@@ -1,9 +1,10 @@
 ﻿using Nt.Parsing.Structures;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Nt.Syntax.Structures
 {
-    public class RegularExpression(TokensList nonterminals)
+    public class RegularExpression(SymbolsList nonterminals)
     {
         public NonTerminal? Token { get; private set; }
         public string Pattern { get; private set; } = "";
