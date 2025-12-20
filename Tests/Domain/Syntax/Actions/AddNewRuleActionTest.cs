@@ -12,7 +12,7 @@ namespace Nt.Syntax.Actions.Tests
             var grammar = new Grammar();
             grammar.NonTerminals.Add("A");
 
-            var tokens = new TokensList(["A"]);
+            var tokens = new SymbolsList(["A"]);
             var action = new AddNewRuleAction(grammar, tokens);
             var rule = action.Perform(null, new ParsedToken(0, 0));
 
@@ -27,7 +27,7 @@ namespace Nt.Syntax.Actions.Tests
             var grammar = new Grammar();
             grammar.NonTerminals.Add("A");
 
-            var tokens = new TokensList(["B"]);
+            var tokens = new SymbolsList(["B"]);
             var action = new AddNewRuleAction(grammar, tokens);
 
             Assert.Throws<NotDeclaredNonTerminalException>(() => { action.Perform(null, new ParsedToken(0, 0)); });

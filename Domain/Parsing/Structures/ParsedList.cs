@@ -7,7 +7,7 @@ namespace Nt.Parsing.Structures
     /// Represents a list of parsed words, identified by their value.
     /// </summary>
     /// <param name="tokens">List of tokens that contains all parsed tokens</param>
-    public class ParsedList(TokensList tokens) : List<ParsedToken>
+    public class ParsedList(SymbolsList tokens) : List<ParsedToken>
     {
         /// <summary>
         /// Gets a string representing the parsed list

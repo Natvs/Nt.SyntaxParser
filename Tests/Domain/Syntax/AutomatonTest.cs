@@ -8,7 +8,7 @@ namespace Nt.Syntax.Tests
         [Fact]
         public void AutomatonTransition_Test1()
         {
-            var tokens = new TokensList(["a"]);
+            var tokens = new SymbolsList(["a"]);
             State initial = new(), state1 = new();
             StateSequence(initial, [(state1, "a")]);
 
@@ -21,7 +21,7 @@ namespace Nt.Syntax.Tests
         [Fact]
         public void AutomatonTransition_Test2()
         {
-            var tokens = new TokensList(["a", "b", "c", "d"]);
+            var tokens = new SymbolsList(["a", "b", "c", "d"]);
             State initial = new(), state1 = new(), state2 = new(), state3 = new(), state4 = new();
             StateSequence(initial, [(state1, "a"), (state2, "b"), (state3, "c"), (state4, "d")]);
 
@@ -34,7 +34,7 @@ namespace Nt.Syntax.Tests
         [Fact]
         public void AutomatonDefaultTransition_Test()
         {
-            var tokens = new TokensList(["a", "b", "c", "d", "e", "f", "g"]);
+            var tokens = new SymbolsList(["a", "b", "c", "d", "e", "f", "g"]);
             State initial = new(), state1 = new(), state2 = new(), state3 = new(), state4 = new();
             StateSequence(initial, [(state1, "a"), (state2, "b"), (state3, "c"), (state4, "d"), (state1, "e"), (state2, "f"), (state3, "g")]);
 

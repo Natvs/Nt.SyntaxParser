@@ -4,7 +4,7 @@ using Nt.Syntax.Structures;
 
 namespace Nt.Syntax.Actions
 {
-    public class AddRegExSymbolsAction(TokensList tokens) : RegExAction
+    public class AddRegExSymbolsAction(SymbolsList tokens) : RegExAction
     {
         public override RegularExpression? Perform(RegularExpression? regex, ParsedToken word)
         {

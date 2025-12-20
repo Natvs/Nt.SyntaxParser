@@ -3,7 +3,7 @@ using Nt.Parsing.Structures;
 
 namespace Nt.Syntax.Actions
 {
-    public class ErrorAction(TokensList tokens) : Action
+    public class ErrorAction(SymbolsList tokens) : Action
     {
 
         public override void Perform(ParsedToken word)

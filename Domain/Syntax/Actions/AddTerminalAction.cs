@@ -8,7 +8,7 @@ namespace Nt.Syntax.Actions
     /// </summary>
     /// <param name="grammar">Grammar datas</param>
     /// <param name="tokens">List of all tokens</param>
-    public class AddTerminalAction(Structures.Grammar grammar, TokensList tokens) : Action
+    public class AddTerminalAction(Structures.Grammar grammar, SymbolsList tokens) : Action
     {
         /// <summary>
         /// Adds a parsed token as new non terminal of the grammar

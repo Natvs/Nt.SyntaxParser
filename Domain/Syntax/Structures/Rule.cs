@@ -10,7 +10,7 @@ namespace Nt.Syntax.Structures
     /// </summary>
     /// <param name="terminals">Terminals tokens of the grammar</param>
     /// <param name="nonterminals">Non terminals tokens of the grammar</param>
-    public class Rule(TokensList terminals, TokensList nonterminals)
+    public class Rule(SymbolsList terminals, SymbolsList nonterminals)
     {
         /// <summary>
         /// Token that would derive into derivation
@@ -43,6 +43,17 @@ namespace Nt.Syntax.Structures
         }
 
         /// <summary>
+        /// Inserts a terminal token at specified position in derivation
+        /// </summary>
+        /// <param name="position">Position for inserting the terminal</param>
+        /// <param name="index">Index of the terminal to insert</param>
+        /// <param name="line">Line of the new terminal</param>
+        public void InsertTerminal(int position, int index, int line)
+        {
+            Derivation.Insert(position, new Terminal(index, line));
+        }
+
+        /// <summary>
         /// Adds a non terminal token to end of derivation
         /// </summary>
         /// <param name="index">Index of the token in non terminals list</param>
@@ -50,6 +61,18 @@ namespace Nt.Syntax.Structures
         public void AddNonTerminal(int index, int line)
         {
             Derivation.Add(new NonTerminal(index, line));
+        }
+
+
+        /// <summary>
+        /// Inserts a non terminal token at specified position in derivation
+        /// </summary>
+        /// <param name="position">Position for inserting the non terminal</param>
+        /// <param name="index">Index of the non terminal to insert</param>
+        /// <param name="line">Line of the new non terminal</param>
+        public void InsertNonTerminal(int position, int index, int line)
+        {
+            Derivation.Insert(position, new NonTerminal(index, line));
         }
 
         /// <summary>

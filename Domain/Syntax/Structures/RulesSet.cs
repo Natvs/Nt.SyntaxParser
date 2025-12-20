@@ -17,7 +17,7 @@ namespace Nt.Syntax.Structures
         /// </summary>
         /// <param name="nonTerminals"></param>
         /// <returns></returns>
-        public string ToString(TokensList nonTerminals)
+        public string ToString(SymbolsList nonTerminals)
         {
             var sb = new StringBuilder().Append('{');
             foreach (var nt in nonTerminals)

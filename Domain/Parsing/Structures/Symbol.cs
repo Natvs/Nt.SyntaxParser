@@ -3,11 +3,11 @@
     /// <summary>
     /// Represents a token. A token is just a word.
     /// </summary>
-    public class Token
+    public class Symbol
     {
         public string Name { get; private set; }
 
-        public Token(string name)
+        public Symbol(string name)
         {
             Name = name;
         }

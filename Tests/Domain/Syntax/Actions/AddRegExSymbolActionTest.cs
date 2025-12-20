@@ -9,7 +9,7 @@ namespace Nt.Syntax.Actions.Tests
         [Fact]
         public void AddRegExSymbolAction_AddSymbolTest1()
         {
-            var tokens = new TokensList(["S", "ab*"]);
+            var tokens = new SymbolsList(["S", "ab*"]);
 
             var grammar = new Grammar();
             grammar.NonTerminals.Add("S");
@@ -27,7 +27,7 @@ namespace Nt.Syntax.Actions.Tests
         [Fact]
         public void AddRegExSymbolAction_AddSymbolTest2()
         {
-            var tokens = new TokensList(["S", "a", "+", "(", "bc", ")", "*"]);
+            var tokens = new SymbolsList(["S", "a", "+", "(", "bc", ")", "*"]);
 
             var grammar = new Grammar();
             grammar.NonTerminals.Add("S");
@@ -49,7 +49,7 @@ namespace Nt.Syntax.Actions.Tests
         [Fact]
         public void AddRegExSymbolAction_NullRegexTest()
         {
-            var tokens = new TokensList(["S", "(ab)+"]);
+            var tokens = new SymbolsList(["S", "(ab)+"]);
 
             var action = new AddRegExSymbolsAction(tokens);
             Assert.Throws<NullRegexException>(() => action.Perform(null, new(1, 0)));
@@ -58,7 +58,7 @@ namespace Nt.Syntax.Actions.Tests
         [Fact]
         public void AddRegExSymbolAction_EscapeTest1()
         {
-            var tokens = new TokensList(["S", "\\a"]);
+            var tokens = new SymbolsList(["S", "\\a"]);
 
             var grammar = new Grammar();
             grammar.NonTerminals.Add("S");

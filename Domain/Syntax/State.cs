@@ -46,7 +46,7 @@ namespace Nt.Syntax
         /// <param name="tokens">List of parsed tokens as a reference</param>
         /// <returns>Next state of the automaton after reading the token</returns>
         /// <exception cref="NoDefaultStateException">It might be that no default state was set for this state</exception>
-        public State Read(ParsedToken token, TokensList tokens, AutomatonContext context)
+        public State Read(ParsedToken token, SymbolsList tokens, AutomatonContext context)
         {
             if (DefaultState == null) throw new NoDefaultStateException();
             foreach (Transition transition in Transitions)

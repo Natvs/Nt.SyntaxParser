@@ -2,35 +2,35 @@
 
 namespace Nt.Parsing.Structures
 {
-    /// <summary>
-    /// Represents a list of tokens, where tokens are words.
-    /// </summary>
-    public class TokensList : List<Token>
-    {
 
+    public class SymbolsList : SymbolsList<Symbol>
+    {
         /// <summary>
         /// Instantiates a list of tokens
         /// </summary>
-        public TokensList() : base() { }
+        public SymbolsList() : base() { }
         /// <summary>
         /// Instantiates a list of tokens from a list of strings.
         /// </summary>
         /// <param name="list">List of string used to instantiate the tokens</param>
-        public TokensList(List<string> list)
+        public SymbolsList(List<string> list)
         {
-            foreach (var word in list) Add(new Token(word));
+            foreach (var word in list) Add(new Symbol(word));
         }
 
         /// <summary>
         /// Adds a new token to the list.
         /// </summary>
         /// <param name="name">Name of the token to add</param>
-        /// <returns>Last index of the list once the token has been added</returns>
+        /// <returns>Last index of the list once the token has been added, or index of the existing one</returns>
         public int Add(string name)
         {
-            var token = new Token(name);
-            Add(token);
-            return Count - 1;
+            if (!Contains(name))
+            {
+                Add(new Symbol(name));
+                return Count - 1;
+            }
+            return IndexOf(name);
         }
 
         /// <summary>
@@ -40,11 +40,7 @@ namespace Nt.Parsing.Structures
         /// <returns>Last index of the list once all the tokens have been added</returns>
         public int AddRange(IEnumerable<string> names)
         {
-            foreach (var name in names)
-            {
-                var token = new Token(name);
-                Add(token);
-            }
+            foreach (var name in names) Add(new Symbol(name));
             return Count - 1;
         }
 
@@ -55,7 +51,7 @@ namespace Nt.Parsing.Structures
         /// <returns>True if the token is in the list, False if not</returns>
         public bool Contains(string name)
         {
-            foreach (Token token in this)
+            foreach (Symbol token in this)
             {
                 if (token.Name.Equals(name)) { return true; }
             }
@@ -68,9 +64,9 @@ namespace Nt.Parsing.Structures
         /// <param name="name">Name of the token to get</param>
         /// <returns>First occurence of such token with the given name in the list</returns>
         /// <exception cref="KeyNotFoundException">It might be that no token with the given name was found.</exception>
-        public Token Get(string name)
+        public Symbol Get(string name)
         {
-            foreach (Token token in this)
+            foreach (Symbol token in this)
             {
                 if (token.Name == name) { return token; }
             }
@@ -110,5 +106,14 @@ namespace Nt.Parsing.Structures
             sb.Append('}');
             return sb.ToString();
         }
+    }
+
+    /// <summary>
+    /// Represents a list of tokens, where tokens are words.
+    /// </summary>
+    public class SymbolsList<T> : List<T> where T : Symbol
+    {
+
+        
     }
 }

@@ -4,7 +4,7 @@ using Nt.Syntax.Structures;
 
 namespace Nt.Syntax.Actions
 {
-    public class AddRuleDerivationAction(Grammar grammar, TokensList tokens) : RuleAction
+    public class AddRuleDerivationAction(Grammar grammar, SymbolsList tokens) : RuleAction
     {
         public override Rule? Perform(Rule? rule, ParsedToken word)
         {

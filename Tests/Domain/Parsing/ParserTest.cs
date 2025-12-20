@@ -128,7 +128,7 @@ namespace Nt.SyntaxParser.Tests.Parsing
             Assert.Equal(expectedTokens.Count, result.Parsed.Count);
             for (var i = 0; i < expectedTokens.Count; i++)
             {
-                Assert.Equal(expectedTokens[i], result.Tokens[result.Parsed[i].TokenIndex].Name);
+                Assert.Equal(expectedTokens[i], result.Symbols[result.Parsed[i].TokenIndex].Name);
             }
         }
 

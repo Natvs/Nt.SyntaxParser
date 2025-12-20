@@ -12,7 +12,7 @@ namespace Nt.Syntax.Structures
             return sb.ToString();
         }
 
-        public string ToString(TokensList nonTerminals)
+        public string ToString(SymbolsList nonTerminals)
         {
             var sb = new StringBuilder();
             sb.Append('{');
