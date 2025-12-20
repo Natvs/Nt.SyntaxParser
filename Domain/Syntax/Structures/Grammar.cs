@@ -13,7 +13,6 @@ namespace Nt.Syntax.Structures
 
         public SymbolsList Terminals { get; } = [];
         public SymbolsList NonTerminals { get; } = [];
-        public SymbolsList RegExSymbols { get; } = [];
         public int Axiom { get; internal set; } = -1;
 
         public RulesSet Rules { get; } = [];
@@ -106,7 +105,6 @@ namespace Nt.Syntax.Structures
         {
             var regex = new RegularExpression(NonTerminals);
             RegularExpressions.Add(regex);
-            RegExSymbols.Add(nonTerminal);
             try
             {
                 regex.SetToken(NonTerminals.IndexOf(nonTerminal), line);
@@ -117,7 +115,6 @@ namespace Nt.Syntax.Structures
         internal RegularExpression AddRegularExpression(int nonTerminalIndex, int line)
         {
             var token = NonTerminals[nonTerminalIndex];
-            RegExSymbols.Add(token.Name);
 
             var regex = new RegularExpression(NonTerminals);
             RegularExpressions.Add(regex);

@@ -1,6 +1,5 @@
 ﻿using Nt.Parsing.Structures;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Nt.Syntax.Structures
 {

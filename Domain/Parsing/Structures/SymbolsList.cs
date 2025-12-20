@@ -3,11 +3,6 @@
 namespace Nt.Parsing.Structures
 {
 
-    public class NonTerminalSymbol(string word) : Symbol(word)
-    {
-        public bool IsRegExp { get; internal set; } = false;
-    }
-
     public class SymbolsList : SymbolsList<Symbol>
     {
         /// <summary>
@@ -27,7 +22,7 @@ namespace Nt.Parsing.Structures
         /// Adds a new token to the list.
         /// </summary>
         /// <param name="name">Name of the token to add</param>
-        /// <returns>Last index of the list once the token has been added</returns>
+        /// <returns>Last index of the list once the token has been added, or index of the existing one</returns>
         public int Add(string name)
         {
             if (!Contains(name))
