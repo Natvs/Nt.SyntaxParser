@@ -1,4 +1,4 @@
-﻿using Nt.Parsing.Structures;
+using Nt.Parsing.Structures;
 
 namespace Nt.Syntax.Structures
 {
@@ -7,7 +7,7 @@ namespace Nt.Syntax.Structures
         NonTerminal,
         Terminal
     }
-
+    
     public class GrammarToken(int index, int line)
     {
         public GrammarTokenType Type { get; protected set; }
