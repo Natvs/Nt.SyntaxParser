@@ -1,105 +1,45 @@
 ﻿using Nt.Parsing.Structures;
 using Nt.Syntax.Structures;
-using Nt.Syntax.Exceptions;
 
 namespace Nt.Syntax.Actions.Tests
 {
     public class AddTerminalActionTest
     {
         [Fact]
-        public void AddTerminalAction_Test()
+        public void AddTerminalAction_Test1()
         {
             var grammar = new Grammar();
-            var tokens = new SymbolsList(["a"]);
-            var action = new AddTerminalAction(grammar, tokens);
-            action.Perform(new ParsedToken(0, 0));
+            var symbols = new SymbolsList(["a"]);
+            var context = new AutomatonContext();
+
+            var readAction = new AppendToCurrentTerminalAction(symbols, context);
+            var writeAction = new AddTerminalAction(grammar, context);
+
+            readAction.Perform(new ParsedToken(0, 0));
+            writeAction.Perform(new ParsedToken(0, 0));
 
             Assert.Single(grammar.Terminals);
             Assert.Equal("a", grammar.Terminals[0].Name);
         }
-    }
-
-    public class ImportFileActionTest
-    {
-        [Fact]
-        public void ImportFileAction_EmptyPathTest1()
-        {
-            var filename = "../../../Resources/test_file.txt";
-            var tokens = new SymbolsList([filename]);
-            var path = new ImportPath();
-
-            var action = new ImportFileAction(tokens, path);
-            var imported = action.Perform(new(0, 0));
-            var expected = File.ReadAllText(filename);
-
-            Assert.Equal(expected, imported);
-        }
 
         [Fact]
-        public void ImportFileAction_EmptyPathTest2()
+        public void AddTerminalAction_Test2()
         {
-            var filename = "../../../Resources/non_existent_file.txt";
-            var tokens = new SymbolsList([filename]);
-            var path = new ImportPath();
+            var grammar = new Grammar();
+            var symbols = new SymbolsList(["a", "b"]);
+            var context = new AutomatonContext();
 
-            var action = new ImportFileAction(tokens, path);
+            var readAction = new AppendToCurrentTerminalAction(symbols, context);
+            var writeAction = new AddTerminalAction(grammar, context);
 
-            Assert.Throws<ImportFileNotFoundException>(() => action.Perform(new(0, 0)));
+            readAction.Perform(new ParsedToken(0, 0));
+            readAction.Perform(new ParsedToken(1, 0));
+            writeAction.Perform(new ParsedToken(0, 0));
+
+            Assert.Single(grammar.Terminals);
+            Assert.Equal("ab", grammar.Terminals[0].Name);
         }
 
-        [Fact]
-        public void ImportFileAction_EmptyPathTest3()
-        {
-            var filename = "../not/an/existing/path";
-            var tokens = new SymbolsList([filename]);
-            var path = new ImportPath();
 
-            var action = new ImportFileAction(tokens, path);
-
-            Assert.Throws<ImportFileNotFoundException>(() => action.Perform(new(0, 0)));
-        }
-
-        [Fact]
-        public void ImportFileAction_WithPathTest1()
-        {
-            var folderpath = "../../../Resources";
-            var filename = "test_file.txt";
-            var tokens = new SymbolsList([filename]);
-            var path = new ImportPath([folderpath]);
-
-            var action = new ImportFileAction(tokens, path);
-            var imported = action.Perform(new(0, 0));
-            var expected = File.ReadAllText(folderpath + "/" + filename);
-
-            Assert.Equal(expected, imported);
-        }
-
-        [Fact]
-        public void ImportFileAction_WithPathTest2()
-        {
-            var folderpath = "../../../Resources";
-            var filename = "non_existent_file.txt";
-            var tokens = new SymbolsList([filename]);
-            var path = new ImportPath([folderpath]);
-
-            var action = new ImportFileAction(tokens, path);
-
-            Assert.Throws<ImportFileNotFoundException>(() => action.Perform(new(0, 0)));
-        }
-
-        [Fact]
-        public void ImportFileAction_WithPathTest3()
-        {
-            var folderpath = "../../../Resources";
-            var filename = "test_file.txt";
-            var tokens = new SymbolsList([folderpath + "/" + filename]);
-            var path = new ImportPath([folderpath]);
-
-            var action = new ImportFileAction(tokens, path);
-            var imported = action.Perform(new(0, 0));
-            var expected = File.ReadAllText(folderpath + "/" + filename);
-
-            Assert.Equal(expected, imported);
-        }
     }
 }

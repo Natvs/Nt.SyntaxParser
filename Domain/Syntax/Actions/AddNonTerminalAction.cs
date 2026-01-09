@@ -8,7 +8,7 @@ namespace Nt.Syntax.Actions
     /// </summary>
     /// <param name="grammar">Grammar datas</param>
     /// <param name="tokens">List of all tokens</param>
-    public class AddNonTerminalAction(Structures.Grammar grammar, SymbolsList tokens) : Action
+    public class AddNonTerminalAction(Structures.Grammar grammar, AutomatonContext context) : Action
     {
         /// <summary>
         /// Adds a parsed token as new non terminal of the grammar
@@ -18,12 +18,12 @@ namespace Nt.Syntax.Actions
         {
             try
             {
-                grammar.AddNonTerminal(tokens[word.TokenIndex].Name);
+                grammar.AddNonTerminal(context.CurrentNonTerminal);
+                context.CurrentNonTerminal = "";
             }
             catch (RegisteredNonTerminalException) { } // Ignore those 2 exceptions for now
             catch (RegisteredTerminalException) { } // Maybe someone should remove them later
         }
-
     }
 
 }

@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Xml;
 using Nt.Parsing;
 using Nt.Parsing.Structures;
 using Nt.Syntax.Actions;
@@ -17,6 +18,7 @@ namespace Nt.Syntax
         private Automaton? Automaton { get; set; }
         private AutomatonContext AutomatonContext { get; } = new AutomatonContext();
         private System.Action? AutomatonEndAction { get; set; }
+        private List<string> ParserSymbols { get; } = [":", ",", "=", "{", "}", ";", "-", ">", "+", "*"];
 
         #endregion
 
@@ -74,7 +76,7 @@ namespace Nt.Syntax
         {
             content = PreParseString(content);
 
-            Parser parser = new([' ', '\0', '\n', '\t'], [":", ",", "=", "{", "}", ";", "-", ">", "+", "*"]);
+            Parser parser = new([' ', '\0', '\n', '\t'], ParserSymbols);
             ParserResult parsed = parser.Parse(content);
 
             GenerateAutomaton(parsed.Symbols);
@@ -142,28 +144,28 @@ namespace Nt.Syntax
         {
             State terminalState = new State().SetDefault(error);
             State affectationState = new State().SetDefault(error);
-            State endState = new State().SetDefault(error);
-            State newState = new State().SetDefault(endState, new AddTerminalAction(Grammar, tokens));
+            State newState = new();
 
             initial.AddTransition("T", terminalState);
             terminalState.AddTransition("=", affectationState);
             affectationState.AddTransition("{", newState);
-            endState.AddTransition("}", initial);
-            endState.AddTransition(",", newState);
+            newState.SetDefault(newState, new AppendToCurrentTerminalAction(tokens, AutomatonContext));
+            newState.AddTransition(",", newState, new AddTerminalAction(Grammar, AutomatonContext));
+            newState.AddTransition("}", initial, new AddTerminalAction(Grammar, AutomatonContext));
         }
 
         private void GenerateNonTerminalStates(SymbolsList tokens, State initial, State error)
         {
             State nonTerminalState = new State().SetDefault(error);
             State affectationState = new State().SetDefault(error);
-            State endState = new State().SetDefault(error);
-            State newState = new State().SetDefault(endState, new AddNonTerminalAction(Grammar, tokens));
+            State newState = new();
 
             initial.AddTransition("N", nonTerminalState);
             nonTerminalState.AddTransition("=", affectationState);
             affectationState.AddTransition("{", newState);
-            endState.AddTransition("}", initial);
-            endState.AddTransition(",", newState);
+            newState.SetDefault(newState, new AppendToCurrentNonTerminalAction(tokens, AutomatonContext));
+            newState.AddTransition(",", newState, new AddNonTerminalAction(Grammar, AutomatonContext));
+            newState.AddTransition("}", initial, new AddNonTerminalAction(Grammar, AutomatonContext));
         }
 
         private void GenerateAxiomStates(SymbolsList tokens, State initial, State error)

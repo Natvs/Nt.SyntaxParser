@@ -138,6 +138,43 @@ namespace Nt.Syntax.Tests
             Assert.Empty(grammar.RegularExpressions);
         }
 
+        [Fact]
+        public void SyntaxParser_ParseSymbolTest1()
+        {
+            var parser = new SyntaxParser();
+            var grammar = parser.ParseString("T = {=}");
+
+            AssertTokens(grammar.Terminals, ["="]);
+            Assert.Empty(grammar.NonTerminals);
+            Assert.Equal(-1, grammar.Axiom);
+            Assert.Empty(grammar.Rules);
+            Assert.Empty(grammar.RegularExpressions);
+        }
+
+        [Fact]
+        public void SyntaxParser_ParseSymbolTest2()
+        {
+            var parser = new SyntaxParser();
+            var grammar = parser.ParseString("N = {==}");
+            AssertTokens(grammar.NonTerminals, ["=="]);
+            Assert.Empty(grammar.Terminals);
+            Assert.Equal(-1, grammar.Axiom);
+            Assert.Empty(grammar.Rules);
+            Assert.Empty(grammar.RegularExpressions);
+        }
+
+        [Fact]
+        public void SyntaxParser_ParseSymbolTest3()
+        {
+            var parser = new SyntaxParser();
+            var grammar = parser.ParseString("N = {===}");
+            AssertTokens(grammar.NonTerminals, ["==="]);
+            Assert.Empty(grammar.Terminals);
+            Assert.Equal(-1, grammar.Axiom);
+            Assert.Empty(grammar.Rules);
+            Assert.Empty(grammar.RegularExpressions);
+        }
+
         #endregion
 
         #region Terminals and NonTerminals
@@ -407,13 +444,6 @@ namespace Nt.Syntax.Tests
 
         [Fact]
         public void SyntaxParser_Test9()
-        {
-            var parser = new SyntaxParser();
-            Assert.Throws<SyntaxError>(() => parser.ParseString("T={a b}"));
-        }
-
-        [Fact]
-        public void SyntaxParser_Test10()
         {
             var parser = new SyntaxParser();
             Assert.Throws<SyntaxError>(() => parser.ParseString("N={A}\nT={a}\nR: A -* a"));

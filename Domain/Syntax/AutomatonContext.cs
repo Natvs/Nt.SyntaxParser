@@ -4,10 +4,12 @@ namespace Nt.Syntax
 {
     public class AutomatonContext
     {
-        public ImportPath ImportPath { get; private set; } = new ImportPath();
-        public string? ImportedString { get; set; }
-        public Rule? Rule { get; set; }
-        public RegularExpression? RegularExpression { get; set; }
+        internal ImportPath ImportPath { get; private set; } = new ImportPath();
+        internal string? ImportedString { get; set; }
+        internal Rule? Rule { get; set; }
+        internal RegularExpression? RegularExpression { get; set; }
+        internal string CurrentTerminal { get; set; } = "";
+        internal string CurrentNonTerminal { get; set; } = "";
 
         internal void Reset()
         {
