@@ -114,17 +114,16 @@ namespace Nt.Parsing
             {
                 if (c == '\r') continue; // Ignores carriage return
 
-                if (isEscapeChar) { HandleEscapeChar(c); continue; }
-                if (c == '\\') { isEscapeChar = true; continue; } // Handles escape chars
-
-                if (isSymbol) HandleSymbol(c);
+                if (isEscapeChar) { HandleEscapeChar(c); }
+                else if (isSymbol) HandleSymbol(c);
                 else if (Breaks.Contains(c)) HandleBreaks(c);
                 else if (Separators.Contains(c)) HandleSeparator(c);
+                else if (c == '\\') { isEscapeChar = true; }
                 else current += c;
 
                 if (c == '\n') line += 1;
             }
-            ParseCurrent(); // Parses the last token if not empty
+            ParseCurrent(); // Ensures the last token is also parsed
             return result;
         }
 
@@ -172,6 +171,13 @@ namespace Nt.Parsing
         private void HandleSymbol(char c)
         {
             List<char> next = NextSymbols(current);
+            if (c == '\\')
+            {
+                isSymbol = false;
+                isEscapeChar = true;
+                ParseCurrent();
+                return;
+            }
             if (!next.Contains(c))
             {
                 isSymbol = false;
@@ -180,7 +186,10 @@ namespace Nt.Parsing
                 else if (Separators.Contains(c)) HandleSeparator(c);
                 else current = c.ToString();
             }
-            else current += c.ToString();
+            else
+            {
+                current += c.ToString();
+            }
         }
 
         /// <summary>

@@ -18,7 +18,7 @@ To define non terminals, use:
 N = {nonterminal1, nonterminal2, ...}
 ```
 
-Note that symbols can contain any lower or upper letter, or symbols except ':' ',' '=' '{' '}' ';' '-' '>' '+' or '*'.
+Note that symbols can contain any characthers except the symbols ',' and '}'.
 If you wish to include one of these symbols into your grammar, it must not be surrounded by any other symbol. For example, `}` is allowed, but not `a}` or `}b`.
 
 ## Setting grammar rules
