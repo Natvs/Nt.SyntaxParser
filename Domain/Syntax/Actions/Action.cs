@@ -1,9 +1,7 @@
 ﻿using Nt.Parsing.Structures;
-using Nt.Syntax.Structures;
 
 namespace Nt.Syntax.Actions
 {
-    public interface IAction { }
 
     /// <summary>
     /// Abstract class used for grammar automaton actions
@@ -19,15 +17,6 @@ namespace Nt.Syntax.Actions
         /// <param name="word">Token of the action</param>
         public abstract void Perform(ParsedToken word);
 
-    }
-    public abstract class RuleAction : IAction
-    {
-        public abstract Rule? Perform(Rule? rule, ParsedToken word);
-    }
-
-    public abstract class RegExAction : IAction
-    {
-        public abstract RegularExpression? Perform(RegularExpression? regex, ParsedToken word);
     }
 
 }

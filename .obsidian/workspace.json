@@ -148,6 +148,12 @@
   },
   "active": "ff75339cc679f3cb",
   "lastOpenFiles": [
+    "Domain/Syntax/Actions/RegExAction.cs",
+    "Domain/Syntax/Actions/RuleAction.cs",
+    "Domain/Syntax/Actions/IAction.cs",
+    "Domain/Parsing/States/IState.cs",
+    "Domain/Parsing/States",
+    "Domain/Parsing/NewFolder",
     "Doc/Exceptions.md",
     "README.md"
   ]

@@ -1,4 +1,5 @@
 ﻿using Nt.Parsing.Exceptions;
+using Nt.SyntaxParser.Parsing.States;
 
 namespace Nt.Parsing
 {
@@ -17,9 +18,13 @@ namespace Nt.Parsing
         private bool isEscapeChar = false;
         private readonly ParserResult result = new();
 
-        private List<char> Separators { get; } = [' '];
-        private List<char> Breaks { get; } = [];
-        private List<string> Symbols { get; set; } = [];
+        internal string CurrentToken { get => current; set => current = value; }
+        internal int CurrentLine { get => line; set => line = value; }
+        internal List<char> Separators { get; } = [' '];
+        internal List<char> Breaks { get; } = [];
+        internal List<string> Symbols { get; set; } = [];
+
+        internal IState? CurrentState { get; set; }
 
         #endregion
 
@@ -108,22 +113,13 @@ namespace Nt.Parsing
         /// <returns>Informations about the parsing stored in a parser result class</returns>
         public ParserResult Parse(string content)
         {
-            current = "";
-            line = 1;
-            foreach (char c in content)
-            {
-                if (c == '\r') continue; // Ignores carriage return
+            CurrentState = new DefaultState(this);
+            CurrentToken = "";
+            CurrentLine = 1;
 
-                if (isEscapeChar) { HandleEscapeChar(c); }
-                else if (isSymbol) HandleSymbol(c);
-                else if (Breaks.Contains(c)) HandleBreaks(c);
-                else if (Separators.Contains(c)) HandleSeparator(c);
-                else if (c == '\\') { isEscapeChar = true; }
-                else current += c;
-
-                if (c == '\n') line += 1;
-            }
+            foreach (char c in content) CurrentState.Handle(c); // Parses each character in the content string
             ParseCurrent(); // Ensures the last token is also parsed
+
             return result;
         }
 
@@ -138,7 +134,7 @@ namespace Nt.Parsing
         /// </summary>
         /// <param name="start">Sequence of letters (being the first letters of the word)</param>
         /// <returns>List of all characters that can be found after the given sequence of letters (among symbols list)</returns>
-        private List<char> NextSymbols(string start)
+        internal List<char> NextSymbols(string start)
         {
             var next = new List<char>();
             foreach (string symbol in Symbols)
@@ -148,54 +144,10 @@ namespace Nt.Parsing
             return next;
         }
 
-        private void HandleEscapeChar(char c)
-        {
-            isEscapeChar = false;
-            current += "\\" + c;
-        }
-
-        private void HandleSeparator(char c)
-        {
-            isSymbol = false;
-            ParseCurrent();
-        }
-
-        private void HandleBreaks(char c)
-        {
-            if (!Symbols.Contains(c.ToString())) { current += c; isSymbol = false; return; }
-            isSymbol = true;
-            ParseCurrent();
-            current = c.ToString();
-        }
-
-        private void HandleSymbol(char c)
-        {
-            List<char> next = NextSymbols(current);
-            if (c == '\\')
-            {
-                isSymbol = false;
-                isEscapeChar = true;
-                ParseCurrent();
-                return;
-            }
-            if (!next.Contains(c))
-            {
-                isSymbol = false;
-                ParseCurrent();
-                if (Breaks.Contains(c)) HandleBreaks(c);
-                else if (Separators.Contains(c)) HandleSeparator(c);
-                else current = c.ToString();
-            }
-            else
-            {
-                current += c.ToString();
-            }
-        }
-
         /// <summary>
         /// Parses the current token (if not empty) and resets it to an empty string
         /// </summary>
-        private void ParseCurrent()
+        internal void ParseCurrent()
         {
             if (current.Length > 0)
             {
