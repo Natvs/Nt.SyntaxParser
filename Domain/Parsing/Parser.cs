@@ -117,7 +117,12 @@ namespace Nt.Parsing
             CurrentToken = "";
             CurrentLine = 1;
 
-            foreach (char c in content) CurrentState.Handle(c); // Parses each character in the content string
+            foreach (char c in content)
+            {
+                if (c == '\r') continue;  // Ignores carriage return
+                CurrentState.Handle(c);
+                if (c == '\n') CurrentLine += 1;
+            }
             ParseCurrent(); // Ensures the last token is also parsed
 
             return result;

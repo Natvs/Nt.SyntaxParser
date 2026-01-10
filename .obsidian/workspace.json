@@ -148,6 +148,9 @@
   },
   "active": "ff75339cc679f3cb",
   "lastOpenFiles": [
+    "Domain/Parsing/States/DefaultState.cs",
+    "Domain/Parsing/States/SymbolState.cs",
+    "Domain/Parsing/States/EscapeCharState.cs",
     "Domain/Syntax/Actions/RegExAction.cs",
     "Domain/Syntax/Actions/RuleAction.cs",
     "Domain/Syntax/Actions/IAction.cs",
