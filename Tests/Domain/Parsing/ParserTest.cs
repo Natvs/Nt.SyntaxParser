@@ -96,6 +96,24 @@ namespace Nt.SyntaxParser.Tests.Parsing
         }
 
         [Fact]
+        public void ParseEscape_TestSeparator()
+        {
+            var parser = new Parser([' '], []);
+            var stringToParse = "a\\ b";
+            var expectedTokens = new List<string>(["a b"]);
+            ParseString(parser, stringToParse, expectedTokens);
+        }
+
+        [Fact]
+        public void ParseEscape_TestSymbol()
+        {
+            var parser = new Parser([], ["+"]);
+            var stringToParse = "a\\+b";
+            var expectedTokens = new List<string>(["a+b"]);
+            ParseString(parser, stringToParse, expectedTokens);
+        }
+
+        [Fact]
         public void AddEmptySymbol_Test()
         {
             var parser = new Parser([], []);
