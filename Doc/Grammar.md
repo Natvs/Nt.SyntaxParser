@@ -18,7 +18,7 @@ To define non terminals, use:
 N = {nonterminal1, nonterminal2, ...}
 ```
 
-Note that symbols defined here can contain any characthers except the symbols ',', '}', '\\' or any space. If you wish to add a symbol containing such a character into your grammar, you must use the escape character `\`. 
+Note that symbols defined here can contain any characthers except the symbols `,` `}` `\` or any white space. If you wish to add a symbol containing such a character into your grammar, you must use the escape character `\`.  See [the parser escape characters](../README.md#escape-character) for more details.
 
 ## Setting grammar rules
 You need to provide each non-terminal at least one derivation rule. The derivation can be any sequence of previously defined symbols.
@@ -30,28 +30,14 @@ R: non-terminal -> symbol1 symbol2 symbol3 ... ;
 
 You can define multiple derivations for a same non-terminal with the syntax:
 ```
-R: non-terminal -> symbol11 symbol12 ... | symbol21 symbol22 ...
+R: non-terminal -> symbol11 symbol12 ... | symbol21 symbol22 ... ;
 ```
 
-You need to separate all your symbols by at least one white space. White spaces you write are ignored when parsing. 
-If you wish to include a white space as a symbol, you can use the escape symbol `\ `.
+You need to separate all your symbols by at least one white space. White spaces you write are ignored when parsing. If you wish to include a white space as a symbol, or a symbol among `,` `}` `\`, you can use the escape character `\`. See [the parser escape characters](../README.md#escape-character) for more details.
 
-The symbol `;` is used to mark the end of the rule. If you want to include this character as a symbol, you can use the escape character `\;`.
+A derivation should be followed with `;` to mark the end of the rule. Remark that the escape symbol `\;` is interpreted by the parser as `;` and thus also marks the end of the rule. Please have a look at [the section about escape characters](#escape-characters) for a way to include it.
 
-> Note that the arrow `->` can be as long as you want. It must begin with `-` and ends with a `>`. So `---->` also works.
-
-## Escape characters
-In a general way, when writing a derivation of a rule, you can use an escape character to ensure its interpretation as a character.
-It is useful if the character you wish to include in your derivation has a meaning for parsing the grammar.
-
-Examples:
-
-1. The previous section already describes use cases of `\ ` and `\;`.
-
-2. For special characters like ':' ',' '=' '{' '}' ';' '-' '>' '+' or '*', writing it in a symbol will automatically create a new word when reading the symbol at parsing time.
-If you want a symbol to contain one of these characters, you can introduce it with the escape character.
-
-3. The character `\` alone will only ensure the following character is interpreted as a character. If you want to add it in a derivation, you can use `\\`.
+> Note that the arrow `->` can be as long as you want. It must begin with `-` and ends with a `>`. So `---->` is also valid.
 
 ## Defining regular expressions
 Alternatively, you define a derivation for non-terminal as a regular expression.
@@ -70,6 +56,17 @@ The grammar needs a symbol to begin with for syntaxically defining if a string b
 S = axiom
 ```
 The axiom can be any non-terminal, but only one of those.
+
+## Escape characters
+Here there is a need to distinguish the [escape character for text parsing](../README.md#escape-character) and the one for syntax parsing.
+- For **text parsing**, the escape character is `\` and only ensures the next character is in the continuity of the token.
+- For **syntax parsing**, the escape character is `'` by default and is used in rules definitions to ensure the derivation symbol is treated as as part of a terminal or non terminal.
+
+When writing a grammar, here is how to use each escape character:
+
+Use `\` for symbols `:`, `,`, `=`, `{`, `}`, `;`, `-`, `>`, `+`, `*` and `\` to include them in the continuity of the token. If not present, it will create a new token. Note that the escape character also works for any symbol.
+
+Use `'` in rule derivations for symbols `;`, `|` and `'` to define them as rule symbols and not rule end markers. The escape character `'` can also be used for any character, though it has no effect.
 
 ## Pre-parsing instructions
 There are two pre-parsing instructions. Both the upper and lower case versions of these instructions are accepted.

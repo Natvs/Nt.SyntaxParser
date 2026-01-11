@@ -19,7 +19,7 @@ Inside the grammar, rules and regular expressions are stored in a set and thus o
 ## Grammar file
 The syntax parser uses a grammar file to create a grammar structure.
 
-A grammar file is a text file that describes the grammar of a language. It contains the list of symbols used in the grammar and the rules. The syntax of the grammar file is described in [Grammar file syntax](Doc/Grammar.md).
+A grammar file is a text file that describes the grammar of a language. It contains the list of symbols used in the grammar and the rules. The syntax of the grammar file is described in the [grammar file syntax documentation](Doc/Grammar.md).
 
 ## Using the syntax parser
 To use the syntax parser, you first need to create an instance of the `GrammarParser` class. There are two ways of parsing a grammar file: from a string or from a file.
