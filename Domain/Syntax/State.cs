@@ -112,7 +112,6 @@ namespace Nt.Syntax
             else if (iaction is RuleAction ruleAction) context.Rule = ruleAction.Perform(context.Rule, token);
             else if (iaction is RegExAction regexAction) context.RegularExpression = regexAction.Perform(context.RegularExpression, token);
             else if (iaction is ImportFileAction importAction) context.ImportedString = importAction.Perform(token);
-            else if (iaction is AddImportPathAction importPathAction) importPathAction.Perform(token);
         }
     }
 }

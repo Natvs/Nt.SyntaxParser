@@ -4,26 +4,39 @@ using Nt.Syntax.Structures;
 
 namespace Nt.Syntax.Actions
 {
-    public class AddRuleDerivationAction(Grammar grammar, SymbolsList tokens) : RuleAction
+    public class AddRuleDerivationAction(Grammar grammar, SymbolsList symbols) : RuleAction
     {
         public override Rule? Perform(Rule? rule, ParsedToken word)
         {
             if (rule == null) throw new NullRuleException("Attempting to write to a derivation of a non existent rule");
+            var token = symbols[word.TokenIndex].Name;
 
-            string token = tokens[word.TokenIndex].Name;
-            if (token.StartsWith('\\')) token = token.Substring(1); // Handles an escape char
-
-            if (grammar.Terminals.Contains(token))
+            // Handles escape characters
+            string new_token = "";
+            bool escape = false;
+            foreach (var c in token)
             {
-                rule.AddTerminal(grammar.GetTerminalIndex(token), word.Line);
+                if (c == grammar.EscapeCharacter && !escape)
+                {
+                    escape = true;
+                    continue;
+                }
+                new_token += c;
+                escape = false;
+            }
+
+            // Adds the symbol to the rule derivation
+            if (grammar.Terminals.Contains(new_token))
+            {
+                rule.AddTerminal(grammar.GetTerminalIndex(new_token), word.Line);
                 return rule;
             }
-            else if (grammar.NonTerminals.Contains(token))
+            else if (grammar.NonTerminals.Contains(new_token))
             {
-                rule.AddNonTerminal(grammar.GetNonTerminalIndex(token), word.Line);
+                rule.AddNonTerminal(grammar.GetNonTerminalIndex(new_token), word.Line);
                 return rule;
             }
-            throw new UnknownSymbolException(token, word.Line);
+            throw new UnknownSymbolException(new_token, word.Line);
         }
     }
 }

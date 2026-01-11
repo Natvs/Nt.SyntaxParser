@@ -18,8 +18,7 @@ To define non terminals, use:
 N = {nonterminal1, nonterminal2, ...}
 ```
 
-Note that symbols can contain any characthers except the symbols ',', '}', '\\' or any space.
-If you wish to add a symbol containing such a character into your grammar, you must use the escape character '\\' ( '\\,' , '\\}' , '\\\\'  and '\\ ')
+Note that symbols defined here can contain any characthers except the symbols ',', '}', '\\' or any space. If you wish to add a symbol containing such a character into your grammar, you must use the escape character `\`. 
 
 ## Setting grammar rules
 You need to provide each non-terminal at least one derivation rule. The derivation can be any sequence of previously defined symbols.

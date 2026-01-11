@@ -7,7 +7,7 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        TryParsing();
+        TrySyntaxParsing();
     }
 
     private static void TrySyntaxParsing()

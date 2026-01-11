@@ -17,6 +17,8 @@ namespace Nt.Syntax
             ImportedString = null;
             Rule = null;
             RegularExpression = null;
+            CurrentTerminal = "";
+            CurrentNonTerminal = "";
         }
     }
 }
