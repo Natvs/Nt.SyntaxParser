@@ -12,18 +12,7 @@ namespace Nt.Syntax.Actions
             var token = symbols[word.TokenIndex].Name;
 
             // Handles escape characters
-            string new_token = "";
-            bool escape = false;
-            foreach (var c in token)
-            {
-                if (c == grammar.EscapeCharacter && !escape)
-                {
-                    escape = true;
-                    continue;
-                }
-                new_token += c;
-                escape = false;
-            }
+            string new_token = grammar.RemoveEscapeCharacters(token);
 
             // Adds the symbol to the rule derivation
             if (grammar.Terminals.Contains(new_token))

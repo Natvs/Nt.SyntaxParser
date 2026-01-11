@@ -18,8 +18,11 @@ namespace Nt.Syntax.Actions
         {
             try
             {
-                grammar.AddTerminal(context.CurrentTerminal); 
-                context.CurrentTerminal = ""; 
+                if (!context.CurrentTerminal.Equals(""))
+                { 
+                    grammar.AddTerminal(grammar.RemoveEscapeCharacters(context.CurrentTerminal)); 
+                    context.CurrentTerminal = "";
+                }
             }
             catch (RegisteredNonTerminalException) { }
             catch (RegisteredTerminalException) { }

@@ -64,7 +64,7 @@ Here there is a need to distinguish the [escape character for text parsing](../R
 
 When writing a grammar, here is how to use each escape character:
 
-Use `\` for symbols `:`, `,`, `=`, `{`, `}`, `;`, `-`, `>`, `+`, `*` and `\` to include them in the continuity of the token. If not present, it will create a new token. Note that the escape character also works for any symbol.
+Use `\` for symbols `:`, `,`, `=`, `{`, `}`, `;`, `-`, `>`, `+`, `*` and `\` to include them in the continuity of the token. If not present, it will create a new token. Note that this escape character also works for any symbol.
 
 Use `'` in rule derivations for symbols `;`, `|` and `'` to define them as rule symbols and not rule end markers. The escape character `'` can also be used for any character, though it has no effect.
 
@@ -95,18 +95,18 @@ N = {CONST, STRING, INT, FLOAT}
 
 R: CONST -> STRING | INT | FLOAT ;
 
-E: STRING = [abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ]* ;
-E: INT = ( 0 | [0123456789]* ) ;
-E: FLOAT = [0123456789]+ ( ,[0123456789]+ )? ;
+E: STRING = [a-zA-Z]* ;
+E: INT = (0|[0-9]*) ;
+E: FLOAT = [0-9]+(,[0-9]+)? ;
 ```
 
 File `params.txt`
 ```
 N = {PARAMS, TYPE, STRING}
-T = {;, ,}
+T = {;, '\,}
 
-R: PARAMS -> TYPE STRING \;
-		   | TYPE STRING , PARAMS \; ;
+R: PARAMS -> TYPE STRING '\;
+		   | TYPE STRING , PARAMS '\; ;
 
 E: TYPE = (int|double|char|string) ;
 ```
@@ -121,10 +121,10 @@ IMPORT params.txt
 T = {(, ), {, }, ;, =}
 N = {BODY, TYPE, STRING, CONST}
 S = BODY
-R: BODY -> TYPE STRING \;
-		 | TYPE STRING = CONST \;
-		 | TYPE STRING ( ) { BODY } \;
-		 | TYPE STRING ( PARAMS ) { BODY } \; ;
+R: BODY -> TYPE STRING '\;
+		 | TYPE STRING = CONST '\;
+		 | TYPE STRING ( ) { BODY } '\;
+		 | TYPE STRING ( PARAMS ) { BODY } '\; ;
 ```
 
 After pre-parsing, the grammar becomes something like
@@ -135,16 +135,16 @@ N = {CONST, STRING, INT, FLOAT, PARAMS, TYPE, BODY}
 S = BODY
 
 R: CONST -> STRING | INT | FLOAT ;
-R: PARAMS -> TYPE STRING \;
-		   | TYPE STRING , PARAMS \; ;
-R: BODY -> TYPE STRING \;
-		 | TYPE STRING = CONST \;
-		 | TYPE STRING ( ) { BODY } \;
-		 | TYPE STRING ( PARAMS ) { BODY } \; ;
+R: PARAMS -> TYPE STRING '\;
+		   | TYPE STRING , PARAMS '\; ;
+R: BODY -> TYPE STRING '\;
+		 | TYPE STRING = CONST '\;
+		 | TYPE STRING ( ) { BODY } '\;
+		 | TYPE STRING ( PARAMS ) { BODY } '\; ;
 
-E: STRING = [abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ]* ;
-E: INT = ( 0 | [0123456789]* ) ;
-E: FLOAT = [0123456789]+ ( ,[0123456789]+ )? ;
+E: STRING = [a-zA-Z]* ;
+E: INT = (0|[0-9]*) ;
+E: FLOAT = [0-9]+(,[0-9]+)? ;
 E: TYPE = (int|double|char|string) ;
 ```
 
