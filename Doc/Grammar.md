@@ -64,9 +64,11 @@ Here there is a need to distinguish the [escape character for text parsing](../R
 
 When writing a grammar, here is how to use each escape character:
 
-Use `\` for symbols `:`, `,`, `=`, `{`, `}`, `;`, `-`, `>`, `+`, `*` and `\` to include them in the continuity of the token. If not present, it will create a new token. Note that this escape character also works for any symbol.
+1. Use `\` for symbols `:`, `,`, `=`, `{`, `}`, `;`, `-`, `>`, `+`, `*` and `\` to include them in the continuity of the token. If not present, it will create a new token. Note that this escape character also works for any symbol.
 
-Use `'` in rule derivations for symbols `;`, `|` and `'` to define them as rule symbols and not rule end markers. The escape character `'` can also be used for any character, though it has no effect.
+2. Use `'` in rule derivations definitions for symbols `|` and `'` to define them as rule symbols and not rule end markers. The escape character `'` can also be used for any character, though it has no effect.
+
+3. To include `;` in a rule derivation, use a combination of the above `'\;`.
 
 ## Pre-parsing instructions
 There are two pre-parsing instructions. Both the upper and lower case versions of these instructions are accepted.
@@ -75,6 +77,7 @@ There are two pre-parsing instructions. Both the upper and lower case versions o
 | --- | --- | --- |
 |addtopath|Adds a folder to the import path|ADDTOPATH ../grammars|
 |import|Imports the content of an external grammar file|IMPORT grammar.txt|
+|escape|Redefines the syntax escape character (`'` by default)|ESCAPE #|
 
 For example, if you have a grammar file under "../grammars/grammar.txt", then there are two ways of importing it.
 ```

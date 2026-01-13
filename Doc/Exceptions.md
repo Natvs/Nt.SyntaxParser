@@ -13,6 +13,7 @@ This project contains several custom exceptions to handle errors that may occur 
 |**Exception**|**Description**|
 |---|---|
 |`ImportFileNotFoundException`| The file you are trying to import was not found. |
+|`InvalidEscapeCharSymbolException`| When redefining the syntax escape character, the new symbol should neither be empty nor be longer than one character|
 
 
 # Exceptions from grammar parser
