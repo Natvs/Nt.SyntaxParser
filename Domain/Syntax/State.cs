@@ -39,12 +39,55 @@ namespace Nt.Syntax
             Transitions.Add(new Transition(value, state, action));
         }
 
+        public void OverwriteTransition(string value, State state)
+        {
+            List<Transition> toRemove = [];
+            foreach (var t in Transitions)
+            {
+                if (t.Value.Equals(value)) toRemove.Add(t);
+            }
+            foreach (var t in toRemove)
+            {
+                Transitions.Remove(t);
+            }
+            Transitions.Add(new Transition(value, state));
+        }
+        public void OverwriteTransition(string value, State state, IAction action)
+        {
+            List<Transition> toRemove = [];
+            foreach (var t in Transitions)
+            {
+                if (t.Value.Equals(value)) toRemove.Add(t);
+            }
+            foreach (var t in toRemove)
+            {
+                Transitions.Remove(t);
+            }
+            Transitions.Add(new Transition(value, state, action));
+        }
+
+        public void AddTransitions(List<string> values, State state)
+        {
+            foreach (string value in values)
+            {
+                Transitions.Add(new Transition(value, state));
+            }
+        }
+        public void AddTransitions(List<string> values, State state, IAction action)
+        {
+            foreach (string value in values)
+            {
+                Transitions.Add(new Transition(value, state, action));
+            }
+        }
+
         /// <summary>
         /// Reads a token and gets the next state
         /// </summary>
         /// <param name="token">Parsed token to read</param>
         /// <param name="tokens">List of parsed tokens as a reference</param>
         /// <returns>Next state of the automaton after reading the token</returns>
+        /// <remarks>In case of multiple transitions with same symbol, only the first action added will be performed</remarks>
         /// <exception cref="NoDefaultStateException">It might be that no default state was set for this state</exception>
         public State Read(ParsedToken token, SymbolsList tokens, AutomatonContext context)
         {
@@ -69,7 +112,6 @@ namespace Nt.Syntax
             else if (iaction is RuleAction ruleAction) context.Rule = ruleAction.Perform(context.Rule, token);
             else if (iaction is RegExAction regexAction) context.RegularExpression = regexAction.Perform(context.RegularExpression, token);
             else if (iaction is ImportFileAction importAction) context.ImportedString = importAction.Perform(token);
-            else if (iaction is AddImportPathAction importPathAction) importPathAction.Perform(token);
         }
     }
 }

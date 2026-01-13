@@ -75,5 +75,45 @@ namespace Nt.Syntax.Actions.Tests
             var action = new AddRuleDerivationAction(grammar, tokens);
             Assert.Throws<NullRuleException>(() => action.Perform(null, new(1, 0)));
         }
+
+        [Fact]
+        public void AddRuleDerivationAction_EscapeCharacterTest1()
+        {
+            var tokens = new SymbolsList(["S", "'a"]);
+
+            var grammar = new Grammar();
+            grammar.NonTerminals.Add("S");
+            grammar.Terminals.Add("a");
+
+            var rule = new Rule(grammar.Terminals, grammar.NonTerminals);
+            rule.SetToken(0, 0);
+            grammar.Rules.Add(rule);
+
+            var action = new AddRuleDerivationAction(grammar, tokens);
+            action.Perform(rule, new ParsedToken(1, 0));
+            Assert.Single(rule.Derivation);
+            Assert.IsType<Terminal>(rule.Derivation[0]);
+            Assert.Equal("a", grammar.Terminals[rule.Derivation[0].Index].Name);
+        }
+
+        [Fact]
+        public void AddRuleDerivationAction_EscapeCharacterTest2()
+        {
+            var tokens = new SymbolsList(["S", "a'b"]);
+
+            var grammar = new Grammar();
+            grammar.NonTerminals.Add("S");
+            grammar.Terminals.Add("ab");
+
+            var rule = new Rule(grammar.Terminals, grammar.NonTerminals);
+            rule.SetToken(0, 0);
+            grammar.Rules.Add(rule);
+
+            var action = new AddRuleDerivationAction(grammar, tokens);
+            action.Perform(rule, new ParsedToken(1, 0));
+            Assert.Single(rule.Derivation);
+            Assert.IsType<Terminal>(rule.Derivation[0]);
+            Assert.Equal("ab", grammar.Terminals[rule.Derivation[0].Index].Name);
+        }
     }
 }

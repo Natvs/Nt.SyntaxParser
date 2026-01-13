@@ -10,6 +10,7 @@ namespace Nt.Syntax.Structures
     /// </summary>
     public class Grammar
     {
+        public char EscapeCharacter { get; internal set; } = '\'';
 
         public SymbolsList Terminals { get; } = [];
         public SymbolsList NonTerminals { get; } = [];
@@ -62,7 +63,7 @@ namespace Nt.Syntax.Structures
         /// </summary>
         /// <param name="name">Name of the non terminal</param>
         /// <returns>Index of the non terminal in the grammar non terminals list</returns>
-        /// <exception cref="NotDeclaredTerminalException">The non terminal may not exists in the list</exception>
+        /// <exception cref="NotDeclaredNonTerminalException">The non terminal may not exists in the list</exception>
         internal int GetNonTerminalIndex(string name)
         {
             for (int i = 0; i < NonTerminals.Count; i++)
@@ -120,6 +121,23 @@ namespace Nt.Syntax.Structures
             RegularExpressions.Add(regex);
             regex.SetToken(nonTerminalIndex, line);
             return regex;
+        }
+
+        internal string RemoveEscapeCharacters(string token)
+        {
+            string new_token = "";
+            bool escape = false;
+            foreach (var c in token)
+            {
+                if (c == EscapeCharacter && !escape)
+                {
+                    escape = true;
+                    continue;
+                }
+                new_token += c;
+                escape = false;
+            }
+            return new_token;
         }
 
         #endregion

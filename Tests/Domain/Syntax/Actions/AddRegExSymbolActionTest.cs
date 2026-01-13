@@ -17,7 +17,7 @@ namespace Nt.Syntax.Actions.Tests
             var regex = new RegularExpression(grammar.NonTerminals);
             regex.SetToken(0, 0);
 
-            var action = new AddRegExSymbolsAction(tokens);
+            var action = new AddRegExSymbolsAction(grammar, tokens);
             var newregex = action.Perform(regex, new(1, 0));
 
             Assert.Equal(regex, newregex);
@@ -35,7 +35,7 @@ namespace Nt.Syntax.Actions.Tests
             var regex = new RegularExpression(grammar.NonTerminals);
             regex.SetToken(0, 0);
 
-            var action = new AddRegExSymbolsAction(tokens);
+            var action = new AddRegExSymbolsAction(grammar, tokens);
             RegularExpression? newregex = regex;
             for (int i = 1; i < tokens.Count; i++)
             {
@@ -51,7 +51,9 @@ namespace Nt.Syntax.Actions.Tests
         {
             var tokens = new SymbolsList(["S", "(ab)+"]);
 
-            var action = new AddRegExSymbolsAction(tokens);
+            var grammar = new Grammar();
+
+            var action = new AddRegExSymbolsAction(grammar, tokens);
             Assert.Throws<NullRegexException>(() => action.Perform(null, new(1, 0)));
         }
 
@@ -66,7 +68,7 @@ namespace Nt.Syntax.Actions.Tests
             var regex = new RegularExpression(grammar.NonTerminals);
             regex.SetToken(0, 0);
 
-            var action = new AddRegExSymbolsAction(tokens);
+            var action = new AddRegExSymbolsAction(grammar, tokens);
             var newregex = action.Perform(regex, new(1, 0));
 
             Assert.Equal(regex, newregex);

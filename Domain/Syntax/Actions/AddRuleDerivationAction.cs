@@ -4,26 +4,27 @@ using Nt.Syntax.Structures;
 
 namespace Nt.Syntax.Actions
 {
-    public class AddRuleDerivationAction(Grammar grammar, SymbolsList tokens) : RuleAction
+    public class AddRuleDerivationAction(Grammar grammar, SymbolsList symbols) : RuleAction
     {
         public override Rule? Perform(Rule? rule, ParsedToken word)
         {
             if (rule == null) throw new NullRuleException("Attempting to write to a derivation of a non existent rule");
 
-            string token = tokens[word.TokenIndex].Name;
-            if (token.StartsWith('\\')) token = token.Substring(1); // Handles an escape char
+            // Handles escape characters
+            string new_token = grammar.RemoveEscapeCharacters(symbols[word.TokenIndex].Name);
 
-            if (grammar.Terminals.Contains(token))
+            // Adds the symbol to the rule derivation
+            if (grammar.Terminals.Contains(new_token))
             {
-                rule.AddTerminal(grammar.GetTerminalIndex(token), word.Line);
+                rule.AddTerminal(grammar.GetTerminalIndex(new_token), word.Line);
                 return rule;
             }
-            else if (grammar.NonTerminals.Contains(token))
+            else if (grammar.NonTerminals.Contains(new_token))
             {
-                rule.AddNonTerminal(grammar.GetNonTerminalIndex(token), word.Line);
+                rule.AddNonTerminal(grammar.GetNonTerminalIndex(new_token), word.Line);
                 return rule;
             }
-            throw new UnknownSymbolException(token, word.Line);
+            throw new UnknownSymbolException(new_token, word.Line);
         }
     }
 }

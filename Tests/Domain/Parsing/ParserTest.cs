@@ -64,7 +64,7 @@ namespace Nt.SyntaxParser.Tests.Parsing
         {
             var parser = new Parser([], []);
             var stringToParse = "\\a";
-            var expectedTokens = new List<string>(["\\a"]);
+            var expectedTokens = new List<string>(["a"]);
             ParseString(parser, stringToParse, expectedTokens);
         }
 
@@ -73,7 +73,7 @@ namespace Nt.SyntaxParser.Tests.Parsing
         {
             var parser = new Parser([], []);
             var stringToParse = "a\\b";
-            var expectedTokens = new List<string>(["a\\b"]);
+            var expectedTokens = new List<string>(["ab"]);
             ParseString(parser, stringToParse, expectedTokens);
         }
 
@@ -82,7 +82,7 @@ namespace Nt.SyntaxParser.Tests.Parsing
         {
             var parser = new Parser([], []);
             var stringToParse = "\\ab";
-            var expectedTokens = new List<string>(["\\ab"]);
+            var expectedTokens = new List<string>(["ab"]);
             ParseString(parser, stringToParse, expectedTokens);
         }
 
@@ -91,7 +91,25 @@ namespace Nt.SyntaxParser.Tests.Parsing
         {
             var parser = new Parser([], []);
             var stringToParse = "a\\\\b";
-            var expectedTokens = new List<string>(["a\\\\b"]);
+            var expectedTokens = new List<string>(["a\\b"]);
+            ParseString(parser, stringToParse, expectedTokens);
+        }
+
+        [Fact]
+        public void ParseEscape_TestSeparator()
+        {
+            var parser = new Parser([' '], []);
+            var stringToParse = "a\\ b";
+            var expectedTokens = new List<string>(["a b"]);
+            ParseString(parser, stringToParse, expectedTokens);
+        }
+
+        [Fact]
+        public void ParseEscape_TestSymbol()
+        {
+            var parser = new Parser([], ["+"]);
+            var stringToParse = "a\\+b";
+            var expectedTokens = new List<string>(["a+b"]);
             ParseString(parser, stringToParse, expectedTokens);
         }
 
