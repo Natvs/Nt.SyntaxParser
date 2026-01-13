@@ -16,22 +16,21 @@ namespace Nt.SyntaxParser.Parsing.States
             {
                 parser.CurrentToken += c.ToString();
             }
+            else if (parser.Breaks.Contains(c))
+            {
+                parser.ParseCurrent();
+                parser.CurrentToken = c.ToString();
+            }
+            else if (parser.Separators.Contains(c))
+            {
+                parser.ParseCurrent();
+                parser.CurrentState = new DefaultState(parser);
+            }
             else
             {
                 parser.ParseCurrent();
-                if (parser.Breaks.Contains(c))
-                {
-                    parser.CurrentToken = c.ToString();
-                }
-                else if (parser.Separators.Contains(c))
-                {
-                    parser.CurrentState = new DefaultState(parser);
-                }
-                else
-                {
-                    parser.CurrentToken = c.ToString();
-                    parser.CurrentState = new DefaultState(parser);
-                }
+                parser.CurrentToken = c.ToString();
+                parser.CurrentState = new SymbolState(parser);
             }
         }
     }
