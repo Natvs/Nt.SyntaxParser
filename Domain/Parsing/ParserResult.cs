@@ -28,7 +28,6 @@ namespace Nt.Parsing
             var sb = new StringBuilder().Append('{');
             for (int i = 0; i < Parsed.Count - 1; i++)
             {
-                if (i > 0) sb.Append(", ");
                 var token = Symbols[Parsed[i].TokenIndex].Name;
                 sb.Append($"{token}, ");
             }

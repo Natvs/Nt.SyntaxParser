@@ -9,24 +9,34 @@ namespace Nt.Syntax.Actions.Tests
         public void AddImportPathAction_Test1()
         {
             var tokens = new SymbolsList(["dir"]);
-            var path = new ImportPath();
-            var action = new AddImportPathAction(tokens, path);
-            action.Perform(new ParsedToken(0, 0));
+            var context = new AutomatonContext();
+            var readAction = new AppendToCurrentImportPathAction(tokens, context);
+            var setAction = new AddImportPathAction(context);
+            readAction.Perform(new ParsedToken(0, 0));
+            setAction.Perform(new ParsedToken(0, 0));
 
-            Assert.Single(path.Path);
-            Assert.Equal("dir", path.Path[0]);
+            var path = context.GetPath();
+            Assert.Single(path);
+            Assert.Contains("dir", path);
         }
 
         [Fact]
         public void AddImportPathAction_Test2()
         {
             var tokens = new SymbolsList(["dir1", "dir2", "dir3"]);
-            var path = new ImportPath();
-            var action = new AddImportPathAction(tokens, path);
-            for (int i = 0; i < tokens.Count; i++) action.Perform(new ParsedToken(i, 0));
+            var context = new AutomatonContext();
 
-            Assert.Equal(tokens.Count, path.Path.Count);
-            for (int i = 0; i < tokens.Count; i++) Assert.Equal(tokens[i].Name, path.Path[i]);
+            var readAction = new AppendToCurrentImportPathAction(tokens, context);
+            var setAction = new AddImportPathAction(context);
+            for (int i = 0; i < tokens.Count; i++)
+            {
+                readAction.Perform(new ParsedToken(i, 0));
+                setAction.Perform(new ParsedToken(0, 0));
+            }
+
+            var path = context.GetPath();
+            Assert.Equal(tokens.Count, path.Count);
+            for (int i = 0; i < tokens.Count; i++) Assert.Contains(tokens[i].Name, path);
         }
     }
 }

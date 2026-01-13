@@ -11,10 +11,13 @@ namespace Nt.Syntax.Actions.Tests
         {
             var filename = "../../../Resources/test_file.txt";
             var tokens = new SymbolsList([filename]);
-            var path = new ImportPath();
+            var context = new AutomatonContext();;
 
-            var action = new ImportFileAction(tokens, path);
-            var imported = action.Perform(new(0, 0));
+            var readAction = new AppendToCurrentImportFileAction(tokens, context);
+            var importAction = new ImportFileAction(context);
+
+            readAction.Perform(new(0, 0));
+            var imported = importAction.Perform(new(0, 0));
             var expected = File.ReadAllText(filename);
 
             Assert.Equal(expected, imported);
@@ -25,11 +28,13 @@ namespace Nt.Syntax.Actions.Tests
         {
             var filename = "../../../Resources/non_existent_file.txt";
             var tokens = new SymbolsList([filename]);
-            var path = new ImportPath();
+            var context = new AutomatonContext();
 
-            var action = new ImportFileAction(tokens, path);
+            var readAction = new AppendToCurrentImportFileAction(tokens, context);
+            var importAction = new ImportFileAction(context);
 
-            Assert.Throws<ImportFileNotFoundException>(() => action.Perform(new(0, 0)));
+            readAction.Perform(new(0, 0));
+            Assert.Throws<ImportFileNotFoundException>(() => importAction.Perform(new(0, 0)));
         }
 
         [Fact]
@@ -37,11 +42,13 @@ namespace Nt.Syntax.Actions.Tests
         {
             var filename = "../not/an/existing/path";
             var tokens = new SymbolsList([filename]);
-            var path = new ImportPath();
+            var context = new AutomatonContext();
 
-            var action = new ImportFileAction(tokens, path);
+            var readAction = new AppendToCurrentImportFileAction(tokens, context);
+            var importAction = new ImportFileAction(context);
 
-            Assert.Throws<ImportFileNotFoundException>(() => action.Perform(new(0, 0)));
+            readAction.Perform(new(0, 0));
+            Assert.Throws<ImportFileNotFoundException>(() => importAction.Perform(new(0, 0)));
         }
 
         [Fact]
@@ -49,10 +56,19 @@ namespace Nt.Syntax.Actions.Tests
         {
             var folderpath = "../../../Resources";
             var filename = "test_file.txt";
-            var tokens = new SymbolsList([filename]);
-            var path = new ImportPath([folderpath]);
+            var tokens = new SymbolsList([folderpath, filename]);
+            var context = new AutomatonContext();
 
-            var action = new ImportFileAction(tokens, path);
+            var pathReadAction = new AppendToCurrentImportPathAction(new SymbolsList([folderpath]), context);
+            var pathAction = new AddImportPathAction(context);
+
+            pathReadAction.Perform(new(0, 0));
+            pathAction.Perform(new(0, 0));
+
+            var readAction = new AppendToCurrentImportFileAction(tokens, context);
+            var action = new ImportFileAction(context);
+
+            readAction.Perform(new(1, 0));
             var imported = action.Perform(new(0, 0));
             var expected = File.ReadAllText(folderpath + "/" + filename);
 
@@ -64,12 +80,21 @@ namespace Nt.Syntax.Actions.Tests
         {
             var folderpath = "../../../Resources";
             var filename = "non_existent_file.txt";
-            var tokens = new SymbolsList([filename]);
-            var path = new ImportPath([folderpath]);
+            var tokens = new SymbolsList([folderpath, filename]);
+            var context = new AutomatonContext();
 
-            var action = new ImportFileAction(tokens, path);
+            var pathReadAction = new AppendToCurrentImportPathAction(new SymbolsList([folderpath]), context);
+            var pathAction = new AddImportPathAction(context);
 
-            Assert.Throws<ImportFileNotFoundException>(() => action.Perform(new(0, 0)));
+            pathReadAction.Perform(new(0, 0));
+            pathAction.Perform(new(0, 0));
+
+            var readAction = new AppendToCurrentImportFileAction(tokens, context);
+            var importAction = new ImportFileAction(context);
+
+            readAction.Perform(new(1, 0));
+
+            Assert.Throws<ImportFileNotFoundException>(() => importAction.Perform(new(0, 0)));
         }
 
         [Fact]
@@ -77,11 +102,20 @@ namespace Nt.Syntax.Actions.Tests
         {
             var folderpath = "../../../Resources";
             var filename = "test_file.txt";
-            var tokens = new SymbolsList([folderpath + "/" + filename]);
-            var path = new ImportPath([folderpath]);
+            var tokens = new SymbolsList([folderpath, folderpath + "/" + filename]);
+            var context = new AutomatonContext();
 
-            var action = new ImportFileAction(tokens, path);
-            var imported = action.Perform(new(0, 0));
+            var pathReadAction = new AppendToCurrentImportPathAction(new SymbolsList([folderpath]), context);
+            var pathAction = new AddImportPathAction(context);
+
+            pathReadAction.Perform(new(0, 0));
+            pathAction.Perform(new(0, 0));
+
+            var readAction = new AppendToCurrentImportFileAction(tokens, context);
+            var importAction = new ImportFileAction(context);
+
+            readAction.Perform(new(1, 0));
+            var imported = importAction.Perform(new(0, 0));
             var expected = File.ReadAllText(folderpath + "/" + filename);
 
             Assert.Equal(expected, imported);

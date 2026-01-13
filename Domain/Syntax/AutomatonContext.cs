@@ -23,5 +23,16 @@ namespace Nt.Syntax
             CurrentTerminal = "";
             CurrentNonTerminal = "";
         }
+
+        #region Public methods
+        
+        public List<string> GetPath()
+        {
+            List<string> path = [];
+            foreach (var segment in ImportPath.Path) path.Add(segment);
+            return path;
+        }
+        
+        #endregion
     }
 }

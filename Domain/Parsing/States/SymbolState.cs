@@ -30,7 +30,7 @@ namespace Nt.SyntaxParser.Parsing.States
             {
                 parser.ParseCurrent();
                 parser.CurrentToken = c.ToString();
-                parser.CurrentState = new SymbolState(parser);
+                parser.CurrentState = new DefaultState(parser);
             }
         }
     }
