@@ -202,7 +202,7 @@ namespace Nt.Syntax
             State newRegExState = new State().SetDefault(error);
             State equalState = new State().SetDefault(error);
             State symbolState = new State().SetDefault(equalState, new AddNewRegExAction(Grammar, symbols));
-            var readState = new State(); readState.SetDefault(readState, new AddRegExSymbolsAction(symbols));
+            var readState = new State(); readState.SetDefault(readState, new AddRegExSymbolsAction(Grammar, symbols));
 
             initial.AddTransition("E", newRegExState);
             newRegExState.AddTransition(":", symbolState);

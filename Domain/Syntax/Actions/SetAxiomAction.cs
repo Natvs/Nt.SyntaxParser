@@ -15,7 +15,8 @@ namespace Nt.Syntax.Actions
         /// <param name="word">Parsed token to add as new terminal</param>
         public override void Perform(ParsedToken word)
         {
-            grammar.SetAxiom(tokens[word.TokenIndex].Name);
+            var new_token = grammar.RemoveEscapeCharacters(tokens[word.TokenIndex].Name);
+            grammar.SetAxiom(new_token);
         }
 
     }
