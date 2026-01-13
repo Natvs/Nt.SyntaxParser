@@ -68,16 +68,20 @@ When writing a grammar, here is how to use each escape character:
 
 2. Use `'` in rule derivations definitions for symbols `|` and `'` to define them as rule symbols and not rule end markers. The escape character `'` can also be used for any character, though it has no effect.
 
-3. To include `;` in a rule derivation, use a combination of the above `'\;`.
+3. To include a terminal containing `,` or `}` in a terminals set (`T={...}`), use the combination `'\,` and `'\}`
+
+4. To include `;` in a rule derivation or a regular expression, use the combination `'\;`.
+
+
 
 ## Pre-parsing instructions
-There are two pre-parsing instructions. Both the upper and lower case versions of these instructions are accepted.
+Before parsing the grammar, a pre-parser is first applied to the grammar file. It consists of pre-parsing instructions which stands for configuration commands. Both the upper and lower case versions of these instructions are accepted.
 
 | Instruction | Meaning | Example |
 | --- | --- | --- |
 |addtopath|Adds a folder to the import path|ADDTOPATH ../grammars|
 |import|Imports the content of an external grammar file|IMPORT grammar.txt|
-|escape|Redefines the syntax escape character (`'` by default)|ESCAPE #|
+|escape|Redefines the syntax escape character (`'` by default)|ESCAPE $|
 
 For example, if you have a grammar file under "../grammars/grammar.txt", then there are two ways of importing it.
 ```
