@@ -1,9 +1,6 @@
 ﻿using Nt.Parsing.Structures;
 using Nt.Syntax.Exceptions;
 using Nt.Syntax.Structures;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using Xunit.Sdk;
 
 namespace Nt.Syntax.Tests
 {
@@ -18,21 +15,20 @@ namespace Nt.Syntax.Tests
             }
         }
 
-        private static bool DerivationEquals(Grammar grammar, Derivation derivation, List<(string, int)> referenceList)
+        private static bool DerivationEquals(Grammar grammar, Derivation derivation, List<string> referenceList)
         {
             if (referenceList.Count != derivation.Count) return false;
             for (int i = 0; i < derivation.Count; i++)
             {
                 var symbol_index = -1;
-                if (grammar.Terminals.Contains(referenceList[i].Item1)) symbol_index = grammar.Terminals.IndexOf(referenceList[i].Item1);
-                else symbol_index = grammar.NonTerminals.IndexOf(referenceList[i].Item1);
+                if (grammar.Terminals.Contains(referenceList[i])) symbol_index = grammar.Terminals.IndexOf(referenceList[i]);
+                else symbol_index = grammar.NonTerminals.IndexOf(referenceList[i]);
                 if (symbol_index != derivation[i].Index) return false;
-                if (referenceList[i].Item2 != derivation[i].Line) return false;
             }
             return true;
         }
 
-        private static void AssertRules(Grammar grammar, List<(string, int, List<(string, int)>)> referenceList)
+        private static void AssertRules(Grammar grammar, List<(string, List<string>)> referenceList)
         {
             Assert.Equal(referenceList.Count, grammar.Rules.Count);
             foreach (var reference in referenceList)
@@ -40,24 +36,35 @@ namespace Nt.Syntax.Tests
                 Assert.Contains(grammar.Rules, rule =>
                     rule.Token != null
                     && rule.Token.Index == grammar.NonTerminals.IndexOf(reference.Item1)
-                    && rule.Token.Line == reference.Item2
-                    && DerivationEquals(grammar, rule.Derivation, reference.Item3));
+                    && DerivationEquals(grammar, rule.Derivation, reference.Item2));
             }
         }
 
-        private static void AssertRegex(ICollection<RegularExpression> regexList, List<(NonTerminal, string)> referenceList)
+        private static void AssertRegex(Grammar grammar, List<(string, string)> referenceList)
         {
-            Assert.Equal(referenceList.Count, regexList.Count);
+            Assert.Equal(referenceList.Count, grammar.RegularExpressions.Count);
             foreach (var reference in referenceList)
             {
-                Assert.Contains(regexList, regex => 
+                var token_index = grammar.NonTerminals.IndexOf(reference.Item1);
+
+                Assert.Contains(grammar.RegularExpressions, regex => 
                     regex.Token != null
-                    && regex.Token.Index == reference.Item1.Index
-                    && regex.Token.Line == reference.Item1.Line
+                    && regex.Token.Index == token_index
                     && regex.Pattern == reference.Item2);
             }
         }
 
+        private static void AssertAxiom(Grammar grammar, string axiom)
+        {
+            if (axiom.Equals(""))
+            {
+                Assert.Equal(-1, grammar.Axiom);
+                return;
+            }
+            Assert.True(grammar.NonTerminals.Contains(axiom));
+            var token_index = grammar.NonTerminals.IndexOf(axiom);
+            Assert.Equal(token_index, grammar.Axiom);
+        }
         #region NonTerminals
 
         [Fact]
@@ -67,10 +74,10 @@ namespace Nt.Syntax.Tests
             var grammar = parser.ParseString("N = {A}");
 
             AssertTokens(grammar.NonTerminals, ["A"]);
-            Assert.Empty(grammar.Terminals);
-            Assert.Equal(-1, grammar.Axiom);
-            Assert.Empty(grammar.Rules);
-            Assert.Empty(grammar.RegularExpressions);
+            AssertTokens(grammar.Terminals, []);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, []);
+            AssertRegex(grammar, []);
         }
 
         [Fact]
@@ -80,10 +87,10 @@ namespace Nt.Syntax.Tests
             var grammar = parser.ParseString("N = {A, B, C, D}");
 
             AssertTokens(grammar.NonTerminals, ["A", "B", "C", "D"]);
-            Assert.Empty(grammar.Terminals);
-            Assert.Equal(-1, grammar.Axiom);
-            Assert.Empty(grammar.Rules);
-            Assert.Empty(grammar.RegularExpressions);
+            AssertTokens(grammar.Terminals, []);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, []);
+            AssertRegex(grammar, []);
         }
 
         [Fact]
@@ -93,10 +100,10 @@ namespace Nt.Syntax.Tests
             var grammar = parser.ParseString("N = {A, B}\nN={C, D}");
 
             AssertTokens(grammar.NonTerminals, ["A", "B", "C", "D"]);
-            Assert.Empty(grammar.Terminals);
-            Assert.Equal(-1, grammar.Axiom);
-            Assert.Empty(grammar.Rules);
-            Assert.Empty(grammar.RegularExpressions);
+            AssertTokens(grammar.Terminals, []);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, []);
+            AssertRegex(grammar, []);
         }
 
         #endregion
@@ -110,11 +117,10 @@ namespace Nt.Syntax.Tests
             var grammar = parser.ParseString("T = {a}");
 
             AssertTokens(grammar.Terminals, ["a"]);
-
-            Assert.Empty(grammar.NonTerminals);
-            Assert.Equal(-1, grammar.Axiom);
-            Assert.Empty(grammar.Rules);
-            Assert.Empty(grammar.RegularExpressions);
+            AssertTokens(grammar.NonTerminals, []);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, []);
+            AssertRegex(grammar, []);
         }
 
         [Fact]
@@ -124,10 +130,10 @@ namespace Nt.Syntax.Tests
             var grammar = parser.ParseString("T = {a, b, c, d}");
 
             AssertTokens(grammar.Terminals, ["a", "b", "c", "d"]);
-            Assert.Empty(grammar.NonTerminals);
-            Assert.Equal(-1, grammar.Axiom);
-            Assert.Empty(grammar.Rules);
-            Assert.Empty(grammar.RegularExpressions);
+            AssertTokens(grammar.NonTerminals, []);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, []);
+            AssertRegex(grammar, []);
         }
 
         [Fact]
@@ -137,10 +143,10 @@ namespace Nt.Syntax.Tests
             var grammar = parser.ParseString("T = {a, b}\nT={c, d}");
 
             AssertTokens(grammar.Terminals, ["a", "b", "c", "d"]);
-            Assert.Empty(grammar.NonTerminals);
-            Assert.Equal(-1, grammar.Axiom);
-            Assert.Empty(grammar.Rules);
-            Assert.Empty(grammar.RegularExpressions);
+            AssertTokens(grammar.NonTerminals, []);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, []);
+            AssertRegex(grammar, []);
         }
 
         [Fact]
@@ -150,34 +156,34 @@ namespace Nt.Syntax.Tests
             var grammar = parser.ParseString("T = {=}");
 
             AssertTokens(grammar.Terminals, ["="]);
-            Assert.Empty(grammar.NonTerminals);
-            Assert.Equal(-1, grammar.Axiom);
-            Assert.Empty(grammar.Rules);
-            Assert.Empty(grammar.RegularExpressions);
+            AssertTokens(grammar.NonTerminals, []);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, []);
+            AssertRegex(grammar, []);
         }
 
         [Fact]
         public void SyntaxParser_ParseSymbolTest2()
         {
             var parser = new SyntaxParser();
-            var grammar = parser.ParseString("N = {==}");
-            AssertTokens(grammar.NonTerminals, ["=="]);
-            Assert.Empty(grammar.Terminals);
-            Assert.Equal(-1, grammar.Axiom);
-            Assert.Empty(grammar.Rules);
-            Assert.Empty(grammar.RegularExpressions);
+            var grammar = parser.ParseString("T = {==}");
+            AssertTokens(grammar.NonTerminals, []);
+            AssertTokens(grammar.Terminals, ["=="]);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, []);
+            AssertRegex(grammar, []);
         }
 
         [Fact]
         public void SyntaxParser_ParseSymbolTest3()
         {
             var parser = new SyntaxParser();
-            var grammar = parser.ParseString("N = {===}");
-            AssertTokens(grammar.NonTerminals, ["==="]);
-            Assert.Empty(grammar.Terminals);
-            Assert.Equal(-1, grammar.Axiom);
-            Assert.Empty(grammar.Rules);
-            Assert.Empty(grammar.RegularExpressions);
+            var grammar = parser.ParseString("T = {===}");
+            AssertTokens(grammar.NonTerminals, []);
+            AssertTokens(grammar.Terminals, ["==="]);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, []);
+            AssertRegex(grammar, []);
         }
 
         #endregion
@@ -192,9 +198,9 @@ namespace Nt.Syntax.Tests
 
             AssertTokens(grammar.NonTerminals, ["A", "B"]);
             AssertTokens(grammar.Terminals, ["a", "b"]);
-            Assert.Equal(-1, grammar.Axiom);
-            Assert.Empty(grammar.Rules);
-            Assert.Empty(grammar.RegularExpressions);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, []);
+            AssertRegex(grammar, []);
         }
 
         [Fact]
@@ -205,9 +211,9 @@ namespace Nt.Syntax.Tests
 
             AssertTokens(grammar.NonTerminals, ["A", "B", "C", "D"]);
             AssertTokens(grammar.Terminals, ["a", "b", "c", "d"]);
-            Assert.Equal(-1, grammar.Axiom);
-            Assert.Empty(grammar.Rules);
-            Assert.Empty(grammar.RegularExpressions);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, []);
+            AssertRegex(grammar, []);
         }
 
         #endregion
@@ -220,11 +226,11 @@ namespace Nt.Syntax.Tests
             var parser = new SyntaxParser();
             var grammar = parser.ParseString("N={A}\nS=A");
 
-            Assert.Empty(grammar.Terminals);
+            AssertTokens(grammar.Terminals, []);
             AssertTokens(grammar.NonTerminals, ["A"]);
-            Assert.Equal(0, grammar.Axiom);
-            Assert.Empty(grammar.Rules);
-            Assert.Empty(grammar.RegularExpressions);
+            AssertAxiom(grammar, "A");
+            AssertRules(grammar, []);
+            AssertRegex(grammar, []);
         }
 
         [Fact]
@@ -247,9 +253,9 @@ namespace Nt.Syntax.Tests
 
             AssertTokens(grammar.NonTerminals, ["A"]);
             AssertTokens(grammar.Terminals, ["a"]);
-            Assert.Equal(-1, grammar.Axiom);
-            AssertRules(grammar, [("A", 3, [("a", 3)])]);
-            Assert.Empty(grammar.RegularExpressions);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, [("A", ["a"])]);
+            AssertRegex(grammar, []);
         }
 
         [Fact]
@@ -260,11 +266,9 @@ namespace Nt.Syntax.Tests
 
             AssertTokens(grammar.NonTerminals, ["A"]);
             AssertTokens(grammar.Terminals, ["a", "b"]);
-            Assert.Equal(-1, grammar.Axiom);
-            AssertRules(grammar, [
-                ("A", 3, [("a", 3)]),
-                ("A", 3, [("b", 3)])
-            ]);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, [("A", ["a"]), ("A", ["b"]) ]);
+            AssertRegex(grammar, []);
         }
 
         [Fact]
@@ -275,12 +279,12 @@ namespace Nt.Syntax.Tests
 
             AssertTokens(grammar.NonTerminals, ["A", "B"]);
             AssertTokens(grammar.Terminals, ["a", "b"]);
-            Assert.Equal(-1, grammar.Axiom);
+            AssertAxiom(grammar, "");
             AssertRules(grammar, [
-                ("A", 3, [("a",3), ("B",3)]),
-                ("B", 4, [("b", 4)])
+                ("A", ["a", "B"]),
+                ("B", ["b"])
             ]);
-            Assert.Empty(grammar.RegularExpressions);
+            AssertRegex(grammar, []);
         }
 
         [Fact]
@@ -291,14 +295,14 @@ namespace Nt.Syntax.Tests
 
             AssertTokens(grammar.NonTerminals, ["A", "B"]);
             AssertTokens(grammar.Terminals, ["a", "b", "c", "d"]);
-            Assert.Equal(-1, grammar.Axiom);
+            AssertAxiom(grammar, "");
             AssertRules(grammar, [
-                ("A", 3, [("a", 3), ("B", 3)]),
-                ("A", 3, [("c", 3)]),
-                ("B", 4, [("b", 4)]),
-                ("B", 4, [("d", 4), ("A", 4)])
+                ("A", ["a", "B"]),
+                ("A", ["c"]),
+                ("B", ["b"]),
+                ("B", ["d", "A"])
             ]);
-            Assert.Empty(grammar.RegularExpressions);
+            AssertRegex(grammar, []);
         }
 
         [Fact]
@@ -332,11 +336,11 @@ namespace Nt.Syntax.Tests
             var parser = new SyntaxParser();
             var grammar = parser.ParseString("N={VAR}\nE:VAR = \"[a-zA-Z_]*\";");
 
-            Assert.Empty(grammar.Terminals);
+            AssertTokens(grammar.Terminals, []);
             AssertTokens(grammar.NonTerminals, ["VAR"]);
-            Assert.Equal(-1, grammar.Axiom);
-            Assert.Empty(grammar.Rules);
-            AssertRegex(grammar.RegularExpressions, [(new(0, 2), "\"[a-zA-Z_]*\"")]);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, []);
+            AssertRegex(grammar, [("VAR", "\"[a-zA-Z_]*\"")]);
         }
 
         [Fact]
@@ -345,13 +349,13 @@ namespace Nt.Syntax.Tests
             var parser = new SyntaxParser();
             var grammar = parser.ParseString("N={VAR, NUM}\nE:VAR = \"[a-zA-Z_]*\";\nE:NUM = \"[0-9]+\";");
 
-            Assert.Empty(grammar.Terminals);
+            AssertTokens(grammar.Terminals, []);
             AssertTokens(grammar.NonTerminals, ["VAR", "NUM"]);
-            Assert.Equal(-1, grammar.Axiom);
-            Assert.Empty(grammar.Rules);
-            AssertRegex(grammar.RegularExpressions, [
-                (new(0, 2), "\"[a-zA-Z_]*\""),
-                (new(1, 3), "\"[0-9]+\"")
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, []);
+            AssertRegex(grammar, [
+                ("VAR", "\"[a-zA-Z_]*\""),
+                ("NUM", "\"[0-9]+\"")
             ]);
         }
 
@@ -372,12 +376,11 @@ namespace Nt.Syntax.Tests
             var parser = new SyntaxParser();
             var grammar = parser.ParseString("ESCAPE $\nT={$a}");
 
-            Assert.Single(grammar.Terminals);
             AssertTokens(grammar.Terminals, ["a"]);
-            Assert.Empty(grammar.NonTerminals);
-            Assert.Equal(-1, grammar.Axiom);
-            Assert.Empty(grammar.Rules);
-            Assert.Empty(grammar.RegularExpressions);
+            AssertTokens(grammar.NonTerminals, []);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, []);
+            AssertRegex(grammar, []);
         }
 
         [Fact]
@@ -386,12 +389,11 @@ namespace Nt.Syntax.Tests
             var parser = new SyntaxParser();
             var grammar = parser.ParseString("ESCAPE $\nN={$A}");
 
-            Assert.Empty(grammar.Terminals);
-            Assert.Single(grammar.NonTerminals);
+            AssertTokens(grammar.Terminals, []);
             AssertTokens(grammar.NonTerminals, ["A"]);
-            Assert.Equal(-1, grammar.Axiom);
-            Assert.Empty(grammar.Rules);
-            Assert.Empty(grammar.RegularExpressions);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, []);
+            AssertRegex(grammar, []);
         }
 
         [Fact]
@@ -399,12 +401,11 @@ namespace Nt.Syntax.Tests
         {
             var parser = new SyntaxParser();
             var grammar = parser.ParseString("ESCAPE $\nN={A}\nS=$A");
-            Assert.Empty(grammar.Terminals);
-            Assert.Single(grammar.NonTerminals);
+            AssertTokens(grammar.Terminals, []);
             AssertTokens(grammar.NonTerminals, ["A"]);
-            Assert.Equal(0, grammar.Axiom);
-            Assert.Empty(grammar.Rules);
-            Assert.Empty(grammar.RegularExpressions);
+            AssertAxiom(grammar, "A");
+            AssertRules(grammar, []);
+            AssertRegex(grammar, []);
         }
 
         [Fact]
@@ -413,14 +414,11 @@ namespace Nt.Syntax.Tests
             var parser = new SyntaxParser();
             var grammar = parser.ParseString("ESCAPE $\nT={a}\nN={A}\nR:A->$a;");
 
-            Assert.Single(grammar.Terminals);
             AssertTokens(grammar.Terminals, ["a"]);
-            Assert.Single(grammar.NonTerminals);
             AssertTokens(grammar.NonTerminals, ["A"]);
-            Assert.Equal(-1, grammar.Axiom);
-            Assert.Single(grammar.Rules);
-            AssertRules(grammar, [( "A", 3, [("a", 3)] )]); // Pre-parsing instructions do not count as a new line
-            Assert.Empty(grammar.RegularExpressions);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, [("A", ["a"])]); // Pre-parsing instructions do not count as a new line
+            AssertRegex(grammar, []);
         }
 
         [Fact]
@@ -429,13 +427,11 @@ namespace Nt.Syntax.Tests
             var parser = new SyntaxParser();
             var grammar = parser.ParseString("ESCAPE $\nN={A}\nE:A=$a;");
 
-            Assert.Empty(grammar.Terminals);
-            Assert.Single(grammar.NonTerminals);
+            AssertTokens(grammar.Terminals, []);
             AssertTokens(grammar.NonTerminals, ["A"]);
-            Assert.Equal(-1, grammar.Axiom);
-            Assert.Empty(grammar.Rules);
-            Assert.Single(grammar.RegularExpressions);
-            AssertRegex(grammar.RegularExpressions, [(new(0, 2), "a")]);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, []);
+            AssertRegex(grammar, [("A", "a")]);
         }
 
         [Fact]
@@ -454,18 +450,18 @@ namespace Nt.Syntax.Tests
 
             AssertTokens(grammar.NonTerminals, ["S", "A", "B", "C", "D"]);
             AssertTokens(grammar.Terminals, ["a", "b", "c"]);
-            Assert.Equal(0, grammar.Axiom);
+            AssertAxiom(grammar, "S");
             AssertRules(grammar, [
-                ("S", 4, [("A",4), ("B",4)]),
-                ("S", 4, [("c",4)]),
-                ("A", 5, [("a",5), ("A",5)]),
-                ("A", 5, [("C",5)]),
-                ("B", 6, [("b",6), ("B",6)]),
-                ("B", 6, [("D",6)])
+                ("S", ["A", "B"]),
+                ("S", ["c"]),
+                ("A", ["a", "A"]),
+                ("A", ["C"]),
+                ("B", ["b", "B"]),
+                ("B", ["D"])
             ]);
-            AssertRegex(grammar.RegularExpressions, [
-                (new(3, 7), "\"a+\""),
-                (new(4, 8), "\"b+\"")
+            AssertRegex(grammar, [
+                ("C", "\"a+\""),
+                ("D", "\"b+\"")
             ]);
         }
 
@@ -524,6 +520,40 @@ namespace Nt.Syntax.Tests
         {
             var parser = new SyntaxParser();
             Assert.Throws<SyntaxError>(() => parser.ParseString("N={A}\nT={a}\nR: A -* a"));
+        }
+
+        #endregion
+
+        #region Importation
+
+        [Fact]
+        public void SyntaxParser_RecursiveSingleImportTest()
+        {
+            var parser = new SyntaxParser();
+
+            var filename = "../../../Resources/single_import_grammar.txt";
+            Grammar grammar = parser.ParseFile(filename);
+
+            AssertTokens(grammar.Terminals, ["a", "b"]);
+            AssertTokens(grammar.NonTerminals, ["A"]);
+            AssertAxiom(grammar, "A");
+            AssertRules(grammar, [("A", ["a"]), ("A", ["b"])]);
+            AssertRegex(grammar, []);
+        }
+
+        [Fact]
+        public void SyntaxParser_RecursiveMultipleImportTest()
+        {
+            var parser = new SyntaxParser();
+
+            var filename = "../../../Resources/multiple_import_grammar.txt";
+            Grammar grammar = parser.ParseFile(filename);
+
+            AssertTokens(grammar.Terminals, ["a", "b"]);
+            AssertTokens(grammar.NonTerminals, ["A", "B"]);
+            AssertAxiom(grammar, "A");
+            AssertRules(grammar, [("A", ["a"]), ("B", ["b"]), ("A", ["B"])]);
+            AssertRegex(grammar, []);
         }
 
         #endregion

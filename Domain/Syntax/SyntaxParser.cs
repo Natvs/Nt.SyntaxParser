@@ -89,7 +89,6 @@ namespace Nt.Syntax
 
             Parser parser = new([' ', '\0', '\n', '\t'], ParserSymbols);
             ParserResult parsed = parser.Parse(content);
-            Console.WriteLine(parsed.ToShortString());
 
             GenerateAutomaton(parsed.Symbols);
             foreach (ParsedToken token in parsed.Parsed)
