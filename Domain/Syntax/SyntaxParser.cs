@@ -38,12 +38,16 @@ namespace Nt.Syntax
         public string PreParseString(string content)
         {
             Reset();
-            var sb = new StringBuilder();
-
             Parser parser = new([' ', '\0', '\n', '\t'], ["import", "IMPORT", "addtopath", "ADDTOPATH", "escape", "ESCAPE", ";"]);
-            ParserResult parsed = parser.Parse(content);
+            return PreParseString(content, parser);
+        }
 
+        private string PreParseString(string content, Parser parser)
+        {
+            ParserResult parsed = parser.Parse(content);
             GeneratePreAutomaton(parsed.Symbols);
+            StringBuilder sb = new();
+
             foreach (ParsedToken token in parsed.Parsed)
             {
                 PreAutomaton?.Read(token, AutomatonContext);
@@ -54,17 +58,24 @@ namespace Nt.Syntax
                 }
             }
 
+            var imported = false;
             var contentReader = new StringReader(content);
             string? line;
             while ((line = contentReader.ReadLine()) != null)
             {
-                if (line.StartsWith("import", StringComparison.CurrentCultureIgnoreCase)) continue;
+                if (line.StartsWith("import", StringComparison.CurrentCultureIgnoreCase)) { imported = true; continue; }
                 if (line.StartsWith("addtopath", StringComparison.CurrentCultureIgnoreCase)) continue;
                 if (line.StartsWith("escape", StringComparison.CurrentCultureIgnoreCase)) continue;
                 sb.AppendLine(line);
             }
 
-            return sb.ToString();
+            var new_content = sb.ToString();
+            if (imported)
+            {
+                parser.Reset();
+                return  PreParseString(new_content, parser);
+            }
+            return new_content;
         }
 
         /// <summary>
@@ -107,14 +118,20 @@ namespace Nt.Syntax
 
             PreAutomaton = new Automaton(symbols, initial);
 
-            State addToPathState = new State().SetDefault(initial, new AddImportPathAction(symbols, AutomatonContext.ImportPath));
-            State importState = new State().SetDefault(initial, new ImportFileAction(symbols, AutomatonContext.ImportPath));
+            State addToPathState = new();
+            State importState = new();
             State escapeState = new State().SetDefault(initial, new SetEscapeCharAction(Grammar, symbols));
 
             initial.AddTransition("import", importState);
             initial.AddTransition("IMPORT", importState);
+            importState.SetDefault(importState, new AppendToCurrentImportFileAction(symbols, AutomatonContext));
+            importState.AddTransition(";", initial, new ImportFileAction(AutomatonContext));
+
             initial.AddTransition("addtopath", addToPathState);
             initial.AddTransition("ADDTOPATH", addToPathState);
+            addToPathState.SetDefault(addToPathState, new AppendToCurrentImportPathAction(symbols, AutomatonContext));
+            addToPathState.AddTransition(";", initial, new AddImportPathAction(AutomatonContext));
+
             initial.AddTransition("ESCAPE", escapeState);
             initial.AddTransition("escape", escapeState);
         }

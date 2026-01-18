@@ -5,11 +5,14 @@ namespace Nt.Syntax
     public class AutomatonContext
     {
         internal ImportPath ImportPath { get; private set; } = new ImportPath();
-        internal string? ImportedString { get; set; }
+        internal string? ImportedString { get; 
+            set; }
         internal Rule? Rule { get; set; }
         internal RegularExpression? RegularExpression { get; set; }
         internal string CurrentTerminal { get; set; } = "";
         internal string CurrentNonTerminal { get; set; } = "";
+        internal string CurrentImportFile { get; set; } = "";
+        internal string CurrentImportPath { get; set; } = "";
 
         internal void Reset()
         {
@@ -20,5 +23,16 @@ namespace Nt.Syntax
             CurrentTerminal = "";
             CurrentNonTerminal = "";
         }
+
+        #region Public methods
+        
+        public List<string> GetPath()
+        {
+            List<string> path = [];
+            foreach (var segment in ImportPath.Path) path.Add(segment);
+            return path;
+        }
+        
+        #endregion
     }
 }

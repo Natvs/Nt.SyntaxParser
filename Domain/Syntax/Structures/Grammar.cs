@@ -152,7 +152,6 @@ namespace Nt.Syntax.Structures
 
             sb.Append("Terminals: ").Append(Terminals.ToString()).Append('\n');
             sb.Append("Non terminals: ").Append(NonTerminals.ToString()).Append('\n');
-            //sb.Append("   RegEx symbols: ").Append(RegExSymbols.ToString()).Append('\n');
             if (Axiom > -1) sb.Append("Axiom: ").Append(NonTerminals[Axiom].Name).Append('\n');
 
             if (Rules.Count > 0) sb.Append("\nRules\n");

@@ -5,18 +5,18 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <PackageId>Prod.Nt.SyntaxParser</PackageId>
+    <PackageId>Nt.SyntaxParser</PackageId>
     <AssemblyName>Nt.SyntaxParser</AssemblyName>
-    <RootNamespace>Nt.SyntaxParser</RootNamespace>
-    <Version>1.0.5</Version>
+    <RootNamespace>Nt</RootNamespace>
+    <Version>1.1.0</Version>
     <Authors>Natvs</Authors>
     <Description>Library containing tools for syntax parsing.
 Includes a grammar string parser and a simple text parser.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/Natvs/Nt.SyntaxParser</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>parser ; grammar</PackageTags>
-    <PackageReleaseNotes>Added methods for inserting symbols in a rule derivation</PackageReleaseNotes>
+    <PackageTags>parser ; grammar ; syntax</PackageTags>
+    <PackageReleaseNotes>Recursive importations are now supported</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

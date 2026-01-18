@@ -79,11 +79,14 @@ Before parsing the grammar, a pre-parser is first applied to the grammar file. I
 
 | Instruction | Meaning | Example |
 | --- | --- | --- |
-|addtopath|Adds a folder to the import path|ADDTOPATH ../grammars|
-|import|Imports the content of an external grammar file|IMPORT grammar.txt|
+|addtopath|Adds a folder to the import path|ADDTOPATH ../grammars ;|
+|import|Imports the content of an external grammar file|IMPORT grammar.txt ;|
 |escape|Redefines the syntax escape character (`'` by default)|ESCAPE $|
 
-For example, if you have a grammar file under "../grammars/grammar.txt", then there are two ways of importing it.
+Please pay attention to the instructions followed by `;` and the ones that are not.
+
+### More about importing files
+If you have a grammar file under "../grammars/grammar.txt", then there are two ways of importing it.
 ```
 IMPORT ../grammars/grammar.txt
 ```
@@ -92,6 +95,16 @@ or
 ADDTOPATH ../grammars
 IMPORT grammar.txt
 ```
+
+Here are important things to know about importing instructions:
+- The importation is recursive, that means you can import other grammar files from the file imported.
+- The folders added to the path are still valid in imported files.
+- Order matters: the folders added to the path and the importation of files occur in the order you write it in the grammar.
+
+### Configuration commands
+These pre-parsing instructions are used to edit the configuration for parsing the grammar. There is only the command `ESCAPE` for now.
+
+- For configuration commands like `ESCAPE`, only the last command is valid. Previous instructions are ignored.
 
 ## Example of grammar file use case
 Consider the following grammar files.
@@ -122,8 +135,8 @@ These files can't be directly used as grammars as they don't define any axiom. I
 Where these files could be of interest, is when imported into other big files.
 
 ```body.txt
-IMPORT const.txt
-IMPORT params.txt
+IMPORT const.txt ;
+IMPORT params.txt ;
 
 T = {(, ), {, }, ;, =}
 N = {BODY, TYPE, STRING, CONST}
@@ -154,5 +167,3 @@ E: INT = (0|[0-9]*) ;
 E: FLOAT = [0-9]+(,[0-9]+)? ;
 E: TYPE = (int|double|char|string) ;
 ```
-
-Note that pre-parsing instructions does not works recursively, meaning you can import files only from you main grammar file.

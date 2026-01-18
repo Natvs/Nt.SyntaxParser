@@ -3,7 +3,7 @@ using Nt.Syntax.Structures;
 
 namespace Nt.Syntax.Actions
 {
-    public class AddImportPathAction(SymbolsList tokens, ImportPath path) : Action
+    public class AddImportPathAction(AutomatonContext context) : Action
     {
         /// <summary>
         /// Adds the token read to the import path.
@@ -11,7 +11,8 @@ namespace Nt.Syntax.Actions
         /// <param name="word">The token that is read</param>
         public override void Perform(ParsedToken word)
         {
-            path.Path.Add(tokens[word.TokenIndex].Name);
+            context.ImportPath.Path.Add(context.CurrentImportPath);
+            context.CurrentImportPath = "";
         }
     }
 

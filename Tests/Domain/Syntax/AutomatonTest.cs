@@ -1,6 +1,7 @@
 ﻿using Nt.Parsing.Structures;
+using Nt.Syntax;
 
-namespace Nt.Syntax.Tests
+namespace Nt.Tests.Domain.Syntax
 {
     public class AutomatonTest
     {

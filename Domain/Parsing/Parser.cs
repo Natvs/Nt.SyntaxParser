@@ -14,9 +14,7 @@ namespace Nt.Parsing
 
         private string current = "";
         private int line = 0;
-        private bool isSymbol = false;
-        private bool isEscapeChar = false;
-        private readonly ParserResult result = new();
+        private ParserResult result = new();
 
         internal string CurrentToken { get => current; set => current = value; }
         internal int CurrentLine { get => line; set => line = value; }
@@ -126,6 +124,11 @@ namespace Nt.Parsing
             ParseCurrent(); // Ensures the last token is also parsed
 
             return result;
+        }
+
+        public void Reset()
+        {
+            result = new();
         }
 
         #endregion

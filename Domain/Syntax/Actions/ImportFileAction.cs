@@ -10,14 +10,16 @@ namespace Nt.Syntax.Actions
     /// Reads the performed token as a file name and gets its content
     /// </summary>
     /// <param name="tokens">List of unique parsed tokens</param>
-    public class ImportFileAction(SymbolsList tokens, ImportPath importPath) : IAction
+    public class ImportFileAction(AutomatonContext context) : IAction
     {
         public string Perform(ParsedToken word)
         {
             var sb = new StringBuilder();
 
-            string fileName = tokens[word.TokenIndex].Name;
-            foreach (string path in importPath.Path)
+            string fileName = context.CurrentImportFile;
+            context.CurrentImportFile = "";
+
+            foreach (string path in context.ImportPath.Path)
             {
                 if (FileSystem.FileExists(path + "/" + fileName))
                 {

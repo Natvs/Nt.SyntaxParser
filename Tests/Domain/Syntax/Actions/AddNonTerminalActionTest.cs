@@ -1,7 +1,9 @@
 ﻿using Nt.Parsing.Structures;
+using Nt.Syntax;
+using Nt.Syntax.Actions;
 using Nt.Syntax.Structures;
 
-namespace Nt.Syntax.Actions.Tests
+namespace Nt.Tests.Domain.Syntax.Actions
 {
     public class AddNonTerminalActionTest
     {

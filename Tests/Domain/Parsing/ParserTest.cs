@@ -1,7 +1,7 @@
 ﻿using Nt.Parsing;
 using Nt.Parsing.Exceptions;
 
-namespace Nt.SyntaxParser.Tests.Parsing
+namespace Nt.Tests.Domain.Parsing
 {
     public class ParserTest()
     {
