@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <PackageId>Nt.SyntaxParser</PackageId>
     <AssemblyName>Nt.SyntaxParser</AssemblyName>
-    <RootNamespace>Nt.SyntaxParser</RootNamespace>
+    <RootNamespace>Nt</RootNamespace>
     <Version>1.1.0</Version>
     <Authors>Natvs</Authors>
     <Description>Library containing tools for syntax parsing.

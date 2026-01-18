@@ -1,9 +1,9 @@
 ﻿using Nt.Parsing.Structures;
 using Nt.Syntax.Structures;
 using Nt.Syntax.Exceptions;
+using Nt.Syntax.Actions;
 
-
-namespace Nt.Syntax.Actions.Tests
+namespace Nt.Tests.Domain.Syntax.Actions
 {
     public class AddNewRegExActionTest
     {

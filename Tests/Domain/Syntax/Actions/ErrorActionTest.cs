@@ -3,7 +3,7 @@ using Nt.Syntax.Actions;
 using Nt.Syntax.Structures;
 using Nt.Syntax.Exceptions;
 
-namespace Nt.Syntax.Actions.Tests
+namespace Nt.Tests.Domain.Syntax.Actions
 {
     public class ErrorActionTest
     {
