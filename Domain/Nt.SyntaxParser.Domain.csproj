@@ -8,7 +8,7 @@
     <PackageId>Nt.SyntaxParser</PackageId>
     <AssemblyName>Nt.SyntaxParser</AssemblyName>
     <RootNamespace>Nt.SyntaxParser</RootNamespace>
-    <Version>1.0.2</Version>
+    <Version>1.1.0</Version>
     <Authors>Natvs</Authors>
     <Description>Library containing tools for syntax parsing.
 Includes a grammar string parser and a simple text parser.</Description>
@@ -16,7 +16,7 @@ Includes a grammar string parser and a simple text parser.</Description>
     <RepositoryUrl>https://github.com/Natvs/Nt.SyntaxParser</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>parser ; grammar ; syntax</PackageTags>
-    <PackageReleaseNotes>Fixed a bug preventing from including symbols in terminals and non-terminals</PackageReleaseNotes>
+    <PackageReleaseNotes>Recursive importations are now supported</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
