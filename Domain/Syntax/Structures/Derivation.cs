@@ -21,7 +21,7 @@ namespace Nt.Syntax.Structures
 
         public int Count => Tokens.Count;
 
-        public GrammarToken this[int index] => throw new NotImplementedException();
+        public GrammarToken this[int index] => Tokens[index];
         public IEnumerator<GrammarToken> GetEnumerator()
         {
             foreach (var token in Tokens)

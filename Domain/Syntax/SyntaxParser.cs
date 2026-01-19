@@ -61,6 +61,7 @@ namespace Nt.Syntax
         private void GeneratePreAutomaton()
         {
             var initial = new State(); initial.SetDefault(initial);
+            AutomatonContext.Reset();
 
             PreAutomaton = new Automaton(initial);
             AutomatonEndAction = () =>
@@ -92,7 +93,6 @@ namespace Nt.Syntax
         /// <exception cref="EndOfStringException">The automaton might end on a state different from the initial state</exception>
         private void GenerateAutomaton()
         {
-            Grammar = new Grammar();
             AutomatonContext.Reset();
 
             var errorAction = new ErrorAction();
@@ -203,6 +203,7 @@ namespace Nt.Syntax
         /// <returns>Grammar data structure from the given string</returns>
         public Grammar ParseString(string content)
         {
+            Grammar = new();
             content = PreParseString(content);
 
             SymbolsParser parser = new([' ', '\0', '\n', '\t'], ParserSymbols);
