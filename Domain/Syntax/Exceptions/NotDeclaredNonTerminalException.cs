@@ -1,13 +1,7 @@
 ﻿namespace Nt.Syntax.Exceptions
 {
 
-    public class NotDeclaredTerminalException : Exception
+    public class NotDeclaredNonTerminalException(string name, int line) : Exception($"Symbol {name} at line {line} is not declared as non terminal")
     {
-        public NotDeclaredTerminalException(string name) : base($"Symbol {name} is not declared as a terminal") { }
-    }
-
-    public class NotDeclaredNonTerminalException : Exception
-    {
-        public NotDeclaredNonTerminalException(string name) : base($"Symbol {name} is not declared as non terminal") { }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Nt.Syntax.Structures;
-using Nt.Parsing.Structures;
 using Nt.Syntax.Actions;
+using Nt.Parser.Structures;
 
 namespace Nt.Tests.Domain.Syntax.Actions
 {
@@ -12,9 +12,9 @@ namespace Nt.Tests.Domain.Syntax.Actions
             var grammar = new Grammar();
             Assert.Equal('\'', grammar.EscapeCharacter);
 
-            var tokens = new SymbolsList(["#"]);
-            var action = new SetEscapeCharAction(grammar, tokens);
-            action.Perform(new ParsedToken(0, 0));
+            var symbols = new SymbolsList(["#"]);
+            var action = new SetEscapeCharAction(grammar);
+            action.Perform(new ParsedToken(symbols.Get(0), 0));
             Assert.Equal('#', grammar.EscapeCharacter);
         }
 

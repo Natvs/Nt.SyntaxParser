@@ -1,4 +1,4 @@
-﻿using Nt.Parsing.Structures;
+﻿using Nt.Parser.Structures;
 
 namespace Nt.Syntax
 {
@@ -8,9 +8,8 @@ namespace Nt.Syntax
     /// </summary>
     /// <param name="tokens">List of tokens that this automaton can read</param>
     /// <param name="initialState">Initial state of the automaton</param>
-    public class Automaton(SymbolsList tokens, State initialState)
+    public class Automaton(State initialState)
     {
-        public SymbolsList Tokens { get; } = tokens;
         public State CurrentState { get; private set; } = initialState;
 
         /// <summary>
@@ -20,7 +19,7 @@ namespace Nt.Syntax
         public void Read(ParsedToken token, AutomatonContext context)
         {
             if (CurrentState == null) { return; }
-            CurrentState = CurrentState.Read(token, Tokens, context);
+            CurrentState = CurrentState.Read(token, context);
         }
     }
 }

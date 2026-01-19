@@ -1,5 +1,4 @@
-﻿using Nt.Parsing.Structures;
-using Nt.Syntax;
+﻿using Nt.Parser.Structures;
 using Nt.Syntax.Exceptions;
 using Nt.Syntax.Structures;
 
@@ -7,12 +6,12 @@ namespace Nt.Tests.Domain.Syntax
 {
     public class SyntaxParserTest
     {
-        private static void AssertTokens(SymbolsList tokens, List<string> reference)
+        private static void AssertTokens(SymbolsList symbols, List<string> reference)
         {
-            Assert.Equal(reference.Count, tokens.Count);
-            for (int i = 0; i < tokens.Count; i++)
+            Assert.Equal(reference.Count, symbols.GetCount());
+            for (int i = 0; i < symbols.GetCount(); i++)
             {
-                Assert.Equal(reference[i], tokens[i].Name);
+                Assert.Equal(reference[i], symbols.Get(i).Name);
             }
         }
 
@@ -21,10 +20,7 @@ namespace Nt.Tests.Domain.Syntax
             if (referenceList.Count != derivation.Count) return false;
             for (int i = 0; i < derivation.Count; i++)
             {
-                var symbol_index = -1;
-                if (grammar.Terminals.Contains(referenceList[i])) symbol_index = grammar.Terminals.IndexOf(referenceList[i]);
-                else symbol_index = grammar.NonTerminals.IndexOf(referenceList[i]);
-                if (symbol_index != derivation[i].Index) return false;
+                if (!referenceList[i].Equals(derivation[i].Name)) return false;
             }
             return true;
         }
@@ -36,7 +32,7 @@ namespace Nt.Tests.Domain.Syntax
             {
                 Assert.Contains(grammar.Rules, rule =>
                     rule.Token != null
-                    && rule.Token.Index == grammar.NonTerminals.IndexOf(reference.Item1)
+                    && rule.Token.Name.Equals(reference.Item1)
                     && DerivationEquals(grammar, rule.Derivation, reference.Item2));
             }
         }
@@ -46,11 +42,9 @@ namespace Nt.Tests.Domain.Syntax
             Assert.Equal(referenceList.Count, grammar.RegularExpressions.Count);
             foreach (var reference in referenceList)
             {
-                var token_index = grammar.NonTerminals.IndexOf(reference.Item1);
-
                 Assert.Contains(grammar.RegularExpressions, regex => 
                     regex.Token != null
-                    && regex.Token.Index == token_index
+                    && regex.Token.Name == reference.Item1
                     && regex.Pattern == reference.Item2);
             }
         }
@@ -59,12 +53,12 @@ namespace Nt.Tests.Domain.Syntax
         {
             if (axiom.Equals(""))
             {
-                Assert.Equal(-1, grammar.Axiom);
+                Assert.Null(grammar.Axiom);
                 return;
             }
             Assert.True(grammar.NonTerminals.Contains(axiom));
-            var token_index = grammar.NonTerminals.IndexOf(axiom);
-            Assert.Equal(token_index, grammar.Axiom);
+            Assert.NotNull(grammar.Axiom);
+            Assert.Equal(axiom, grammar.Axiom.Name);
         }
   
         #region NonTerminals
@@ -376,6 +370,15 @@ namespace Nt.Tests.Domain.Syntax
         public void SyntaxParser_EscapeCharacterTest1()
         {
             var parser = new Nt.Syntax.SyntaxParser();
+            var grammar = parser.ParseString("ESCAPE $");
+
+            Assert.Equal('$', grammar.EscapeCharacter);
+        }
+
+        [Fact]
+        public void SyntaxParser_EscapeCharacterTest2()
+        {
+            var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("ESCAPE $\nT={$a}");
 
             AssertTokens(grammar.Terminals, ["a"]);
@@ -386,7 +389,7 @@ namespace Nt.Tests.Domain.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_EscapeCharacterTest2()
+        public void SyntaxParser_EscapeCharacterTest3()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("ESCAPE $\nN={$A}");
@@ -399,7 +402,7 @@ namespace Nt.Tests.Domain.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_EscapeCharacterTest3()
+        public void SyntaxParser_EscapeCharacterTest4()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("ESCAPE $\nN={A}\nS=$A");
@@ -411,7 +414,7 @@ namespace Nt.Tests.Domain.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_EscapeCharacterTest4()
+        public void SyntaxParser_EscapeCharacterTest5()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("ESCAPE $\nT={a}\nN={A}\nR:A->$a;");
@@ -424,7 +427,7 @@ namespace Nt.Tests.Domain.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_EscapeCharacterTest5()
+        public void SyntaxParser_EscapeCharacterTest6()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("ESCAPE $\nN={A}\nE:A=$a;");

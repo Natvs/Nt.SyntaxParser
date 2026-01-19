@@ -1,4 +1,4 @@
-﻿using Nt.Parsing.Structures;
+﻿using Nt.Parser.Structures;
 using Nt.Syntax.Exceptions;
 
 namespace Nt.Syntax.Actions
@@ -20,7 +20,7 @@ namespace Nt.Syntax.Actions
             {
                 if (!context.CurrentNonTerminal.Equals(""))
                 {
-                    grammar.AddNonTerminal(grammar.RemoveEscapeCharacters(context.CurrentNonTerminal));
+                    grammar.AddNonTerminal(grammar.RemoveEscapeCharacter(context.CurrentNonTerminal));
                     context.CurrentNonTerminal = "";
                 }
             }

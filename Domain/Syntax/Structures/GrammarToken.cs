@@ -1,4 +1,4 @@
-using Nt.Parsing.Structures;
+using Nt.Parser.Structures;
 
 namespace Nt.Syntax.Structures
 {
@@ -8,13 +8,15 @@ namespace Nt.Syntax.Structures
         Terminal
     }
     
-    public class GrammarToken(int index, int line)
+    public class GrammarToken(GrammarTokenType type, Symbol symbol, int line)
     {
-        public GrammarTokenType Type { get; protected set; }
-        public int Index { get; } = index;
+        public GrammarTokenType Type { get; } = type;
+        public Symbol Symbol { get; } = symbol;
+
+        public string Name { get => Symbol.Name; }
         public int Line { get; } = line;
 
-        public override string ToString() => $"(Index: {Index}, Line: {Line})";
+        public override string ToString() => $"(Name: {Symbol.Name}, Line: {Line})";
 
     }
 }

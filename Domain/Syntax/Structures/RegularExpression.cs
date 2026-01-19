@@ -1,26 +1,28 @@
-﻿using Nt.Parsing.Structures;
+﻿using Nt.Syntax.Exceptions;
 using System.Text;
 
 namespace Nt.Syntax.Structures
 {
-    public class RegularExpression(SymbolsList nonterminals)
+    public class RegularExpression(Grammar grammar)
     {
         public NonTerminal? Token { get; private set; }
         public string Pattern { get; private set; } = "";
 
         /// <summary>
-        /// Sets a non terminal that would derive into word matching the regular expression
+        /// Sets the token of this regular expression to the specified non-terminal symbol.
         /// </summary>
-        /// <param name="index">Index of the non terminal</param>
-        /// <param name="line">Line the symbol has been parsed</param>
-        public void SetToken(int index, int line)
+        /// <param name="nt">The non-terminal symbol to assign as the current token. The non-terminal must be declared in the grammar;</param>
+        /// <exception cref="NotDeclaredNonTerminalException">Thrown if the specified non-terminal symbol is not declared in the grammar.</exception>
+        public void SetToken(NonTerminal nt)
         {
-            Token = new NonTerminal(index, line);
+            if (!grammar.NonTerminals.Contains(nt.Name)) throw new NotDeclaredNonTerminalException(nt.Name, nt.Line);
+            Token = nt;
         }
+
         /// <summary>
-        /// Adds a sequence of symbol to the regular expression
+        /// Appends the specified symbols to the current pattern.
         /// </summary>
-        /// <param name="symbols">Sequence of symbols to add</param>
+        /// <param name="symbols">A string containing the symbols to add to the pattern. Cannot be null.</param>
         public void AddSymbols(string symbols)
         {
             Pattern += symbols;
@@ -34,7 +36,7 @@ namespace Nt.Syntax.Structures
         {
             var sb = new StringBuilder();
 
-            if (Token != null) sb.Append(nonterminals[Token.Index].Name);
+            if (Token != null) sb.Append(Token.Symbol.Name);
             else sb.Append("<<undefined>>");
 
             sb.Append(" = ").Append(Pattern.Equals("") ? "<<empty>>" : Pattern);

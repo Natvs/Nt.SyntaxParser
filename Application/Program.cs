@@ -2,7 +2,7 @@
 // See https://aka.ms/new-console-template for more information
 using Nt.Syntax.Structures;
 using Nt.Syntax;
-using Nt.Parsing;
+using Nt.Parser;
 internal class Program
 {
     private static void Main(string[] args)
@@ -51,7 +51,7 @@ internal class Program
         {
             string? text = null;
             string input = "";
-            var parser = new Parser([' ', '\0', '\n', '\t'], [":", ",", "=", "{", "}", ";", "-", ">", "+", "*"]);
+            var parser = new SymbolsParser([' ', '\0', '\n', '\t'], [":", ",", "=", "{", "}", ";", "-", ">", "+", "*"]);
             Console.WriteLine("Enter text to parse (end to finish):");
             while (text != "end")
             {
@@ -61,7 +61,7 @@ internal class Program
             try
             {
                 ParserResult result = parser.Parse(input);
-                Console.WriteLine("\nParsed result:\n" + result.Parsed.ToString());
+                Console.WriteLine("\nParsed result:\n" + result.GetParsed().ToString());
             }
             catch (Exception ex)
             {

@@ -16,7 +16,7 @@ namespace Nt.Syntax
 
         internal void Reset()
         {
-            ImportPath.Reset();
+            ImportPath.ClearPath();
             ImportedString = null;
             Rule = null;
             RegularExpression = null;
@@ -28,9 +28,7 @@ namespace Nt.Syntax
         
         public List<string> GetPath()
         {
-            List<string> path = [];
-            foreach (var segment in ImportPath.Path) path.Add(segment);
-            return path;
+            return ImportPath.GetPath();
         }
         
         #endregion

@@ -1,4 +1,4 @@
-﻿using Nt.Parsing.Structures;
+﻿using Nt.Parser.Structures;
 using Nt.Syntax;
 using Nt.Syntax.Actions;
 using Nt.Syntax.Structures;
@@ -14,14 +14,14 @@ namespace Nt.Tests.Domain.Syntax.Actions
             var symbols = new SymbolsList(["A"]);
             var context = new AutomatonContext();
 
-            var readAction = new AppendToCurrentNonTerminalAction(symbols, context);
+            var readAction = new AppendToCurrentNonTerminalAction(context);
             var writeAction = new AddNonTerminalAction(grammar, context);
 
-            readAction.Perform(new ParsedToken(0, 0));
-            writeAction.Perform(new ParsedToken(0, 0));
+            readAction.Perform(new ParsedToken(symbols.Get(0), 0));
+            writeAction.Perform(new ParsedToken(symbols.Get(0), 0));
 
-            Assert.Single(grammar.NonTerminals);
-            Assert.Equal("A", grammar.NonTerminals[0].Name);
+            Assert.Single(grammar.NonTerminals.GetSymbols());
+            Assert.Equal("A", grammar.NonTerminals.Get(0).Name);
         }
 
         [Fact]
@@ -31,15 +31,15 @@ namespace Nt.Tests.Domain.Syntax.Actions
             var symbols = new SymbolsList(["A", "B"]);
             var context = new AutomatonContext();
 
-            var readAction = new AppendToCurrentNonTerminalAction(symbols, context);
+            var readAction = new AppendToCurrentNonTerminalAction(context);
             var writeAction = new AddNonTerminalAction(grammar, context);
 
-            readAction.Perform(new ParsedToken(0, 0));
-            readAction.Perform(new ParsedToken(1, 0));
-            writeAction.Perform(new ParsedToken(0, 0));
+            readAction.Perform(new ParsedToken(symbols.Get(0), 0));
+            readAction.Perform(new ParsedToken(symbols.Get(1), 0));
+            writeAction.Perform(new ParsedToken(symbols.Get(0), 0));
 
-            Assert.Single(grammar.NonTerminals);
-            Assert.Equal("AB", grammar.NonTerminals[0].Name);
+            Assert.Single(grammar.NonTerminals.GetSymbols());
+            Assert.Equal("AB", grammar.NonTerminals.Get(0).Name);
         }
 
         [Fact]
@@ -49,15 +49,15 @@ namespace Nt.Tests.Domain.Syntax.Actions
             var symbols = new SymbolsList(["'", "A"]);
             var context = new AutomatonContext();
 
-            var readAction = new AppendToCurrentNonTerminalAction(symbols, context);
+            var readAction = new AppendToCurrentNonTerminalAction(context);
             var writeAction = new AddNonTerminalAction(grammar, context);
 
-            readAction.Perform(new ParsedToken(0, 0));
-            readAction.Perform(new ParsedToken(1, 0));
-            writeAction.Perform(new ParsedToken(0, 0));
+            readAction.Perform(new ParsedToken(symbols.Get(0), 0));
+            readAction.Perform(new ParsedToken(symbols.Get(1), 0));
+            writeAction.Perform(new ParsedToken(symbols.Get(0), 0));
 
-            Assert.Single(grammar.NonTerminals);
-            Assert.Equal("A", grammar.NonTerminals[0].Name);
+            Assert.Single(grammar.NonTerminals.GetSymbols());
+            Assert.Equal("A", grammar.NonTerminals.Get(0).Name);
         }
 
         [Fact]
@@ -67,16 +67,16 @@ namespace Nt.Tests.Domain.Syntax.Actions
             var symbols = new SymbolsList(["A", "'", "B"]);
             var context = new AutomatonContext();
 
-            var readAction = new AppendToCurrentNonTerminalAction(symbols, context);
+            var readAction = new AppendToCurrentNonTerminalAction(context);
             var writeAction = new AddNonTerminalAction(grammar, context);
 
-            readAction.Perform(new ParsedToken(0, 0));
-            readAction.Perform(new ParsedToken(1, 0));
-            readAction.Perform(new ParsedToken(2, 0));
-            writeAction.Perform(new ParsedToken(0, 0));
+            readAction.Perform(new ParsedToken(symbols.Get(0), 0));
+            readAction.Perform(new ParsedToken(symbols.Get(1), 0));
+            readAction.Perform(new ParsedToken(symbols.Get(2), 0));
+            writeAction.Perform(new ParsedToken(symbols.Get(0), 0));
 
-            Assert.Single(grammar.NonTerminals);
-            Assert.Equal("AB", grammar.NonTerminals[0].Name);
+            Assert.Single(grammar.NonTerminals.GetSymbols());
+            Assert.Equal("AB", grammar.NonTerminals.Get(0).Name);
         }
     }
 }

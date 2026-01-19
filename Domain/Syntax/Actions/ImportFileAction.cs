@@ -1,8 +1,7 @@
 ﻿using Microsoft.VisualBasic.FileIO;
 using System.Text;
 using Nt.Syntax.Exceptions;
-using Nt.Parsing.Structures;
-using Nt.Syntax.Structures;
+using Nt.Parser.Structures;
 
 namespace Nt.Syntax.Actions
 {
@@ -19,7 +18,7 @@ namespace Nt.Syntax.Actions
             string fileName = context.CurrentImportFile;
             context.CurrentImportFile = "";
 
-            foreach (string path in context.ImportPath.Path)
+            foreach (string path in context.GetPath())
             {
                 if (FileSystem.FileExists(path + "/" + fileName))
                 {
