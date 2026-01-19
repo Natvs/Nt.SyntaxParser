@@ -12,7 +12,7 @@ namespace Nt.Syntax.Actions
 
             // Handles escape characters
             var new_token = grammar.ParseToGrammarToken(word);
-            rule.AddDerivationToken(new_token);
+            rule.Add(new_token);
             return rule;
         }
     }

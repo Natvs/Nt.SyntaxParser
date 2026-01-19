@@ -10,7 +10,7 @@ namespace Nt.Syntax.Actions
         /// <param name="word">The token that is read</param>
         public override void Perform(ParsedToken word)
         {
-            context.ImportPath.Path.Add(context.CurrentImportPath);
+            context.ImportPath.AddPath(context.CurrentImportPath);
             context.CurrentImportPath = "";
         }
     }

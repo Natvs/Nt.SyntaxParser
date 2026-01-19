@@ -11,7 +11,7 @@ namespace Nt.Syntax.Actions
         /// <param name="word"></param>
         public override Rule? Perform(Rule? rule, ParsedToken word)
         {
-            return grammar.AddRule(word.Symbol, word.Line);
+            return grammar.AddRule(new(word.Symbol, word.Line));
         }
     }
 }

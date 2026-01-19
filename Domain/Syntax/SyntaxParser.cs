@@ -2,6 +2,7 @@
 using Nt.Parser;
 using Nt.Parser.Structures;
 using Nt.Syntax.Actions;
+using Nt.Syntax.Exceptions;
 using Nt.Syntax.Structures;
 
 namespace Nt.Syntax
@@ -10,7 +11,7 @@ namespace Nt.Syntax
     public class SyntaxParser
     {
 
-        #region Properties
+        #region Private
 
         private Grammar Grammar { get; set; } = new();
         private Automaton? PreAutomaton { get; set; }
@@ -18,30 +19,6 @@ namespace Nt.Syntax
         private AutomatonContext AutomatonContext { get; } = new AutomatonContext();
         private System.Action? AutomatonEndAction { get; set; }
         private List<string> ParserSymbols { get; } = [":", ",", "=", "{", "}", ";", "-", ">", "+", "*"];
-
-        #endregion
-
-        private void Reset()
-        {
-            Grammar = new Grammar();
-            PreAutomaton = null;
-            Automaton = null;
-            AutomatonContext.Reset();
-            AutomatonEndAction = null;
-        }
-
-        /// <summary>
-        /// Applies the pre-parser on a given grammar string
-        /// </summary>
-        /// <param name="content">String to pre-parse</param>
-        /// <returns>A pre-parsed string of the grammar</returns>
-        public string PreParseString(string content)
-        {
-            Reset();
-            GeneratePreAutomaton();
-            SymbolsParser parser = new([' ', '\0', '\n', '\t'], ["import", "IMPORT", "addtopath", "ADDTOPATH", "escape", "ESCAPE", ";"]);
-            return PreParseString(content, parser);
-        }
 
         private string PreParseString(string content, SymbolsParser parser)
         {
@@ -72,50 +49,24 @@ namespace Nt.Syntax
             var new_content = sb.ToString();
             if (imported)
             {
-                return  PreParseString(new_content, parser);
+                return PreParseString(new_content, parser);
             }
             return new_content;
         }
 
         /// <summary>
-        /// Reads a string and generates a grammar structure from it. Also applies pre-parsing on it.
+        /// Initializes the pre-automaton structure used for parsing pre-parsing instructions.
         /// </summary>
-        /// <param name="content">String to read</param>
-        /// <returns>Grammar data structure from the given string</returns>
-        public Grammar ParseString(string content)
-        {
-            content = PreParseString(content);
-
-            SymbolsParser parser = new([' ', '\0', '\n', '\t'], ParserSymbols);
-            ParserResult parsed = parser.Parse(content);
-
-            GenerateAutomaton();
-            foreach (ParsedToken token in parsed.GetParsed())
-            {
-                Automaton?.Read(token, AutomatonContext);
-            }
-            AutomatonEndAction?.Invoke();
-
-            return Grammar;
-        }
-
-        /// <summary>
-        /// Reads a file and generates a grammar structure from it. Also applies pre-parsing on it.
-        /// </summary>
-        /// <param name="path">Path to the file</param>
-        /// <returns>Grammar structure from content of the given file</returns>
-        public Grammar ParseFile(string path)
-        {
-            if (!File.Exists(path)) throw new FileNotFoundException($"Cannot parse {path}. The file cannot be found.");
-            string content = File.ReadAllText(path);
-            return ParseString(content);
-        }
-
+        /// <exception cref="EndOfStringException">The pre-automaton might end on a state different from the initial state</exception>
         private void GeneratePreAutomaton()
         {
             var initial = new State(); initial.SetDefault(initial);
 
             PreAutomaton = new Automaton(initial);
+            AutomatonEndAction = () =>
+            {
+                if (PreAutomaton.CurrentState != initial) throw new EndOfStringException();
+            };
 
             State addToPathState = new();
             State importState = new();
@@ -136,11 +87,14 @@ namespace Nt.Syntax
         }
 
         /// <summary>
-        /// Generates an automaton that can read a grammar file
+        /// Initializes an automaton that can read a grammar file
         /// </summary>
-        /// <param name="symbols">List of tokens that can be read by the automaton</param>
+        /// <exception cref="EndOfStringException">The automaton might end on a state different from the initial state</exception>
         private void GenerateAutomaton()
         {
+            Grammar = new Grammar();
+            AutomatonContext.Reset();
+
             var errorAction = new ErrorAction();
 
             var initial = new State(); initial.SetDefault(initial, errorAction);
@@ -149,7 +103,7 @@ namespace Nt.Syntax
             Automaton = new Automaton(initial);
             AutomatonEndAction = () =>
             {
-                if (Automaton.CurrentState != initial) throw new Exceptions.EndOfStringException();
+                if (Automaton.CurrentState != initial) throw new EndOfStringException();
             };
 
             GenerateTerminalsStates(initial, error);
@@ -225,6 +179,58 @@ namespace Nt.Syntax
             equalState.AddTransition("=", readState);
             readState.AddTransition(";", initial);
         }
+
+        #endregion
+
+        #region Public
+
+        /// <summary>
+        /// Applies the pre-parser on a given grammar string
+        /// </summary>
+        /// <param name="content">String to pre-parse</param>
+        /// <returns>A pre-parsed string of the grammar</returns>
+        public string PreParseString(string content)
+        {
+            GeneratePreAutomaton();
+            SymbolsParser parser = new([' ', '\0', '\n', '\t'], ["import", "IMPORT", "addtopath", "ADDTOPATH", "escape", "ESCAPE", ";"]);
+            return PreParseString(content, parser);
+        }
+
+        /// <summary>
+        /// Reads a string and generates a grammar structure from it. Also applies pre-parsing on it.
+        /// </summary>
+        /// <param name="content">String to read</param>
+        /// <returns>Grammar data structure from the given string</returns>
+        public Grammar ParseString(string content)
+        {
+            content = PreParseString(content);
+
+            SymbolsParser parser = new([' ', '\0', '\n', '\t'], ParserSymbols);
+            ParserResult parsed = parser.Parse(content);
+
+            GenerateAutomaton();
+            foreach (ParsedToken token in parsed.GetParsed())
+            {
+                Automaton?.Read(token, AutomatonContext);
+            }
+            AutomatonEndAction?.Invoke();
+
+            return Grammar;
+        }
+
+        /// <summary>
+        /// Reads a file and generates a grammar structure from it. Also applies pre-parsing on it.
+        /// </summary>
+        /// <param name="path">Path to the file</param>
+        /// <returns>Grammar structure from content of the given file</returns>
+        public Grammar ParseFile(string path)
+        {
+            if (!File.Exists(path)) throw new FileNotFoundException($"Cannot parse {path}. The file cannot be found.");
+            string content = File.ReadAllText(path);
+            return ParseString(content);
+        }
+
+        #endregion
 
     }
 }

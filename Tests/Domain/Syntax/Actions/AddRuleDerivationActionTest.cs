@@ -16,9 +16,7 @@ namespace Nt.Tests.Domain.Syntax.Actions
             grammar.NonTerminals.Add("S");
             grammar.Terminals.Add("a");
 
-            var rule = new Rule(grammar);
-            rule.SetToken(new(symbols.Get(0), 0));
-            grammar.Rules.Add(rule);
+            var rule = grammar.AddRule(new(symbols.Get(0), 0));
 
             var action = new AddRuleDerivationAction(grammar);
             var newrule = action.Perform(rule, new(symbols.Get(1), 0));
@@ -38,9 +36,7 @@ namespace Nt.Tests.Domain.Syntax.Actions
             var grammar = new Grammar();
             grammar.NonTerminals.AddRange(["S", "A"]);
 
-            var rule = new Rule(grammar);
-            rule.SetToken(new(symbols.Get(0), 0));
-            grammar.Rules.Add(rule);
+            var rule = grammar.AddRule(new(symbols.Get(0), 0));
 
             var action = new AddRuleDerivationAction(grammar);
             var newrule = action.Perform(rule, new(symbols.Get(1), 0));
@@ -59,9 +55,7 @@ namespace Nt.Tests.Domain.Syntax.Actions
             var grammar = new Grammar();
             grammar.NonTerminals.Add("S");
 
-            var rule = new Rule(grammar);
-            rule.SetToken(new(symbols.Get(0), 0));
-            grammar.Rules.Add(rule);
+            var rule = grammar.AddRule(new(symbols.Get(0), 0));
 
             var action = new AddRuleDerivationAction(grammar);
             Assert.Throws<UnknownSymbolException>(() => action.Perform(rule, new ParsedToken(symbols.Get(1), 0)));
@@ -86,9 +80,7 @@ namespace Nt.Tests.Domain.Syntax.Actions
             grammar.NonTerminals.Add("S");
             grammar.Terminals.Add("a");
 
-            var rule = new Rule(grammar);
-            rule.SetToken(new(symbols.Get(0), 0));
-            grammar.Rules.Add(rule);
+            var rule = grammar.AddRule(new(symbols.Get(0), 0));
 
             var action = new AddRuleDerivationAction(grammar);
             action.Perform(rule, new ParsedToken(symbols.Get(1), 0));
@@ -106,9 +98,7 @@ namespace Nt.Tests.Domain.Syntax.Actions
             grammar.NonTerminals.Add("S");
             grammar.Terminals.Add("ab");
 
-            var rule = new Rule(grammar);
-            rule.SetToken(new(symbols.Get(0), 0));
-            grammar.Rules.Add(rule);
+            var rule = grammar.AddRule(new(symbols.Get(0), 0));
 
             var action = new AddRuleDerivationAction(grammar);
             action.Perform(rule, new ParsedToken(symbols.Get(1), 0));

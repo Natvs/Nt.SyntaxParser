@@ -18,7 +18,7 @@ namespace Nt.Syntax.Actions
             string fileName = context.CurrentImportFile;
             context.CurrentImportFile = "";
 
-            foreach (string path in context.ImportPath.Path)
+            foreach (string path in context.GetPath())
             {
                 if (FileSystem.FileExists(path + "/" + fileName))
                 {

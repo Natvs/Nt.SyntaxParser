@@ -1,10 +1,49 @@
-﻿using System.Text;
-using Nt.Parser.Structures;
+﻿using System.Collections;
+using System.Text;
 
 namespace Nt.Syntax.Structures
 {
-    public class RulesSet(): HashSet<Rule>
+    public class RulesSet() : IEnumerable<Rule>
     {
+        #region Private
+
+        private HashSet<Rule> Rules { get; } = [];
+
+        #endregion
+
+        #region Internal
+
+        /// <summary>
+        /// Adds the specified rule to the collection of rules.
+        /// </summary>
+        /// <param name="rule">The rule to add to the collection.</param>
+        internal void Add(Rule rule)
+        {
+            Rules.Add(rule);
+        }
+
+        #endregion
+
+        #region Public
+
+        public int Count { get => Rules.Count; }
+
+        public IEnumerator<Rule> GetEnumerator()
+        {
+            foreach (var rule in Rules)
+            {
+                yield return rule;
+            }
+        }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        /// <summary>
+        /// Returns a string that represents the collection in a comma-separated list enclosed in braces.
+        /// </summary>
+        /// <returns>A string containing the elements of the collection, separated by commas and enclosed in curly braces.</returns>
         public override string ToString()
         {
             var sb = new StringBuilder();
@@ -12,21 +51,6 @@ namespace Nt.Syntax.Structures
             return sb.ToString();
         }
 
-        /// <summary>
-        /// Gets a string representing this rules set, grouping rules by non terminal orders
-        /// </summary>
-        /// <param name="nonTerminals"></param>
-        /// <returns></returns>
-        public string ToString(SymbolsList nonTerminals)
-        {
-            var sb = new StringBuilder().Append('{');
-            foreach (var nt in nonTerminals.GetSymbols())
-            {
-                var rules = this.Where(r => r.Token != null && r.Token.Name.Equals(nt.Name)).ToList();
-                sb.Append(string.Join(",", this));
-            }
-            sb.Append('}');
-            return sb.ToString();
-        }
+        #endregion
     }
 }

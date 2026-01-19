@@ -10,7 +10,7 @@ namespace Nt.Syntax.Structures
     
     public class GrammarToken(GrammarTokenType type, Symbol symbol, int line)
     {
-        public GrammarTokenType Type { get; protected set; } = type;
+        public GrammarTokenType Type { get; } = type;
         public Symbol Symbol { get; } = symbol;
 
         public string Name { get => Symbol.Name; }
