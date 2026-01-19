@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using Nt.Parsing.Structures;
+using Nt.Parser.Structures;
 using Nt.Syntax.Exceptions;
 
 namespace Nt.Syntax.Structures
@@ -12,8 +12,8 @@ namespace Nt.Syntax.Structures
     {
         public char EscapeCharacter { get; internal set; } = '\'';
 
-        public SymbolsList Terminals { get; } = [];
-        public SymbolsList NonTerminals { get; } = [];
+        public SymbolsList Terminals { get; } = new();
+        public SymbolsList NonTerminals { get; } = new();
         public int Axiom { get; internal set; } = -1;
 
         public RulesSet Rules { get; } = [];
@@ -40,9 +40,9 @@ namespace Nt.Syntax.Structures
         /// <exception cref="NotDeclaredTerminalException">The terminal may not exists in the list</exception>
         internal int GetTerminalIndex(string name)
         {
-            for (int i = 0; i < Terminals.Count; i++)
+            for (int i = 0; i < Terminals.GetCount(); i++)
             {
-                if (Terminals[i].Name == name) return i;
+                if (Terminals.Get(i).Name == name) return i;
             }
             throw new NotDeclaredTerminalException(name);
         }
@@ -66,9 +66,9 @@ namespace Nt.Syntax.Structures
         /// <exception cref="NotDeclaredNonTerminalException">The non terminal may not exists in the list</exception>
         internal int GetNonTerminalIndex(string name)
         {
-            for (int i = 0; i < NonTerminals.Count; i++)
+            for (int i = 0; i < NonTerminals.GetCount(); i++)
             {
-                if (NonTerminals[i].Name == name) return i;
+                if (NonTerminals.Get(i).Name == name) return i;
             }
             throw new NotDeclaredNonTerminalException(name);
         }
@@ -115,7 +115,7 @@ namespace Nt.Syntax.Structures
         }
         internal RegularExpression AddRegularExpression(int nonTerminalIndex, int line)
         {
-            var token = NonTerminals[nonTerminalIndex];
+            var token = NonTerminals.Get(nonTerminalIndex);
 
             var regex = new RegularExpression(NonTerminals);
             RegularExpressions.Add(regex);
@@ -152,7 +152,7 @@ namespace Nt.Syntax.Structures
 
             sb.Append("Terminals: ").Append(Terminals.ToString()).Append('\n');
             sb.Append("Non terminals: ").Append(NonTerminals.ToString()).Append('\n');
-            if (Axiom > -1) sb.Append("Axiom: ").Append(NonTerminals[Axiom].Name).Append('\n');
+            if (Axiom > -1) sb.Append("Axiom: ").Append(NonTerminals.Get(Axiom).Name).Append('\n');
 
             if (Rules.Count > 0) sb.Append("\nRules\n");
             foreach (Rule rule in Rules)

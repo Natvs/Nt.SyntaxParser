@@ -1,4 +1,4 @@
-﻿using Nt.Parsing.Structures;
+﻿using Nt.Parser.Structures;
 using System.Text;
 
 namespace Nt.Syntax.Structures
@@ -34,7 +34,7 @@ namespace Nt.Syntax.Structures
         {
             var sb = new StringBuilder();
 
-            if (Token != null) sb.Append(nonterminals[Token.Index].Name);
+            if (Token != null) sb.Append(nonterminals.Get(Token.Index).Name);
             else sb.Append("<<undefined>>");
 
             sb.Append(" = ").Append(Pattern.Equals("") ? "<<empty>>" : Pattern);

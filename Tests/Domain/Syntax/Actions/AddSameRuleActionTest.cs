@@ -16,7 +16,7 @@ namespace Nt.Tests.Domain.Syntax.Actions
             var rule = new Rule(grammar.Terminals, grammar.NonTerminals);
             rule.SetToken(0, 0);
 
-            var newrule = action.Perform(rule, new(-1, 0));
+            var newrule = action.Perform(rule, new(new(""), 0));
 
             Assert.NotNull(newrule);
             Assert.NotNull(rule.Token);
@@ -33,7 +33,7 @@ namespace Nt.Tests.Domain.Syntax.Actions
 
             var action = new AddSameRuleAction(grammar);
 
-            Assert.Throws<NullRuleException>(() => { action.Perform(null, new(-1, 0)); });
+            Assert.Throws<NullRuleException>(() => { action.Perform(null, new(new(""), 0)); });
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Nt.Syntax.Exceptions;
 using Nt.Syntax.Structures;
-using Nt.Parsing.Structures;
 using Nt.Syntax.Actions;
+using Nt.Parser.Structures;
 
 namespace Nt.Tests.Domain.Syntax.Actions
 {
@@ -10,7 +10,7 @@ namespace Nt.Tests.Domain.Syntax.Actions
         [Fact]
         public void AddRuleDerivationAction_AddTerminalTest()
         {
-            var tokens = new SymbolsList(["S", "a"]);
+            var symbols = new SymbolsList(["S", "a"]);
 
             var grammar = new Grammar();
             grammar.NonTerminals.Add("S");
@@ -20,20 +20,20 @@ namespace Nt.Tests.Domain.Syntax.Actions
             rule.SetToken(0, 0);
             grammar.Rules.Add(rule);
 
-            var action = new AddRuleDerivationAction(grammar, tokens);
-            var newrule = action.Perform(rule, new(1, 0));
+            var action = new AddRuleDerivationAction(grammar);
+            var newrule = action.Perform(rule, new(symbols.Get(1), 0));
 
             Assert.Equal(rule, newrule);
             Assert.Single(rule.Derivation);
             Assert.IsType<Terminal>(rule.Derivation[0]);
-            Assert.Equal("a", grammar.Terminals[rule.Derivation[0].Index].Name);
+            Assert.Equal("a", grammar.Terminals.Get(rule.Derivation[0].Index).Name);
             rule.Derivation.ToString();
         }
 
         [Fact]
         public void AddRuleDerivationAction_AddNonTerminalTest()
         {
-            var tokens = new SymbolsList(["S", "A"]);
+            var symbols = new SymbolsList(["S", "A"]);
 
             var grammar = new Grammar();
             grammar.NonTerminals.AddRange(["S", "A"]);
@@ -42,19 +42,19 @@ namespace Nt.Tests.Domain.Syntax.Actions
             rule.SetToken(0, 0);
             grammar.Rules.Add(rule);
 
-            var action = new AddRuleDerivationAction(grammar, tokens);
-            var newrule = action.Perform(rule, new(1, 0));
+            var action = new AddRuleDerivationAction(grammar);
+            var newrule = action.Perform(rule, new(symbols.Get(1), 0));
 
             Assert.Equal(rule, newrule);
             Assert.Single(rule.Derivation);
             Assert.IsType<NonTerminal>(rule.Derivation[0]);
-            Assert.Equal("A", grammar.NonTerminals[rule.Derivation[0].Index].Name);
+            Assert.Equal("A", grammar.NonTerminals.Get(rule.Derivation[0].Index).Name);
         }
 
         [Fact]
         public void AddRuleDerivationAction_AddUnregisteredSymbolTest()
         {
-            var tokens = new SymbolsList(["S", "a"]);
+            var symbols = new SymbolsList(["S", "a"]);
 
             var grammar = new Grammar();
             grammar.NonTerminals.Add("S");
@@ -63,24 +63,24 @@ namespace Nt.Tests.Domain.Syntax.Actions
             rule.SetToken(0, 0);
             grammar.Rules.Add(rule);
 
-            var action = new AddRuleDerivationAction(grammar, tokens);
-            Assert.Throws<UnknownSymbolException>(() => action.Perform(rule, new ParsedToken(1, 0)));
+            var action = new AddRuleDerivationAction(grammar);
+            Assert.Throws<UnknownSymbolException>(() => action.Perform(rule, new ParsedToken(symbols.Get(1), 0)));
         }
 
         [Fact]
         public void AddRuleDerivationAction_NullRuleTest()
         {
-            var tokens = new SymbolsList(["S", "a"]);
+            var symbols = new SymbolsList(["S", "a"]);
             var grammar = new Grammar();
 
-            var action = new AddRuleDerivationAction(grammar, tokens);
-            Assert.Throws<NullRuleException>(() => action.Perform(null, new(1, 0)));
+            var action = new AddRuleDerivationAction(grammar);
+            Assert.Throws<NullRuleException>(() => action.Perform(null, new(symbols.Get(1), 0)));
         }
 
         [Fact]
         public void AddRuleDerivationAction_EscapeCharacterTest1()
         {
-            var tokens = new SymbolsList(["S", "'a"]);
+            var symbols = new SymbolsList(["S", "'a"]);
 
             var grammar = new Grammar();
             grammar.NonTerminals.Add("S");
@@ -90,17 +90,17 @@ namespace Nt.Tests.Domain.Syntax.Actions
             rule.SetToken(0, 0);
             grammar.Rules.Add(rule);
 
-            var action = new AddRuleDerivationAction(grammar, tokens);
-            action.Perform(rule, new ParsedToken(1, 0));
+            var action = new AddRuleDerivationAction(grammar);
+            action.Perform(rule, new ParsedToken(symbols.Get(1), 0));
             Assert.Single(rule.Derivation);
             Assert.IsType<Terminal>(rule.Derivation[0]);
-            Assert.Equal("a", grammar.Terminals[rule.Derivation[0].Index].Name);
+            Assert.Equal("a", grammar.Terminals.Get(rule.Derivation[0].Index).Name);
         }
 
         [Fact]
         public void AddRuleDerivationAction_EscapeCharacterTest2()
         {
-            var tokens = new SymbolsList(["S", "a'b"]);
+            var symbols = new SymbolsList(["S", "a'b"]);
 
             var grammar = new Grammar();
             grammar.NonTerminals.Add("S");
@@ -110,11 +110,11 @@ namespace Nt.Tests.Domain.Syntax.Actions
             rule.SetToken(0, 0);
             grammar.Rules.Add(rule);
 
-            var action = new AddRuleDerivationAction(grammar, tokens);
-            action.Perform(rule, new ParsedToken(1, 0));
+            var action = new AddRuleDerivationAction(grammar);
+            action.Perform(rule, new ParsedToken(symbols.Get(1), 0));
             Assert.Single(rule.Derivation);
             Assert.IsType<Terminal>(rule.Derivation[0]);
-            Assert.Equal("ab", grammar.Terminals[rule.Derivation[0].Index].Name);
+            Assert.Equal("ab", grammar.Terminals.Get(rule.Derivation[0].Index).Name);
         }
     }
 }

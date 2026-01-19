@@ -1,8 +1,7 @@
 ﻿using Microsoft.VisualBasic.FileIO;
 using System.Text;
 using Nt.Syntax.Exceptions;
-using Nt.Parsing.Structures;
-using Nt.Syntax.Structures;
+using Nt.Parser.Structures;
 
 namespace Nt.Syntax.Actions
 {

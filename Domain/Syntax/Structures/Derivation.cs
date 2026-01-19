@@ -1,4 +1,4 @@
-﻿using Nt.Parsing.Structures;
+﻿using Nt.Parser.Structures;
 using System.Text;
 
 namespace Nt.Syntax.Structures
@@ -21,11 +21,11 @@ namespace Nt.Syntax.Structures
             {
                 for (int i = 0; i < Count - 1; i++)
                 {
-                    if (this[i] is Terminal) sb.Append(terminals[this[i].Index].Name).Append(' ');
-                    else sb.Append(nonterminals[this[i].Index].Name).Append(' ');
+                    if (this[i] is Terminal) sb.Append(terminals.Get(this[i].Index).Name).Append(' ');
+                    else sb.Append(nonterminals.Get(this[i].Index).Name).Append(' ');
                 }
-                if (this[Count - 1] is Terminal) sb.Append(terminals[this[Count - 1].Index].Name);
-                else sb.Append(nonterminals[this[Count - 1].Index].Name);
+                if (this[Count - 1] is Terminal) sb.Append(terminals.Get(this[Count - 1].Index).Name);
+                else sb.Append(nonterminals.Get(this[Count - 1].Index).Name);
             }
             else
             {

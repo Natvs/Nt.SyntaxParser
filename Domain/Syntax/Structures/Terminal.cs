@@ -4,7 +4,7 @@
     {
         public Terminal(int index, int line): base(index, line)
         {
-            this.Type = GrammarTokenType.Terminal;
+            Type = GrammarTokenType.Terminal;
         }
     }
 }

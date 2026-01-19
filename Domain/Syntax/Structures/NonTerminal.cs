@@ -4,7 +4,7 @@
     {
         public NonTerminal(int index, int line): base(index, line)
         {
-            this.Type = GrammarTokenType.NonTerminal;
+            Type = GrammarTokenType.NonTerminal;
         }
     }
 }

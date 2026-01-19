@@ -1,5 +1,4 @@
-﻿using Nt.Parsing.Structures;
-using Nt.Syntax.Structures;
+﻿using Nt.Parser.Structures;
 using System.Text;
 
 namespace Nt.Syntax.Structures
@@ -82,7 +81,7 @@ namespace Nt.Syntax.Structures
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append(Token == null ? "<<undefined>>" : nonterminals[Token.Index].Name);
+            sb.Append(Token == null ? "<<undefined>>" : nonterminals.Get(Token.Index).Name);
             sb.Append(" -> "); sb.Append(Derivation.ToString());
             return sb.ToString();
         }

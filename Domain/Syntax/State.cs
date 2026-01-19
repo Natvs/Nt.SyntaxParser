@@ -1,10 +1,9 @@
-﻿using Nt.Parsing.Structures;
+﻿using Nt.Parser.Structures;
 using Nt.Syntax.Actions;
 using Nt.Syntax.Exceptions;
 
 namespace Nt.Syntax
 {
-
     public class State
     {
         public List<Transition> Transitions { get; } = [];
@@ -89,12 +88,12 @@ namespace Nt.Syntax
         /// <returns>Next state of the automaton after reading the token</returns>
         /// <remarks>In case of multiple transitions with same symbol, only the first action added will be performed</remarks>
         /// <exception cref="NoDefaultStateException">It might be that no default state was set for this state</exception>
-        public State Read(ParsedToken token, SymbolsList tokens, AutomatonContext context)
+        public State Read(ParsedToken token, AutomatonContext context)
         {
             if (DefaultState == null) throw new NoDefaultStateException();
             foreach (Transition transition in Transitions)
             {
-                if (transition.Value.Equals(tokens[token.TokenIndex].Name))
+                if (transition.Value.Equals(token.Symbol.Name))
                 {
                     PerformAction(transition.Action, token, context);
                     PerformAction(transition.NewState.Action, token, context);

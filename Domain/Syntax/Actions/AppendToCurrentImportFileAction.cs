@@ -1,8 +1,8 @@
-﻿using Nt.Parsing.Structures;
+﻿using Nt.Parser.Structures;
 
 namespace Nt.Syntax.Actions
 {
-    public class AppendToCurrentImportFileAction(SymbolsList symbols, AutomatonContext context) : Action
+    public class AppendToCurrentImportFileAction(AutomatonContext context) : Action
     {
         /// <summary>
         /// Appends a parsed token to the current import file being built 
@@ -11,7 +11,7 @@ namespace Nt.Syntax.Actions
         /// <exception cref="NotImplementedException"></exception>
         public override void Perform(ParsedToken word)
         {
-            context.CurrentImportFile += symbols[word.TokenIndex];
+            context.CurrentImportFile += word.Symbol.Name;
         }
     }
 

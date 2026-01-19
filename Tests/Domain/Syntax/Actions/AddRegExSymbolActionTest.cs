@@ -1,7 +1,7 @@
 ﻿using Nt.Syntax.Exceptions;
 using Nt.Syntax.Structures;
-using Nt.Parsing.Structures;
 using Nt.Syntax.Actions;
+using Nt.Parser.Structures;
 
 namespace Nt.Tests.Domain.Syntax.Actions
 {
@@ -10,7 +10,7 @@ namespace Nt.Tests.Domain.Syntax.Actions
         [Fact]
         public void AddRegExSymbolAction_AddSymbolTest1()
         {
-            var tokens = new SymbolsList(["S", "ab*"]);
+            var symbols = new SymbolsList(["S", "ab*"]);
 
             var grammar = new Grammar();
             grammar.NonTerminals.Add("S");
@@ -18,8 +18,8 @@ namespace Nt.Tests.Domain.Syntax.Actions
             var regex = new RegularExpression(grammar.NonTerminals);
             regex.SetToken(0, 0);
 
-            var action = new AddRegExSymbolsAction(grammar, tokens);
-            var newregex = action.Perform(regex, new(1, 0));
+            var action = new AddRegExSymbolsAction(grammar);
+            var newregex = action.Perform(regex, new(symbols.Get(1), 0));
 
             Assert.Equal(regex, newregex);
             Assert.Equal("ab*", regex.Pattern);
@@ -28,7 +28,7 @@ namespace Nt.Tests.Domain.Syntax.Actions
         [Fact]
         public void AddRegExSymbolAction_AddSymbolTest2()
         {
-            var tokens = new SymbolsList(["S", "a", "+", "(", "bc", ")", "*"]);
+            var symbols = new SymbolsList(["S", "a", "+", "(", "bc", ")", "*"]);
 
             var grammar = new Grammar();
             grammar.NonTerminals.Add("S");
@@ -36,11 +36,11 @@ namespace Nt.Tests.Domain.Syntax.Actions
             var regex = new RegularExpression(grammar.NonTerminals);
             regex.SetToken(0, 0);
 
-            var action = new AddRegExSymbolsAction(grammar, tokens);
+            var action = new AddRegExSymbolsAction(grammar);
             RegularExpression? newregex = regex;
-            for (int i = 1; i < tokens.Count; i++)
+            for (int i = 1; i < symbols.GetCount(); i++)
             {
-                newregex = action.Perform(newregex, new(i, 0));
+                newregex = action.Perform(newregex, new(symbols.Get(i), 0));
             }
 
             Assert.Equal(regex, newregex);
@@ -50,18 +50,18 @@ namespace Nt.Tests.Domain.Syntax.Actions
         [Fact]
         public void AddRegExSymbolAction_NullRegexTest()
         {
-            var tokens = new SymbolsList(["S", "(ab)+"]);
+            var symbols = new SymbolsList(["S", "(ab)+"]);
 
             var grammar = new Grammar();
 
-            var action = new AddRegExSymbolsAction(grammar, tokens);
-            Assert.Throws<NullRegexException>(() => action.Perform(null, new(1, 0)));
+            var action = new AddRegExSymbolsAction(grammar);
+            Assert.Throws<NullRegexException>(() => action.Perform(null, new(symbols.Get(1), 0)));
         }
 
         [Fact]
         public void AddRegExSymbolAction_EscapeTest1()
         {
-            var tokens = new SymbolsList(["S", "\\a"]);
+            var symbols = new SymbolsList(["S", "\\a"]);
 
             var grammar = new Grammar();
             grammar.NonTerminals.Add("S");
@@ -69,8 +69,8 @@ namespace Nt.Tests.Domain.Syntax.Actions
             var regex = new RegularExpression(grammar.NonTerminals);
             regex.SetToken(0, 0);
 
-            var action = new AddRegExSymbolsAction(grammar, tokens);
-            var newregex = action.Perform(regex, new(1, 0));
+            var action = new AddRegExSymbolsAction(grammar);
+            var newregex = action.Perform(regex, new(symbols.Get(1), 0));
 
             Assert.Equal(regex, newregex);
             Assert.Equal("\\a", regex.Pattern);

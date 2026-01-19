@@ -1,14 +1,14 @@
 ﻿using Nt.Syntax.Exceptions;
-using Nt.Parsing.Structures;
+using Nt.Parser.Structures;
 
 namespace Nt.Syntax.Actions
 {
-    public class ErrorAction(SymbolsList tokens) : Action
+    public class ErrorAction() : Action
     {
 
         public override void Perform(ParsedToken word)
         {
-            throw new SyntaxError(tokens[word.TokenIndex].Name, word.Line);
+            throw new SyntaxError(word.Symbol.Name, word.Line);
         }
 
     }

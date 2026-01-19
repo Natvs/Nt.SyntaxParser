@@ -1,5 +1,4 @@
-﻿using Nt.Parsing.Structures;
-using Nt.Syntax;
+﻿using Nt.Parser.Structures;
 using Nt.Syntax.Exceptions;
 using Nt.Syntax.Structures;
 
@@ -7,12 +6,12 @@ namespace Nt.Tests.Domain.Syntax
 {
     public class SyntaxParserTest
     {
-        private static void AssertTokens(SymbolsList tokens, List<string> reference)
+        private static void AssertTokens(SymbolsList symbols, List<string> reference)
         {
-            Assert.Equal(reference.Count, tokens.Count);
-            for (int i = 0; i < tokens.Count; i++)
+            Assert.Equal(reference.Count, symbols.GetCount());
+            for (int i = 0; i < symbols.GetCount(); i++)
             {
-                Assert.Equal(reference[i], tokens[i].Name);
+                Assert.Equal(reference[i], symbols.Get(i).Name);
             }
         }
 
@@ -376,6 +375,15 @@ namespace Nt.Tests.Domain.Syntax
         public void SyntaxParser_EscapeCharacterTest1()
         {
             var parser = new Nt.Syntax.SyntaxParser();
+            var grammar = parser.ParseString("ESCAPE $");
+
+            Assert.Equal('$', grammar.EscapeCharacter);
+        }
+
+        [Fact]
+        public void SyntaxParser_EscapeCharacterTest2()
+        {
+            var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("ESCAPE $\nT={$a}");
 
             AssertTokens(grammar.Terminals, ["a"]);
@@ -386,7 +394,7 @@ namespace Nt.Tests.Domain.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_EscapeCharacterTest2()
+        public void SyntaxParser_EscapeCharacterTest3()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("ESCAPE $\nN={$A}");
@@ -399,7 +407,7 @@ namespace Nt.Tests.Domain.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_EscapeCharacterTest3()
+        public void SyntaxParser_EscapeCharacterTest4()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("ESCAPE $\nN={A}\nS=$A");
@@ -411,7 +419,7 @@ namespace Nt.Tests.Domain.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_EscapeCharacterTest4()
+        public void SyntaxParser_EscapeCharacterTest5()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("ESCAPE $\nT={a}\nN={A}\nR:A->$a;");
@@ -424,7 +432,7 @@ namespace Nt.Tests.Domain.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_EscapeCharacterTest5()
+        public void SyntaxParser_EscapeCharacterTest6()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("ESCAPE $\nN={A}\nE:A=$a;");

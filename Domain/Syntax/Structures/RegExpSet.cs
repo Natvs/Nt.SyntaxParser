@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using Nt.Parsing.Structures;
+using Nt.Parser.Structures;
 
 namespace Nt.Syntax.Structures
 {
@@ -16,7 +16,7 @@ namespace Nt.Syntax.Structures
         {
             var sb = new StringBuilder();
             sb.Append('{');
-            foreach (var nt in nonTerminals)
+            foreach (var nt in nonTerminals.GetSymbols())
             {
                 var rules = this.Where(r => r.Token != null && r.Token.Index == nonTerminals.IndexOf(nt.Name)).ToList();
                 sb.Append('}');

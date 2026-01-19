@@ -1,5 +1,4 @@
-﻿using Nt.Parsing.Structures;
-using Nt.Syntax;
+﻿using Nt.Syntax;
 
 namespace Nt.Tests.Domain.Syntax
 {
@@ -9,11 +8,10 @@ namespace Nt.Tests.Domain.Syntax
         [Fact]
         public void AutomatonTransition_Test1()
         {
-            var tokens = new SymbolsList(["a"]);
             State initial = new(), state1 = new();
             StateSequence(initial, [(state1, "a")]);
 
-            var automaton = new Automaton(tokens, initial);
+            var automaton = new Automaton(initial);
             Read(automaton, ["a"]);
 
             Assert.Equal(state1, automaton.CurrentState);
@@ -22,11 +20,10 @@ namespace Nt.Tests.Domain.Syntax
         [Fact]
         public void AutomatonTransition_Test2()
         {
-            var tokens = new SymbolsList(["a", "b", "c", "d"]);
             State initial = new(), state1 = new(), state2 = new(), state3 = new(), state4 = new();
             StateSequence(initial, [(state1, "a"), (state2, "b"), (state3, "c"), (state4, "d")]);
 
-            var automaton = new Automaton(tokens, initial);
+            var automaton = new Automaton(initial);
             Read(automaton, ["a", "b", "c", "d"]);
 
             Assert.Equal(state4, automaton.CurrentState);
@@ -35,17 +32,16 @@ namespace Nt.Tests.Domain.Syntax
         [Fact]
         public void AutomatonDefaultTransition_Test()
         {
-            var tokens = new SymbolsList(["a", "b", "c", "d", "e", "f", "g"]);
             State initial = new(), state1 = new(), state2 = new(), state3 = new(), state4 = new();
             StateSequence(initial, [(state1, "a"), (state2, "b"), (state3, "c"), (state4, "d"), (state1, "e"), (state2, "f"), (state3, "g")]);
 
-            var automaton = new Automaton(tokens, initial);
+            var automaton = new Automaton(initial);
             Read(automaton, ["a", "b", "c", "d", "f", "g", "e"]);
 
             Assert.Equal(initial, automaton.CurrentState);
         }
 
-        private void StateSequence(State initial, List<(State, string)> states)
+        private static void StateSequence(State initial, List<(State, string)> states)
         {
             initial.SetDefault(initial);
             var lastState = initial;
@@ -57,10 +53,10 @@ namespace Nt.Tests.Domain.Syntax
             }
         }
 
-        private void Read(Automaton automaton, List<string> words)
+        private static void Read(Automaton automaton, List<string> words)
         {
             var context = new AutomatonContext();
-            foreach (var word in words) automaton.Read(new(automaton.Tokens.IndexOf(word), 0), context);
+            foreach (var word in words) automaton.Read(new(new(word), -1), context);
         }
     }
 }
