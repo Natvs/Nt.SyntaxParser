@@ -1,7 +1,8 @@
 ﻿namespace Nt.Syntax.Exceptions
 {
-    public class UnknownSymbolException : Exception
+    public class UnknownSymbolException(string name, int line) : Exception($"Symbol {name} at line {line} was not declared. Unknown symbol.")
     {
-        public UnknownSymbolException(string name, int line) : base($"Symbol {name} at line {line} was not declared. Unknown symbol.") { }
+        public string TokenName { get; } = name;
+        public int Line { get; } = line;
     }
 }

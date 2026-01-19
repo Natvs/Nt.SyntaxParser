@@ -16,8 +16,8 @@ namespace Nt.Tests.Domain.Syntax.Actions
             grammar.NonTerminals.Add("S");
             grammar.Terminals.Add("a");
 
-            var rule = new Rule(grammar.Terminals, grammar.NonTerminals);
-            rule.SetToken(0, 0);
+            var rule = new Rule(grammar);
+            rule.SetToken(new(symbols.Get(0), 0));
             grammar.Rules.Add(rule);
 
             var action = new AddRuleDerivationAction(grammar);
@@ -26,7 +26,7 @@ namespace Nt.Tests.Domain.Syntax.Actions
             Assert.Equal(rule, newrule);
             Assert.Single(rule.Derivation);
             Assert.IsType<Terminal>(rule.Derivation[0]);
-            Assert.Equal("a", grammar.Terminals.Get(rule.Derivation[0].Index).Name);
+            Assert.Equal("a", rule.Derivation[0].Name);
             rule.Derivation.ToString();
         }
 
@@ -38,8 +38,8 @@ namespace Nt.Tests.Domain.Syntax.Actions
             var grammar = new Grammar();
             grammar.NonTerminals.AddRange(["S", "A"]);
 
-            var rule = new Rule(grammar.Terminals, grammar.NonTerminals);
-            rule.SetToken(0, 0);
+            var rule = new Rule(grammar);
+            rule.SetToken(new(symbols.Get(0), 0));
             grammar.Rules.Add(rule);
 
             var action = new AddRuleDerivationAction(grammar);
@@ -48,7 +48,7 @@ namespace Nt.Tests.Domain.Syntax.Actions
             Assert.Equal(rule, newrule);
             Assert.Single(rule.Derivation);
             Assert.IsType<NonTerminal>(rule.Derivation[0]);
-            Assert.Equal("A", grammar.NonTerminals.Get(rule.Derivation[0].Index).Name);
+            Assert.Equal("A", rule.Derivation[0].Name);
         }
 
         [Fact]
@@ -59,8 +59,8 @@ namespace Nt.Tests.Domain.Syntax.Actions
             var grammar = new Grammar();
             grammar.NonTerminals.Add("S");
 
-            var rule = new Rule(grammar.Terminals, grammar.NonTerminals);
-            rule.SetToken(0, 0);
+            var rule = new Rule(grammar);
+            rule.SetToken(new(symbols.Get(0), 0));
             grammar.Rules.Add(rule);
 
             var action = new AddRuleDerivationAction(grammar);
@@ -86,15 +86,15 @@ namespace Nt.Tests.Domain.Syntax.Actions
             grammar.NonTerminals.Add("S");
             grammar.Terminals.Add("a");
 
-            var rule = new Rule(grammar.Terminals, grammar.NonTerminals);
-            rule.SetToken(0, 0);
+            var rule = new Rule(grammar);
+            rule.SetToken(new(symbols.Get(0), 0));
             grammar.Rules.Add(rule);
 
             var action = new AddRuleDerivationAction(grammar);
             action.Perform(rule, new ParsedToken(symbols.Get(1), 0));
             Assert.Single(rule.Derivation);
             Assert.IsType<Terminal>(rule.Derivation[0]);
-            Assert.Equal("a", grammar.Terminals.Get(rule.Derivation[0].Index).Name);
+            Assert.Equal("a", rule.Derivation[0].Name);
         }
 
         [Fact]
@@ -106,15 +106,15 @@ namespace Nt.Tests.Domain.Syntax.Actions
             grammar.NonTerminals.Add("S");
             grammar.Terminals.Add("ab");
 
-            var rule = new Rule(grammar.Terminals, grammar.NonTerminals);
-            rule.SetToken(0, 0);
+            var rule = new Rule(grammar);
+            rule.SetToken(new(symbols.Get(0), 0));
             grammar.Rules.Add(rule);
 
             var action = new AddRuleDerivationAction(grammar);
             action.Perform(rule, new ParsedToken(symbols.Get(1), 0));
             Assert.Single(rule.Derivation);
             Assert.IsType<Terminal>(rule.Derivation[0]);
-            Assert.Equal("ab", grammar.Terminals.Get(rule.Derivation[0].Index).Name);
+            Assert.Equal("ab", rule.Derivation[0].Name);
         }
     }
 }

@@ -1,10 +1,9 @@
-﻿namespace Nt.Syntax.Structures
+﻿using Nt.Parser.Structures;
+
+namespace Nt.Syntax.Structures
 {
     public class NonTerminal:  GrammarToken
     {
-        public NonTerminal(int index, int line): base(index, line)
-        {
-            Type = GrammarTokenType.NonTerminal;
-        }
+        public NonTerminal(Symbol symbol, int line): base(GrammarTokenType.NonTerminal, symbol, line) { }
     }
 }

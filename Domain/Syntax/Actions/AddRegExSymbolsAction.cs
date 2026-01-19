@@ -11,7 +11,7 @@ namespace Nt.Syntax.Actions
             if (regex == null) throw new NullRegexException("Attempting to add symbols to a non existent regular expression");
 
             // Handles escape characters
-            var new_token = grammar.RemoveEscapeCharacters(word.Symbol.Name);
+            var new_token = grammar.RemoveEscapeCharacter(word.Symbol.Name);
 
             // Adds the symbols to the regex
             regex.AddSymbols(new_token);

@@ -15,8 +15,8 @@ namespace Nt.Tests.Domain.Syntax.Actions
             var grammar = new Grammar();
             grammar.NonTerminals.Add("S");
 
-            var regex = new RegularExpression(grammar.NonTerminals);
-            regex.SetToken(0, 0);
+            var regex = new RegularExpression(grammar);
+            regex.SetToken(new(symbols.Get(0), -1));
 
             var action = new AddRegExSymbolsAction(grammar);
             var newregex = action.Perform(regex, new(symbols.Get(1), 0));
@@ -33,8 +33,8 @@ namespace Nt.Tests.Domain.Syntax.Actions
             var grammar = new Grammar();
             grammar.NonTerminals.Add("S");
 
-            var regex = new RegularExpression(grammar.NonTerminals);
-            regex.SetToken(0, 0);
+            var regex = new RegularExpression(grammar);
+            regex.SetToken(new(symbols.Get(0), -1));
 
             var action = new AddRegExSymbolsAction(grammar);
             RegularExpression? newregex = regex;
@@ -66,8 +66,8 @@ namespace Nt.Tests.Domain.Syntax.Actions
             var grammar = new Grammar();
             grammar.NonTerminals.Add("S");
 
-            var regex = new RegularExpression(grammar.NonTerminals);
-            regex.SetToken(0, 0);
+            var regex = new RegularExpression(grammar);
+            regex.SetToken(new(symbols.Get(0), -1));
 
             var action = new AddRegExSymbolsAction(grammar);
             var newregex = action.Perform(regex, new(symbols.Get(1), 0));

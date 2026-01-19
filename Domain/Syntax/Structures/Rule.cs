@@ -1,4 +1,4 @@
-﻿using Nt.Parser.Structures;
+﻿using Nt.Syntax.Exceptions;
 using System.Text;
 
 namespace Nt.Syntax.Structures
@@ -9,7 +9,7 @@ namespace Nt.Syntax.Structures
     /// </summary>
     /// <param name="terminals">Terminals tokens of the grammar</param>
     /// <param name="nonterminals">Non terminals tokens of the grammar</param>
-    public class Rule(SymbolsList terminals, SymbolsList nonterminals)
+    public class Rule(Grammar grammar)
     {
         /// <summary>
         /// Token that would derive into derivation
@@ -18,60 +18,87 @@ namespace Nt.Syntax.Structures
         /// <summary>
         /// List of tokens that represent derivation
         /// </summary>
-        public Derivation Derivation { get; } = new(terminals, nonterminals);
+        public Derivation Derivation { get; } = [];
 
 
         /// <summary>
         /// Sets the token to derive
         /// </summary>
-        /// <param name="index">Index of the token in non terminals list</param>
+        /// <param name="symbol">Symbol of the token</param>
         /// <param name="line">Line the token have been parsed</param>
-        public void SetToken(int index, int line)
+        public void SetToken(NonTerminal nt)
         {
-            Token = new NonTerminal(index, line);
+            if (!grammar.NonTerminals.Contains(nt.Name)) throw new NotDeclaredNonTerminalException(nt.Name, nt.Line);
+            Token = nt;
+        }
+
+        /// <summary>
+        /// Adds a derivation token to the current grammar derivation sequence.
+        /// </summary>
+        /// <param name="token">The token to add to the derivation sequence.</param>
+        public void AddDerivationToken(GrammarToken token)
+        {
+            if (!grammar.Terminals.Contains(token.Name) && !grammar.NonTerminals.Contains(token.Name))
+                throw new UnknownSymbolException(token.Name, token.Line);
+            Derivation.Add(token);
+        }
+
+        /// <summary>
+        /// Inserts a derivation token at the specified position in the derivation sequence.
+        /// </summary>
+        /// <param name="position">The index at which the token should be inserted.</param>
+        /// <param name="token">The derivation token to insert.</param>
+        public void InsertDerivationToken(int position, GrammarToken token)
+        {
+            if (!grammar.Terminals.Contains(token.Name) && !grammar.NonTerminals.Contains(token.Name))
+                throw new UnknownSymbolException(token.Name, token.Line);
+            Derivation.Insert(position, token);
         }
 
         /// <summary>
         /// Adds a terminal token to end of derivation
         /// </summary>
-        /// <param name="index">Index of the token in terminals list</param>
+        /// <param name="symbol">Symbol of the token</param>
         /// <param name="line">Line the token have been parsed</param>
-        public void AddTerminal(int index, int line)
+        public void AddTerminal(Terminal t)
         {
-            Derivation.Add(new Terminal(index, line));
+            if (!grammar.Terminals.Contains(t.Name)) throw new NotDeclaredTerminalException(t.Name, t.Line);
+            Derivation.Add(t);
         }
 
         /// <summary>
         /// Inserts a terminal token at specified position in derivation
         /// </summary>
         /// <param name="position">Position for inserting the terminal</param>
-        /// <param name="index">Index of the terminal to insert</param>
+        /// <param name="symbol">Symbol of the token</param>
         /// <param name="line">Line of the new terminal</param>
-        public void InsertTerminal(int position, int index, int line)
+        public void InsertTerminal(int position, Terminal t)
         {
-            Derivation.Insert(position, new Terminal(index, line));
+            if (!grammar.Terminals.Contains(t.Name)) throw new NotDeclaredTerminalException(t.Name, t.Line);
+            Derivation.Insert(position, t);
         }
 
         /// <summary>
         /// Adds a non terminal token to end of derivation
         /// </summary>
-        /// <param name="index">Index of the token in non terminals list</param>
+        /// <param name="symbol">Symbol of the token</param>
         /// <param name="line">Line the token have been parsed</param>
-        public void AddNonTerminal(int index, int line)
+        public void AddNonTerminal(NonTerminal nt)
         {
-            Derivation.Add(new NonTerminal(index, line));
+            if (!grammar.NonTerminals.Contains(nt.Name)) throw new NotDeclaredNonTerminalException(nt.Name, nt.Line);
+            Derivation.Add(nt);
         }
-
 
         /// <summary>
         /// Inserts a non terminal token at specified position in derivation
         /// </summary>
         /// <param name="position">Position for inserting the non terminal</param>
-        /// <param name="index">Index of the non terminal to insert</param>
+        /// <param name="symbol">Symbol of the token</param>
         /// <param name="line">Line of the new non terminal</param>
-        public void InsertNonTerminal(int position, int index, int line)
+        public void InsertNonTerminal(int position, NonTerminal nt)
         {
-            Derivation.Insert(position, new NonTerminal(index, line));
+            if (!grammar.NonTerminals.Contains(nt.Name)) throw new NotDeclaredNonTerminalException(nt.Name, nt.Line);
+            Derivation.Insert(position, nt);
         }
 
         /// <summary>
@@ -81,7 +108,7 @@ namespace Nt.Syntax.Structures
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append(Token == null ? "<<undefined>>" : nonterminals.Get(Token.Index).Name);
+            sb.Append(Token == null ? "<<undefined>>" : Token.Name);
             sb.Append(" -> "); sb.Append(Derivation.ToString());
             return sb.ToString();
         }

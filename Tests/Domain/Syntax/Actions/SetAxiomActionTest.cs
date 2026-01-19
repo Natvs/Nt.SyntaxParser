@@ -17,7 +17,8 @@ namespace Nt.Tests.Domain.Syntax.Actions
             var action = new SetAxiomAction(grammar);
             action.Perform(new(symbols.Get(2), 1));
 
-            Assert.Equal("C", grammar.NonTerminals.Get(grammar.Axiom).Name);
+            Assert.NotNull(grammar.Axiom);
+            Assert.Equal("C", grammar.Axiom.Name);
         }
 
         [Fact]

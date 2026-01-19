@@ -10,7 +10,7 @@ namespace Nt.Syntax.Actions
         {
             if (rule == null) throw new NullRuleException($"Attempting to set a new rule with same symbol while the rule does not exists");
             if (rule.Token == null) throw new Exception("Attempting to set a new rule with same symbol while the symbol is not defined");
-            return grammar.AddRule(rule.Token.Index, word.Line);
+            return grammar.AddRule(rule.Token.Symbol, word.Line);
         }
     }
 }

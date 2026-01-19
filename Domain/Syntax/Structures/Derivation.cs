@@ -8,7 +8,7 @@ namespace Nt.Syntax.Structures
     /// </summary>
     /// <param name="terminals">Terminal tokens of the rule</param>
     /// <param name="nonterminals">Non terminal tokens of the rule</param>
-    public class Derivation(SymbolsList terminals, SymbolsList nonterminals) : List<GrammarToken>
+    public class Derivation : List<GrammarToken>
     {
         /// <summary>
         /// Gets a string representing the list of tokens in derivation
@@ -21,11 +21,9 @@ namespace Nt.Syntax.Structures
             {
                 for (int i = 0; i < Count - 1; i++)
                 {
-                    if (this[i] is Terminal) sb.Append(terminals.Get(this[i].Index).Name).Append(' ');
-                    else sb.Append(nonterminals.Get(this[i].Index).Name).Append(' ');
+                    sb.Append(this[i].Symbol.Name).Append(' ');
                 }
-                if (this[Count - 1] is Terminal) sb.Append(terminals.Get(this[Count - 1].Index).Name);
-                else sb.Append(nonterminals.Get(this[Count - 1].Index).Name);
+                sb.Append(this[Count - 1].Symbol.Name);
             }
             else
             {

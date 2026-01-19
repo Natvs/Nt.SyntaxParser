@@ -1,9 +1,9 @@
-﻿using Nt.Parser.Structures;
+﻿using Nt.Syntax.Exceptions;
 using System.Text;
 
 namespace Nt.Syntax.Structures
 {
-    public class RegularExpression(SymbolsList nonterminals)
+    public class RegularExpression(Grammar grammar)
     {
         public NonTerminal? Token { get; private set; }
         public string Pattern { get; private set; } = "";
@@ -13,9 +13,10 @@ namespace Nt.Syntax.Structures
         /// </summary>
         /// <param name="index">Index of the non terminal</param>
         /// <param name="line">Line the symbol has been parsed</param>
-        public void SetToken(int index, int line)
+        public void SetToken(NonTerminal nt)
         {
-            Token = new NonTerminal(index, line);
+            if (!grammar.NonTerminals.Contains(nt.Name)) throw new NotDeclaredNonTerminalException(nt.Name, nt.Line);
+            Token = nt;
         }
         /// <summary>
         /// Adds a sequence of symbol to the regular expression
@@ -34,7 +35,7 @@ namespace Nt.Syntax.Structures
         {
             var sb = new StringBuilder();
 
-            if (Token != null) sb.Append(nonterminals.Get(Token.Index).Name);
+            if (Token != null) sb.Append(Token.Symbol.Name);
             else sb.Append("<<undefined>>");
 
             sb.Append(" = ").Append(Pattern.Equals("") ? "<<empty>>" : Pattern);

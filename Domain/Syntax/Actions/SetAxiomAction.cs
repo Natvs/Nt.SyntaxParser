@@ -1,4 +1,6 @@
 ﻿using Nt.Parser.Structures;
+using Nt.Syntax.Exceptions;
+using Nt.Syntax.Structures;
 
 namespace Nt.Syntax.Actions
 {
@@ -15,8 +17,19 @@ namespace Nt.Syntax.Actions
         /// <param name="word">Parsed token to add as new terminal</param>
         public override void Perform(ParsedToken word)
         {
-            var new_token = grammar.RemoveEscapeCharacters(word.Symbol.Name);
-            grammar.SetAxiom(new_token);
+            try
+            {
+                var new_token = grammar.ParseToGrammarToken(word);
+                if (new_token is NonTerminal nt)
+                {
+                    grammar.SetAxiom(nt);
+                }
+                else throw new NotDeclaredNonTerminalException(new_token.Name, new_token.Line);
+            }
+            catch (UnknownSymbolException ex)
+            {
+                throw new NotDeclaredNonTerminalException(ex.TokenName, ex.Line);
+            }
         }
 
     }

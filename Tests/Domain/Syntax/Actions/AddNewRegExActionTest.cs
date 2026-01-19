@@ -19,7 +19,7 @@ namespace Nt.Tests.Domain.Syntax.Actions
 
             Assert.NotNull(regex);
             Assert.NotNull(regex.Token);
-            Assert.Equal("A", grammar.NonTerminals.Get(regex.Token.Index).Name);
+            Assert.Equal("A", regex.Token.Name);
         }
 
         [Fact]

@@ -19,7 +19,7 @@ namespace Nt.Tests.Domain.Syntax.Actions
 
             Assert.NotNull(rule);
             Assert.NotNull(rule.Token);
-            Assert.Equal("A", symbols.Get(rule.Token.Index).Name);
+            Assert.Equal("A", rule.Token.Name);
         }
 
         [Fact]

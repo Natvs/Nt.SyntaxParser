@@ -11,20 +11,9 @@ namespace Nt.Syntax.Actions
             if (rule == null) throw new NullRuleException("Attempting to write to a derivation of a non existent rule");
 
             // Handles escape characters
-            string new_token = grammar.RemoveEscapeCharacters(word.Symbol.Name);
-
-            // Adds the symbol to the rule derivation
-            if (grammar.Terminals.Contains(new_token))
-            {
-                rule.AddTerminal(grammar.GetTerminalIndex(new_token), word.Line);
-                return rule;
-            }
-            else if (grammar.NonTerminals.Contains(new_token))
-            {
-                rule.AddNonTerminal(grammar.GetNonTerminalIndex(new_token), word.Line);
-                return rule;
-            }
-            throw new UnknownSymbolException(new_token, word.Line);
+            var new_token = grammar.ParseToGrammarToken(word);
+            rule.AddDerivationToken(new_token);
+            return rule;
         }
     }
 }

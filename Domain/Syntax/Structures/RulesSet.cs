@@ -22,7 +22,7 @@ namespace Nt.Syntax.Structures
             var sb = new StringBuilder().Append('{');
             foreach (var nt in nonTerminals.GetSymbols())
             {
-                var rules = this.Where(r => r.Token != null && r.Token.Index == nonTerminals.IndexOf(nt.Name)).ToList();
+                var rules = this.Where(r => r.Token != null && r.Token.Name.Equals(nt.Name)).ToList();
                 sb.Append(string.Join(",", this));
             }
             sb.Append('}');

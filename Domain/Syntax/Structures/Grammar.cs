@@ -14,7 +14,7 @@ namespace Nt.Syntax.Structures
 
         public SymbolsList Terminals { get; } = new();
         public SymbolsList NonTerminals { get; } = new();
-        public int Axiom { get; internal set; } = -1;
+        public NonTerminal? Axiom { get; internal set; } = null;
 
         public RulesSet Rules { get; } = [];
         public RegExpSet RegularExpressions { get; } = [];
@@ -32,20 +32,6 @@ namespace Nt.Syntax.Structures
             if (NonTerminals.Contains(name)) throw new RegisteredNonTerminalException(name);
             Terminals.Add(name);
         }
-        /// <summary>
-        /// Gets index of a terminal in this grammar
-        /// </summary>
-        /// <param name="name">Name of the terminal</param>
-        /// <returns>Index of the terminal in the grammar terminals list</returns>
-        /// <exception cref="NotDeclaredTerminalException">The terminal may not exists in the list</exception>
-        internal int GetTerminalIndex(string name)
-        {
-            for (int i = 0; i < Terminals.GetCount(); i++)
-            {
-                if (Terminals.Get(i).Name == name) return i;
-            }
-            throw new NotDeclaredTerminalException(name);
-        }
 
         /// <summary>
         /// Adds a new non terminal to the non terminals list of this grammar
@@ -58,86 +44,72 @@ namespace Nt.Syntax.Structures
             if (Terminals.Contains(name)) throw new RegisteredTerminalException(name);
             NonTerminals.Add(name);
         }
-        /// <summary>
-        /// Gets index of a non terminal in this grammar
-        /// </summary>
-        /// <param name="name">Name of the non terminal</param>
-        /// <returns>Index of the non terminal in the grammar non terminals list</returns>
-        /// <exception cref="NotDeclaredNonTerminalException">The non terminal may not exists in the list</exception>
-        internal int GetNonTerminalIndex(string name)
-        {
-            for (int i = 0; i < NonTerminals.GetCount(); i++)
-            {
-                if (NonTerminals.Get(i).Name == name) return i;
-            }
-            throw new NotDeclaredNonTerminalException(name);
-        }
 
         /// <summary>
         /// Sets the axiom of this grammar
         /// </summary>
         /// <param name="name">Name of the new axiom</param>
         /// <exception cref="NotDeclaredNonTerminalException">The axiom might not exist in the non terminals list of this grammar</exception>
-        internal void SetAxiom(string name)
+        internal void SetAxiom(NonTerminal token)
         {
-            if (!NonTerminals.Contains(name)) throw new NotDeclaredNonTerminalException(name);
-            Axiom = NonTerminals.IndexOf(name);
+            Axiom = token;
         }
 
-        internal Rule AddRule(string nonTerminal, int line)
+        internal Rule AddRule(Symbol nonTerminal, int line)
         {
-            var rule = new Rule(Terminals, NonTerminals);
+            var rule = new Rule(this);
             Rules.Add(rule);
             try
             {
-                rule.SetToken(NonTerminals.IndexOf(nonTerminal), line);
+                rule.SetToken(new(nonTerminal, line));
                 return rule;
             }
-            catch (KeyNotFoundException) { throw new NotDeclaredNonTerminalException(nonTerminal); }
+            catch (KeyNotFoundException) { throw new NotDeclaredNonTerminalException(nonTerminal.Name, line); }
         }
-        internal Rule AddRule(int nonTerminalIndex, int line)
+        internal RegularExpression AddRegularExpression(Symbol nonTerminal, int line)
         {
-            var rule = new Rule(Terminals, NonTerminals);
-            Rules.Add(rule);
-            rule.SetToken(nonTerminalIndex, line);
-            return rule;
-        }
-        internal RegularExpression AddRegularExpression(string nonTerminal, int line)
-        {
-            var regex = new RegularExpression(NonTerminals);
+            var regex = new RegularExpression(this);
             RegularExpressions.Add(regex);
             try
             {
-                regex.SetToken(NonTerminals.IndexOf(nonTerminal), line);
+                regex.SetToken(new(nonTerminal, line));
                 return regex;
             }
-            catch (KeyNotFoundException) { throw new NotDeclaredNonTerminalException(nonTerminal); }
-        }
-        internal RegularExpression AddRegularExpression(int nonTerminalIndex, int line)
-        {
-            var token = NonTerminals.Get(nonTerminalIndex);
-
-            var regex = new RegularExpression(NonTerminals);
-            RegularExpressions.Add(regex);
-            regex.SetToken(nonTerminalIndex, line);
-            return regex;
+            catch (KeyNotFoundException) { throw new NotDeclaredNonTerminalException(nonTerminal.Name, line); }
         }
 
-        internal string RemoveEscapeCharacters(string token)
+        internal string RemoveEscapeCharacter(string content)
         {
-            string new_token = "";
+            string new_content = "";
             bool escape = false;
-            foreach (var c in token)
+            foreach (var c in content)
             {
                 if (c == EscapeCharacter && !escape)
                 {
                     escape = true;
                     continue;
                 }
-                new_token += c;
+                new_content += c;
                 escape = false;
             }
-            return new_token;
+            return new_content;
+        }
+
+        internal GrammarToken ParseToGrammarToken(ParsedToken token)
+        {
+            // Remove escape characters
+            string new_content = RemoveEscapeCharacter(token.Symbol.Name);
+
+            // Check if terminal or non terminal
+            if (Terminals.Contains(new_content))
+            {
+                return new Terminal(Terminals.Get(new_content), token.Line);
+            }
+            else if (NonTerminals.Contains(new_content))
+            {
+                return new NonTerminal(NonTerminals.Get(new_content), token.Line);
+            }
+            throw new UnknownSymbolException(new_content, token.Line);
         }
 
         #endregion
@@ -152,7 +124,7 @@ namespace Nt.Syntax.Structures
 
             sb.Append("Terminals: ").Append(Terminals.ToString()).Append('\n');
             sb.Append("Non terminals: ").Append(NonTerminals.ToString()).Append('\n');
-            if (Axiom > -1) sb.Append("Axiom: ").Append(NonTerminals.Get(Axiom).Name).Append('\n');
+            if (Axiom != null) sb.Append("Axiom: ").Append(Axiom.Name).Append('\n');
 
             if (Rules.Count > 0) sb.Append("\nRules\n");
             foreach (Rule rule in Rules)

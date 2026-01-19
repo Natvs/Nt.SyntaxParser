@@ -7,7 +7,7 @@ namespace Nt.Syntax.Actions
     {
         public override RegularExpression? Perform(RegularExpression? regex, ParsedToken word)
         {
-            return grammar.AddRegularExpression(word.Symbol.Name, word.Line);
+            return grammar.AddRegularExpression(word.Symbol, word.Line);
         }
     }
 }

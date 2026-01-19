@@ -20,7 +20,7 @@ namespace Nt.Syntax.Actions
             {
                 if (!context.CurrentTerminal.Equals(""))
                 { 
-                    grammar.AddTerminal(grammar.RemoveEscapeCharacters(context.CurrentTerminal)); 
+                    grammar.AddTerminal(grammar.RemoveEscapeCharacter(context.CurrentTerminal)); 
                     context.CurrentTerminal = "";
                 }
             }
