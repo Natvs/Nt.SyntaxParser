@@ -1,8 +1,9 @@
 ﻿using Nt.Syntax.Actions;
 using Nt.Syntax.Exceptions;
 using Nt.Parser.Structures;
+using Nt.Syntax.Automaton;
 
-namespace Nt.Tests.Domain.Syntax.Actions
+namespace Nt.Tests.Syntax.Actions
 {
     public class ErrorActionTest
     {
@@ -12,7 +13,7 @@ namespace Nt.Tests.Domain.Syntax.Actions
             var symbols = new SymbolsList(["a"]);
             var action = new ErrorAction();
 
-            Assert.Throws<SyntaxError>(() => action.Perform(new ParsedToken(symbols.Get(0), 1)));
+            Assert.Throws<SyntaxError>(() => action.Perform(new AutomatonToken(symbols.Get(0), 1)));
         }
     }
 }

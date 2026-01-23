@@ -1,4 +1,7 @@
-﻿using Nt.Parser.Structures;
+﻿using Nt.Automaton.Actions;
+using Nt.Automaton.Tokens;
+using Nt.Parser.Structures;
+using Nt.Syntax.Automaton;
 using Nt.Syntax.Exceptions;
 
 namespace Nt.Syntax.Actions
@@ -7,14 +10,13 @@ namespace Nt.Syntax.Actions
     /// Represents an action that adds a new terminal to the grammar
     /// </summary>
     /// <param name="grammar">Grammar datas</param>
-    /// <param name="tokens">List of all symbols</param>
-    public class AddTerminalAction(Structures.Grammar grammar, AutomatonContext context) : Action
+    public class AddTerminalAction(Structures.Grammar grammar, AutomatonContext context) : IAction<string>
     {
         /// <summary>
         /// Adds a parsed token as a new non terminal of the grammar
         /// </summary>
         /// <param name="word">Parsed token to add as new terminal</param>
-        public override void Perform(ParsedToken word)
+        public void Perform(IAutomatonToken<string> word)
         {
             try
             {

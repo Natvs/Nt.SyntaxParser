@@ -1,4 +1,7 @@
-﻿using Nt.Parser.Structures;
+﻿using Nt.Automaton.Actions;
+using Nt.Automaton.Tokens;
+using Nt.Parser.Structures;
+using Nt.Syntax.Automaton;
 using Nt.Syntax.Exceptions;
 using Nt.Syntax.Structures;
 
@@ -9,22 +12,25 @@ namespace Nt.Syntax.Actions
     /// </summary>
     /// <param name="grammar">Grammar datas</param>
     /// <param name="tokens">List of all tokens</param>
-    public class SetAxiomAction(Structures.Grammar grammar) : Action
+    public class SetAxiomAction(Structures.Grammar grammar) : IAction<string>
     {
         /// <summary>
         /// Sets a parsed token as new axiom of the grammar. Axiom should be a valid non terminal.
         /// </summary>
         /// <param name="word">Parsed token to add as new terminal</param>
-        public override void Perform(ParsedToken word)
+        public void Perform(IAutomatonToken<string> word)
         {
             try
             {
-                var new_token = grammar.ParseToGrammarToken(word);
-                if (new_token is NonTerminal nt)
+                if (word is AutomatonToken token)
                 {
-                    grammar.SetAxiom(nt);
+                    var new_token = grammar.ParseToGrammarToken(token);
+                    if (new_token is NonTerminal nt)
+                    {
+                        grammar.SetAxiom(nt);
+                    }
+                    else throw new NotDeclaredNonTerminalException(new_token.Name, new_token.Line);
                 }
-                else throw new NotDeclaredNonTerminalException(new_token.Name, new_token.Line);
             }
             catch (UnknownSymbolException ex)
             {

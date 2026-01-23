@@ -1,17 +1,22 @@
-﻿using Nt.Parser.Structures;
+﻿using Nt.Automaton.Actions;
+using Nt.Automaton.Tokens;
+using Nt.Syntax.Automaton;
 using Nt.Syntax.Structures;
 
 namespace Nt.Syntax.Actions
 {
-    public class AddNewRuleAction(Grammar grammar) : RuleAction
+    public class AddNewRuleAction(Grammar grammar, AutomatonContext context) : IAction<string>
     {
         /// <summary>
         /// Adds the symbol of a rule
         /// </summary>
         /// <param name="word"></param>
-        public override Rule? Perform(Rule? rule, ParsedToken word)
+        public void Perform(IAutomatonToken<string> word)
         {
-            return grammar.AddRule(new(word.Symbol, word.Line));
+            if (word is AutomatonToken token)
+            {
+                context.Rule = grammar.AddRule(new(token.Symbol, token.Line));
+            }
         }
     }
 }

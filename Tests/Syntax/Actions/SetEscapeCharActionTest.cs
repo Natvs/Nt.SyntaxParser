@@ -1,8 +1,9 @@
-﻿using Nt.Syntax.Structures;
+﻿using Nt.Parser.Structures;
 using Nt.Syntax.Actions;
-using Nt.Parser.Structures;
+using Nt.Syntax.Automaton;
+using Nt.Syntax.Structures;
 
-namespace Nt.Tests.Domain.Syntax.Actions
+namespace Nt.Tests.Syntax.Actions
 {
     public class SetEscapeCharActionTest
     {
@@ -14,7 +15,7 @@ namespace Nt.Tests.Domain.Syntax.Actions
 
             var symbols = new SymbolsList(["#"]);
             var action = new SetEscapeCharAction(grammar);
-            action.Perform(new ParsedToken(symbols.Get(0), 0));
+            action.Perform(new AutomatonToken(symbols.Get(0), 0));
             Assert.Equal('#', grammar.EscapeCharacter);
         }
 

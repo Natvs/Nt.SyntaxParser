@@ -1,17 +1,23 @@
-﻿using Nt.Parser.Structures;
+﻿using Nt.Automaton.Actions;
+using Nt.Automaton.Tokens;
+using Nt.Parser.Structures;
+using Nt.Syntax.Automaton;
 
 namespace Nt.Syntax.Actions
 {
-    public class AppendToCurrentImportFileAction(AutomatonContext context) : Action
+    public class AppendToCurrentImportFileAction(AutomatonContext context) : IAction<string>
     {
         /// <summary>
         /// Appends a parsed token to the current import file being built 
         /// </summary>
         /// <param name="word"></param>
         /// <exception cref="NotImplementedException"></exception>
-        public override void Perform(ParsedToken word)
+        public void Perform(IAutomatonToken<string> word)
         {
-            context.CurrentImportFile += word.Symbol.Name;
+            if (word is AutomatonToken token)
+            {
+                context.CurrentImportFile += token.Symbol.Name;
+            }
         }
     }
 

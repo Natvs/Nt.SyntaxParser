@@ -1,9 +1,10 @@
-﻿using Nt.Syntax.Actions;
-using Nt.Syntax.Structures;
+﻿using Nt.Parser.Structures;
+using Nt.Syntax.Actions;
+using Nt.Syntax.Automaton;
 using Nt.Syntax.Exceptions;
-using Nt.Parser.Structures;
+using Nt.Syntax.Structures;
 
-namespace Nt.Tests.Domain.Syntax.Actions
+namespace Nt.Tests.Syntax.Actions
 {
     public class SetAxiomActionTest
     {
@@ -15,7 +16,7 @@ namespace Nt.Tests.Domain.Syntax.Actions
             grammar.NonTerminals.AddRange(["A", "B", "C"]);
 
             var action = new SetAxiomAction(grammar);
-            action.Perform(new(symbols.Get(2), 1));
+            action.Perform(new AutomatonToken(symbols.Get(2), 1));
 
             Assert.NotNull(grammar.Axiom);
             Assert.Equal("C", grammar.Axiom.Name);
@@ -29,7 +30,7 @@ namespace Nt.Tests.Domain.Syntax.Actions
             grammar.NonTerminals.AddRange(["A", "B"]);
 
             var action = new SetAxiomAction(grammar);
-            Assert.Throws<NotDeclaredNonTerminalException>(() => action.Perform(new(symbols.Get(2), 1)));
+            Assert.Throws<NotDeclaredNonTerminalException>(() => action.Perform(new AutomatonToken(symbols.Get(2), 1)));
         }
     }
 }
