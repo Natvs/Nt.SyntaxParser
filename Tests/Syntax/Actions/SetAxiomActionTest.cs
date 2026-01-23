@@ -4,7 +4,7 @@ using Nt.Syntax.Automaton;
 using Nt.Syntax.Exceptions;
 using Nt.Syntax.Structures;
 
-namespace Nt.Tests.Domain.Syntax.Actions
+namespace Nt.Tests.Syntax.Actions
 {
     public class SetAxiomActionTest
     {

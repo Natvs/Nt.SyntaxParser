@@ -1,8 +1,5 @@
 ﻿using Nt.Parser.Structures;
 using Nt.Syntax.Structures;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Nt.Tests.Syntax
 {

@@ -2,7 +2,7 @@
 using Nt.Syntax.Automaton;
 using Nt.Syntax.Actions;
 
-namespace Nt.Tests.Domain.Syntax.Actions
+namespace Nt.Tests.Syntax.Actions
 {
     public class AddImportPathActionTest
     {

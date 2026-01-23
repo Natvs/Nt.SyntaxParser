@@ -4,7 +4,7 @@ using Nt.Syntax.Actions;
 using Nt.Parser.Structures;
 using Nt.Syntax.Automaton;
 
-namespace Nt.Tests.Domain.Syntax.Actions
+namespace Nt.Tests.Syntax.Actions
 {
     public class AddNewRuleActionTest
     {

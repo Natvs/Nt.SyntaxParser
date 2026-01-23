@@ -5,7 +5,7 @@ using Nt.Syntax.Automaton;
 using Nt.Parser.Structures;
 using static Nt.Tests.Syntax.SyntaxTestUtils;
 
-namespace Nt.Tests.Domain.Syntax.Actions
+namespace Nt.Tests.Syntax.Actions
 {
     public class AddSameRuleActionTest
     {

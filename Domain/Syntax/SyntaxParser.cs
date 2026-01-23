@@ -1,7 +1,5 @@
 ﻿using System.Text;
-using Nt.Automaton;
 using Nt.Automaton.States;
-using Nt.Automaton.Transitions;
 using Nt.Parser;
 using Nt.Parser.Structures;
 using Nt.Syntax.Actions;

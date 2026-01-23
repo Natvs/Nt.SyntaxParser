@@ -2,7 +2,7 @@
 using Nt.Syntax.Structures;
 using static Nt.Tests.Syntax.SyntaxTestUtils;
 
-namespace Nt.Tests.Domain.Syntax
+namespace Nt.Tests.Syntax
 {
     public class SyntaxParserTest
     {
