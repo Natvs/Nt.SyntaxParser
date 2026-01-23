@@ -1,6 +1,9 @@
 ﻿using Nt.Syntax.Structures;
 using Nt.Syntax.Exceptions;
 using Nt.Syntax.Actions;
+using Nt.Syntax.Automaton;
+using Nt.Parser.Structures;
+using static Nt.Tests.Syntax.SyntaxTestUtils;
 
 namespace Nt.Tests.Domain.Syntax.Actions
 {
@@ -9,31 +12,31 @@ namespace Nt.Tests.Domain.Syntax.Actions
         [Fact]
         public void AddSameRuleAction_Test()
         {
+            var symbols = new SymbolsList(["A"]);
+            var context = new AutomatonContext();
             var grammar = new Grammar();
             grammar.NonTerminals.Add("A");
 
-            var action = new AddSameRuleAction(grammar);
-            var rule = new Rule(grammar);
-            rule.SetToken(new(new("A"), 0));
+            var newaction = new AddNewRuleAction(grammar, context);
+            newaction.Perform(new AutomatonToken(symbols.Get(0), 0));
 
-            var newrule = action.Perform(rule, new(new(""), 0));
+            var action = new AddSameRuleAction(grammar, context);
+            action.Perform(new AutomatonToken(symbols.Get(0), 0));
 
-            Assert.NotNull(newrule);
-            Assert.NotNull(rule.Token);
-            Assert.NotNull(newrule.Token);
-            Assert.NotEqual(rule, newrule);
-            Assert.Equal(rule.Token.Name, newrule.Token.Name);
+            AssertRule(context.Rule, "A", []);
         }
 
         [Fact]
         public void AddSameRuleAction_EmptyRuleTest()
         {
+            var symbols = new SymbolsList(["A"]);
+            var context = new AutomatonContext();
             var grammar = new Grammar();
             grammar.NonTerminals.Add("A");
 
-            var action = new AddSameRuleAction(grammar);
+            var action = new AddSameRuleAction(grammar, context);
 
-            Assert.Throws<NullRuleException>(() => { action.Perform(null, new(new(""), 0)); });
+            Assert.Throws<NullRuleException>(() => { action.Perform(new AutomatonToken(symbols.Get(0), 0)); });
         }
     }
 }

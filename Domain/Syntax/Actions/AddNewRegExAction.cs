@@ -1,13 +1,18 @@
-﻿using Nt.Parser.Structures;
+﻿using Nt.Automaton.Actions;
+using Nt.Automaton.Tokens;
+using Nt.Syntax.Automaton;
 using Nt.Syntax.Structures;
 
 namespace Nt.Syntax.Actions
 {
-    public class AddNewRegExAction(Grammar grammar) : RegExAction
+    public class AddNewRegExAction(Grammar grammar, AutomatonContext context) : IAction<string>
     {
-        public override RegularExpression? Perform(RegularExpression? regex, ParsedToken word)
+        public void Perform(IAutomatonToken<string> word)
         {
-            return grammar.AddRegex(new(word.Symbol, word.Line));
+            if (word is AutomatonToken token) 
+            {
+                context.Regex = grammar.AddRegex(new(token.Symbol, token.Line));               
+            }
         }
     }
 }

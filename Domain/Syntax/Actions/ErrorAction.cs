@@ -1,14 +1,20 @@
 ﻿using Nt.Syntax.Exceptions;
 using Nt.Parser.Structures;
+using Nt.Automaton.Actions;
+using Nt.Automaton.Tokens;
+using Nt.Syntax.Automaton;
 
 namespace Nt.Syntax.Actions
 {
-    public class ErrorAction() : Action
+    public class ErrorAction() : IAction<string>
     {
 
-        public override void Perform(ParsedToken word)
+        public void Perform(IAutomatonToken<string> word)
         {
-            throw new SyntaxError(word.Symbol.Name, word.Line);
+            if (word is AutomatonToken token)
+            {
+                throw new SyntaxError(token.Symbol.Name, token.Line);
+            }
         }
 
     }

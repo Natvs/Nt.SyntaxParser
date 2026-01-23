@@ -2,6 +2,7 @@
 using Nt.Syntax.Exceptions;
 using Nt.Syntax.Actions;
 using Nt.Parser.Structures;
+using Nt.Syntax.Automaton;
 
 namespace Nt.Tests.Domain.Syntax.Actions
 {
@@ -14,12 +15,13 @@ namespace Nt.Tests.Domain.Syntax.Actions
             grammar.NonTerminals.Add("A");
 
             var symbols = new SymbolsList(["A"]);
-            var action = new AddNewRegExAction(grammar);
-            var regex = action.Perform(null, new ParsedToken(symbols.Get(0), 0));
+            var context = new AutomatonContext();
+            var action = new AddNewRegExAction(grammar, context);
+            action.Perform(new AutomatonToken(symbols.Get(0), 0));
 
-            Assert.NotNull(regex);
-            Assert.NotNull(regex.Token);
-            Assert.Equal("A", regex.Token.Name);
+            Assert.NotNull(context.Regex);
+            Assert.NotNull(context.Regex.Token);
+            Assert.Equal("A", context.Regex.Token.Name);
         }
 
         [Fact]
@@ -29,9 +31,10 @@ namespace Nt.Tests.Domain.Syntax.Actions
             grammar.NonTerminals.Add("A");
 
             var symbols = new SymbolsList(["B"]);
-            var action = new AddNewRegExAction(grammar);
+            var context = new AutomatonContext();
+            var action = new AddNewRegExAction(grammar, context);
 
-            Assert.Throws<NotDeclaredNonTerminalException>(() => { action.Perform(null, new ParsedToken(symbols.Get(0), 0)); });
+            Assert.Throws<NotDeclaredNonTerminalException>(() => { action.Perform(new AutomatonToken(symbols.Get(0), 0)); });
         }
     }
 }
