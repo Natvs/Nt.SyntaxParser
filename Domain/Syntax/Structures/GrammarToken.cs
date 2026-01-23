@@ -1,4 +1,5 @@
 using Nt.Parser.Structures;
+using Nt.Parser.Symbols;
 
 namespace Nt.Syntax.Structures
 {
@@ -8,10 +9,10 @@ namespace Nt.Syntax.Structures
         Terminal
     }
     
-    public class GrammarToken(GrammarTokenType type, Symbol symbol, int line)
+    public class GrammarToken(GrammarTokenType type, ISymbol symbol, int line)
     {
         public GrammarTokenType Type { get; } = type;
-        public Symbol Symbol { get; } = symbol;
+        public ISymbol Symbol { get; } = symbol;
 
         public string Name { get => Symbol.Name; }
         public int Line { get; } = line;

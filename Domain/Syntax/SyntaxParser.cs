@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using Nt.Automaton.States;
-using Nt.Parser;
-using Nt.Parser.Structures;
+using Nt.Parser.Symbols;
 using Nt.Syntax.Actions;
 using Nt.Syntax.Exceptions;
 using Nt.Syntax.Structures;
@@ -11,8 +10,32 @@ using State = Nt.Automaton.States.State<string>;
 using Transition = Nt.Automaton.Transitions.Transition<string>;
 using Nt.Syntax.Automaton;
 
+using SymbolsParser = Nt.Parser.SymbolsParser<Nt.Parser.Symbols.ISymbol>;
+using ParserResult = Nt.Parser.ParserResult<Nt.Parser.Symbols.ISymbol>;
+
+
 namespace Nt.Syntax
 {
+    public class SyntaxParserConfig
+    {
+        public ISymbolFactory<ISymbol> SymbolFactory { get; private set; } = (ISymbolFactory<ISymbol>)new SymbolFactory();
+
+        public void SetSymbolFactory(ISymbolFactory<ISymbol> factory)
+        {
+            SymbolFactory = factory;
+        }
+
+        private static SyntaxParserConfig? _instance = null;
+
+        public static SyntaxParserConfig GetInstance()
+        {
+            if (_instance == null)
+            {
+                _instance = new SyntaxParserConfig();
+            }
+            return _instance;
+        }
+    }
 
     public class SyntaxParser
     {
@@ -198,7 +221,9 @@ namespace Nt.Syntax
         public string PreParseString(string content)
         {
             GeneratePreAutomaton();
-            SymbolsParser parser = new([' ', '\0', '\n', '\t'], ["import", "IMPORT", "addtopath", "ADDTOPATH", "escape", "ESCAPE", ";"]);
+
+            var configuration = SyntaxParserConfig.GetInstance();
+            SymbolsParser parser = new(configuration.SymbolFactory, [' ', '\0', '\n', '\t'], ["import", "IMPORT", "addtopath", "ADDTOPATH", "escape", "ESCAPE", ";"]);
             return PreParseString(content, parser);
         }
 
@@ -209,14 +234,16 @@ namespace Nt.Syntax
         /// <returns>Grammar data structure from the given string</returns>
         public Grammar ParseString(string content)
         {
+            GenerateAutomaton();
+
+            var configuration = SyntaxParserConfig.GetInstance();
+            SymbolsParser parser = new(configuration.SymbolFactory, [' ', '\0', '\n', '\t'], ParserSymbols);
+            ParserResult parsed = parser.Parse(content);
+
             Grammar = new();
             content = PreParseString(content);
 
-            SymbolsParser parser = new([' ', '\0', '\n', '\t'], ParserSymbols);
-            ParserResult parsed = parser.Parse(content);
-
-            GenerateAutomaton();
-            foreach (ParsedToken token in parsed.GetParsed())
+            foreach (var token in parsed.GetParsed())
             {
                 Automaton?.Read(new AutomatonToken(token));
             }
