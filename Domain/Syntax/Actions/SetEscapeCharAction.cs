@@ -1,18 +1,23 @@
 ﻿using Nt.Syntax.Structures;
 using Nt.Syntax.Exceptions;
-using Nt.Parser.Structures;
+using Nt.Automaton.Actions;
+using Nt.Automaton.Tokens;
+using Nt.Syntax.Automaton;
 
 namespace Nt.Syntax.Actions
 {
-    public class SetEscapeCharAction(Grammar grammar) : Action()
+    public class SetEscapeCharAction(Grammar grammar) : IAction<string>
     {
-        public override void Perform(ParsedToken word)
+        public void Perform(IAutomatonToken<string> word)
         {
-            if (word.Symbol.Name.Length != 1)
+            if (word is AutomatonToken token)
             {
-                throw new InvalidEscapeCharSymbolException(word.Symbol.Name, word.Line);
+                if (token.Symbol.Name.Length != 1)
+                {
+                    throw new InvalidEscapeCharSymbolException(token.Symbol.Name, token.Line);
+                }
+                grammar.EscapeCharacter = token.Symbol.Name.ToCharArray()[0];
             }
-            grammar.EscapeCharacter = word.Symbol.Name.ToCharArray()[0];
         }
     }
 

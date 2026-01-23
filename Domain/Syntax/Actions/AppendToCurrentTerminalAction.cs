@@ -1,4 +1,6 @@
-﻿using Nt.Parser.Structures;
+﻿using Nt.Automaton.Actions;
+using Nt.Automaton.Tokens;
+using Nt.Syntax.Automaton;
 
 namespace Nt.Syntax.Actions
 {
@@ -8,11 +10,14 @@ namespace Nt.Syntax.Actions
     /// <param name="grammar">Grammar datas</param>
     /// <param name="symbols">List of all symbols</param>
     /// <param name="context">Context of the automaton</param>
-    public class AppendToCurrentTerminalAction(AutomatonContext context) : Action
+    public class AppendToCurrentTerminalAction(AutomatonContext context) : IAction<string>
     {
-        public override void Perform(ParsedToken word)
+        public void Perform(IAutomatonToken<string> word)
         {
-            context.CurrentTerminal += word.Symbol.Name;
+            if (word is AutomatonToken token)
+            {
+                context.CurrentTerminal += token.Symbol.Name;
+            }
         }
     }
 }

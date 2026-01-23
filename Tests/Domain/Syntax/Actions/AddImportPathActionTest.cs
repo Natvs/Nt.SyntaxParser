@@ -1,5 +1,5 @@
 ﻿using Nt.Parser.Structures;
-using Nt.Syntax;
+using Nt.Syntax.Automaton;
 using Nt.Syntax.Actions;
 
 namespace Nt.Tests.Domain.Syntax.Actions
@@ -13,8 +13,8 @@ namespace Nt.Tests.Domain.Syntax.Actions
             var context = new AutomatonContext();
             var readAction = new AppendToCurrentImportPathAction(context);
             var setAction = new AddImportPathAction(context);
-            readAction.Perform(new ParsedToken(tokens.Get(0), 0));
-            setAction.Perform(new ParsedToken(new(""), 0));
+            readAction.Perform(new AutomatonToken(tokens.Get(0), 0));
+            setAction.Perform(new AutomatonToken(new(""), 0));
 
             var path = context.GetPath();
             Assert.Single(path);
@@ -31,8 +31,8 @@ namespace Nt.Tests.Domain.Syntax.Actions
             var setAction = new AddImportPathAction(context);
             for (int i = 0; i < tokens.GetCount(); i++)
             {
-                readAction.Perform(new ParsedToken(tokens.Get(i), 0));
-                setAction.Perform(new ParsedToken(new(""), 0));
+                readAction.Perform(new AutomatonToken(tokens.Get(i), 0));
+                setAction.Perform(new AutomatonToken(new(""), 0));
             }
 
             var path = context.GetPath();

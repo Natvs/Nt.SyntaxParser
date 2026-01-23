@@ -1,21 +1,27 @@
-﻿using Nt.Parser.Structures;
+﻿using Nt.Automaton.Actions;
+using Nt.Automaton.Tokens;
+using Nt.Parser.Structures;
+using Nt.Syntax.Automaton;
 using Nt.Syntax.Exceptions;
 using Nt.Syntax.Structures;
+using System.Text.RegularExpressions;
 
 namespace Nt.Syntax.Actions
 {
-    public class AddRegExSymbolsAction(Grammar grammar) : RegExAction
+    public class AddRegExSymbolsAction(Grammar grammar, AutomatonContext context) : IAction<string>
     {
-        public override RegularExpression? Perform(RegularExpression? regex, ParsedToken word)
+        public void Perform(IAutomatonToken<string> word)
         {
-            if (regex == null) throw new NullRegexException("Attempting to add symbols to a non existent regular expression");
+            if (context.Regex == null) throw new NullRegexException("Attempting to add symbols to a non existent regular expression");
 
-            // Handles escape characters
-            var new_token = grammar.RemoveEscapeCharacter(word.Symbol.Name);
+            if (word is AutomatonToken token)
+            {
+                // Handles escape characters
+                var new_token = grammar.RemoveEscapeCharacter(token.Symbol.Name);
 
-            // Adds the symbols to the regex
-            regex.AddSymbols(new_token);
-            return regex;
+                // Adds the symbols to the regex
+                context.Regex.AddSymbols(new_token);
+            }
         }
     }
 }
