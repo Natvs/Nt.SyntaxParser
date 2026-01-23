@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Nt.Automaton.States;
+using Nt.Parser;
 using Nt.Parser.Symbols;
 using Nt.Syntax.Actions;
 using Nt.Syntax.Exceptions;
@@ -10,17 +11,15 @@ using State = Nt.Automaton.States.State<string>;
 using Transition = Nt.Automaton.Transitions.Transition<string>;
 using Nt.Syntax.Automaton;
 
-using SymbolsParser = Nt.Parser.SymbolsParser<Nt.Parser.Symbols.ISymbol>;
-using ParserResult = Nt.Parser.ParserResult<Nt.Parser.Symbols.ISymbol>;
-
 
 namespace Nt.Syntax
 {
+
     public class SyntaxParserConfig
     {
-        public ISymbolFactory<ISymbol> SymbolFactory { get; private set; } = (ISymbolFactory<ISymbol>)new SymbolFactory();
+        public ISymbolFactory SymbolFactory { get; private set; } = new SymbolFactory();
 
-        public void SetSymbolFactory(ISymbolFactory<ISymbol> factory)
+        public void SetSymbolFactory(ISymbolFactory factory)
         {
             SymbolFactory = factory;
         }
@@ -223,7 +222,7 @@ namespace Nt.Syntax
             GeneratePreAutomaton();
 
             var configuration = SyntaxParserConfig.GetInstance();
-            SymbolsParser parser = new(configuration.SymbolFactory, [' ', '\0', '\n', '\t'], ["import", "IMPORT", "addtopath", "ADDTOPATH", "escape", "ESCAPE", ";"]);
+            Nt.Parser.SymbolsParser parser = new(configuration.SymbolFactory, [' ', '\0', '\n', '\t'], ["import", "IMPORT", "addtopath", "ADDTOPATH", "escape", "ESCAPE", ";"]);
             return PreParseString(content, parser);
         }
 
@@ -234,14 +233,13 @@ namespace Nt.Syntax
         /// <returns>Grammar data structure from the given string</returns>
         public Grammar ParseString(string content)
         {
+            Grammar = new();
+            content = PreParseString(content);
             GenerateAutomaton();
 
             var configuration = SyntaxParserConfig.GetInstance();
             SymbolsParser parser = new(configuration.SymbolFactory, [' ', '\0', '\n', '\t'], ParserSymbols);
             ParserResult parsed = parser.Parse(content);
-
-            Grammar = new();
-            content = PreParseString(content);
 
             foreach (var token in parsed.GetParsed())
             {

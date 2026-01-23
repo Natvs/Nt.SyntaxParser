@@ -4,15 +4,18 @@ using Nt.Syntax.Actions;
 using Nt.Parser.Structures;
 using Nt.Syntax.Automaton;
 using static Nt.Tests.Syntax.SyntaxTestUtils;
+using Nt.Parser.Symbols;
 
 namespace Nt.Tests.Syntax.Actions
 {
     public class AddRegExSymbolActionTest
     {
+        private SymbolFactory SymbolFactory = new SymbolFactory();
+
         [Fact]
         public void AddRegExSymbolAction_AddSymbolTest1()
         {
-            var symbols = new SymbolsList(["S", "ab*"]);
+            var symbols = new SymbolsList(SymbolFactory, ["S", "ab*"]);
             var context = new AutomatonContext();
             var grammar = new Grammar();
             grammar.NonTerminals.Add("S");
@@ -29,7 +32,7 @@ namespace Nt.Tests.Syntax.Actions
         [Fact]
         public void AddRegExSymbolAction_AddSymbolTest2()
         {
-            var symbols = new SymbolsList(["S", "a", "+", "(", "bc", ")", "*"]);
+            var symbols = new SymbolsList(SymbolFactory, ["S", "a", "+", "(", "bc", ")", "*"]);
             var context = new AutomatonContext();
             var grammar = new Grammar();
             grammar.NonTerminals.Add("S");
@@ -49,7 +52,7 @@ namespace Nt.Tests.Syntax.Actions
         [Fact]
         public void AddRegExSymbolAction_NullRegexTest()
         {
-            var symbols = new SymbolsList(["S", "(ab)+"]);
+            var symbols = new SymbolsList(SymbolFactory, ["S", "(ab)+"]);
             var context = new AutomatonContext();
             var grammar = new Grammar();
 
@@ -60,7 +63,7 @@ namespace Nt.Tests.Syntax.Actions
         [Fact]
         public void AddRegExSymbolAction_EscapeTest1()
         {
-            var symbols = new SymbolsList(["S", "'a"]);
+            var symbols = new SymbolsList(SymbolFactory, ["S", "'a"]);
             var context = new AutomatonContext();
             var grammar = new Grammar();
             grammar.NonTerminals.Add("S");
@@ -77,7 +80,7 @@ namespace Nt.Tests.Syntax.Actions
         [Fact]
         public void AddRegExSymbolAction_EscapeTest2()
         {
-            var symbols = new SymbolsList(["S", "a'b"]);
+            var symbols = new SymbolsList(SymbolFactory, ["S", "a'b"]);
             var context = new AutomatonContext();
             var grammar = new Grammar();
             grammar.NonTerminals.Add("S");

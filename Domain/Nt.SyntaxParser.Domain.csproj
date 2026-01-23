@@ -37,7 +37,7 @@ Includes a grammar string parser and a simple text parser.</Description>
 
   <ItemGroup>
     <PackageReference Include="Nt.Automaton" Version="1.0.0" />
-    <PackageReference Include="Nt.Parser" Version="1.0.1" />
+    <PackageReference Include="Nt.Parser" Version="1.0.2" />
   </ItemGroup>
 
 </Project>

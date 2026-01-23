@@ -4,11 +4,11 @@ using Nt.Parser.Symbols;
 
 namespace Nt.Syntax.Automaton
 {
-    public class AutomatonToken : ParsedToken<ISymbol>, IAutomatonToken<string>
+    public class AutomatonToken : ParsedToken, IAutomatonToken<string>
     {
         public string Value { get; }
 
-        public AutomatonToken(ParsedToken<ISymbol> token) : base(token.Symbol, token.Line)
+        public AutomatonToken(ParsedToken token) : base(token.Symbol, token.Line)
         {
             Value = token.Symbol.Name;
         }

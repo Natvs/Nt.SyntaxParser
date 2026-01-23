@@ -3,16 +3,19 @@ using Nt.Syntax.Structures;
 using Nt.Syntax.Actions;
 using Nt.Parser.Structures;
 using Nt.Syntax.Automaton;
+using Nt.Parser.Symbols;
 using static Nt.Tests.Syntax.SyntaxTestUtils;
 
 namespace Nt.Tests.Syntax.Actions
 {
     public class AddRuleDerivationActionTest
     {
+        private SymbolFactory SymbolFactory = new SymbolFactory();
+
         [Fact]
         public void AddRuleDerivationAction_AddTerminalTest()
         {
-            var symbols = new SymbolsList(["S", "a"]);
+            var symbols = new SymbolsList(SymbolFactory, ["S", "a"]);
             var context = new AutomatonContext();
             var grammar = new Grammar();
             grammar.NonTerminals.Add("S");
@@ -31,7 +34,7 @@ namespace Nt.Tests.Syntax.Actions
         [Fact]
         public void AddRuleDerivationAction_AddNonTerminalTest()
         {
-            var symbols = new SymbolsList(["S", "A"]);
+            var symbols = new SymbolsList(SymbolFactory, ["S", "A"]);
             var context = new AutomatonContext();
             var grammar = new Grammar();
             grammar.NonTerminals.AddRange(["S", "A"]);
@@ -49,7 +52,7 @@ namespace Nt.Tests.Syntax.Actions
         [Fact]
         public void AddRuleDerivationAction_AddUnregisteredSymbolTest()
         {
-            var symbols = new SymbolsList(["S", "a"]);
+            var symbols = new SymbolsList(SymbolFactory, ["S", "a"]);
             var context = new AutomatonContext();
             var grammar = new Grammar();
             grammar.NonTerminals.Add("S");
@@ -64,7 +67,7 @@ namespace Nt.Tests.Syntax.Actions
         [Fact]
         public void AddRuleDerivationAction_NullRuleTest()
         {
-            var symbols = new SymbolsList(["S", "a"]);
+            var symbols = new SymbolsList(SymbolFactory, ["S", "a"]);
             var context = new AutomatonContext();
             var grammar = new Grammar();
 
@@ -75,7 +78,7 @@ namespace Nt.Tests.Syntax.Actions
         [Fact]
         public void AddRuleDerivationAction_EscapeCharacterTest1()
         {
-            var symbols = new SymbolsList(["S", "'a"]);
+            var symbols = new SymbolsList(SymbolFactory, ["S", "'a"]);
             var context = new AutomatonContext();
             var grammar = new Grammar();
             grammar.NonTerminals.Add("S");
@@ -94,7 +97,7 @@ namespace Nt.Tests.Syntax.Actions
         [Fact]
         public void AddRuleDerivationAction_EscapeCharacterTest2()
         {
-            var symbols = new SymbolsList(["S", "a'b"]);
+            var symbols = new SymbolsList(SymbolFactory, ["S", "a'b"]);
             var context = new AutomatonContext();
             var grammar = new Grammar();
             grammar.NonTerminals.Add("S");

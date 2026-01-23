@@ -3,6 +3,7 @@
 using Nt.Syntax.Structures;
 using Nt.Syntax;
 using Nt.Parser;
+using Nt.Parser.Symbols;
 internal class Program
 {
     private static void Main(string[] args)
@@ -51,7 +52,7 @@ internal class Program
         {
             string? text = null;
             string input = "";
-            var parser = new SymbolsParser([' ', '\0', '\n', '\t'], [":", ",", "=", "{", "}", ";", "-", ">", "+", "*"]);
+            var parser = new SymbolsParser(new SymbolFactory(), [' ', '\0', '\n', '\t'], [":", ",", "=", "{", "}", ";", "-", ">", "+", "*"]);
             Console.WriteLine("Enter text to parse (end to finish):");
             while (text != "end")
             {

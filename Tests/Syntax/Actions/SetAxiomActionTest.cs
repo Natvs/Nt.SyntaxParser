@@ -1,4 +1,5 @@
 ﻿using Nt.Parser.Structures;
+using Nt.Parser.Symbols;
 using Nt.Syntax.Actions;
 using Nt.Syntax.Automaton;
 using Nt.Syntax.Exceptions;
@@ -8,10 +9,12 @@ namespace Nt.Tests.Syntax.Actions
 {
     public class SetAxiomActionTest
     {
+        private SymbolFactory SymbolFactory = new SymbolFactory();
+
         [Fact]
         public void SetAxiomAction_Test1()
         {
-            var symbols = new SymbolsList(["A", "B", "C"]);
+            var symbols = new SymbolsList(SymbolFactory, ["A", "B", "C"]);
             var grammar = new Grammar();
             grammar.NonTerminals.AddRange(["A", "B", "C"]);
 
@@ -25,7 +28,7 @@ namespace Nt.Tests.Syntax.Actions
         [Fact]
         public void SetAxiomAction_Test2()
         {
-            var symbols = new SymbolsList(["A", "B", "C"]);
+            var symbols = new SymbolsList(SymbolFactory, ["A", "B", "C"]);
             var grammar = new Grammar();
             grammar.NonTerminals.AddRange(["A", "B"]);
 

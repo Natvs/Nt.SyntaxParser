@@ -2,16 +2,19 @@
 using Nt.Syntax.Actions;
 using Nt.Parser.Structures;
 using Nt.Syntax.Automaton;
+using Nt.Parser.Symbols;
 
 namespace Nt.Tests.Syntax.Actions
 {
     public class ImportFileActionTest
     {
+        private SymbolFactory SymbolFactory = new SymbolFactory();
+
         [Fact]
         public void ImportFileAction_EmptyPathTest1()
         {
             var filename = "../../../Resources/test_file.txt";
-            var symbols = new SymbolsList([filename]);
+            var symbols = new SymbolsList(SymbolFactory, [filename]);
             var context = new AutomatonContext();;
 
             var readAction = new AppendToCurrentImportFileAction(context);
@@ -29,7 +32,7 @@ namespace Nt.Tests.Syntax.Actions
         public void ImportFileAction_EmptyPathTest2()
         {
             var filename = "../../../Resources/non_existent_file.txt";
-            var symbols = new SymbolsList([filename]);
+            var symbols = new SymbolsList(SymbolFactory, [filename]);
             var context = new AutomatonContext();
 
             var readAction = new AppendToCurrentImportFileAction(context);
@@ -43,7 +46,7 @@ namespace Nt.Tests.Syntax.Actions
         public void ImportFileAction_EmptyPathTest3()
         {
             var filename = "../not/an/existing/path";
-            var symbols = new SymbolsList([filename]);
+            var symbols = new SymbolsList(SymbolFactory, [filename]);
             var context = new AutomatonContext();
 
             var readAction = new AppendToCurrentImportFileAction(context);
@@ -58,7 +61,7 @@ namespace Nt.Tests.Syntax.Actions
         {
             var folderpath = "../../../Resources";
             var filename = "test_file.txt";
-            var symbols = new SymbolsList([folderpath, filename]);
+            var symbols = new SymbolsList(SymbolFactory, [folderpath, filename]);
             var context = new AutomatonContext();
 
             var pathReadAction = new AppendToCurrentImportPathAction(context);
@@ -83,7 +86,7 @@ namespace Nt.Tests.Syntax.Actions
         {
             var folderpath = "../../../Resources";
             var filename = "non_existent_file.txt";
-            var symbols = new SymbolsList([folderpath, filename]);
+            var symbols = new SymbolsList(SymbolFactory, [folderpath, filename]);
             var context = new AutomatonContext();
 
             var pathReadAction = new AppendToCurrentImportPathAction(context);
@@ -105,7 +108,7 @@ namespace Nt.Tests.Syntax.Actions
         {
             var folderpath = "../../../Resources";
             var filename = "test_file.txt";
-            var symbols = new SymbolsList([folderpath, folderpath + "/" + filename]);
+            var symbols = new SymbolsList(SymbolFactory, [folderpath, folderpath + "/" + filename]);
             var context = new AutomatonContext();
 
             var pathReadAction = new AppendToCurrentImportPathAction(context);

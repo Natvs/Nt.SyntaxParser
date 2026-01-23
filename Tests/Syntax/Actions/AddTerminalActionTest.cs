@@ -2,16 +2,19 @@
 using Nt.Syntax.Automaton;
 using Nt.Syntax.Actions;
 using Nt.Syntax.Structures;
+using Nt.Parser.Symbols;
 
 namespace Nt.Tests.Syntax.Actions
 {
     public class AddTerminalActionTest
     {
+        private SymbolFactory SymbolFactory = new SymbolFactory();
+
         [Fact]
         public void AddTerminalAction_Test1()
         {
             var grammar = new Grammar();
-            var symbols = new SymbolsList(["a"]);
+            var symbols = new SymbolsList(SymbolFactory, ["a"]);
             var context = new AutomatonContext();
 
             var readAction = new AppendToCurrentTerminalAction(context);
@@ -28,7 +31,7 @@ namespace Nt.Tests.Syntax.Actions
         public void AddTerminalAction_Test2()
         {
             var grammar = new Grammar();
-            var symbols = new SymbolsList(["a", "b"]);
+            var symbols = new SymbolsList(SymbolFactory, ["a", "b"]);
             var context = new AutomatonContext();
 
             var readAction = new AppendToCurrentTerminalAction(context);
@@ -46,7 +49,7 @@ namespace Nt.Tests.Syntax.Actions
         public void AddTerminalAction_EscapeCharacterTest1()
         {
             var grammar = new Grammar();
-            var symbols = new SymbolsList(["'", "a"]);
+            var symbols = new SymbolsList(SymbolFactory, ["'", "a"]);
             var context = new AutomatonContext();
 
             var readAction = new AppendToCurrentTerminalAction(context);
@@ -64,7 +67,7 @@ namespace Nt.Tests.Syntax.Actions
         public void AddTerminalAction_EscapeCharacterTest2()
         {
             var grammar = new Grammar();
-            var symbols = new SymbolsList(["a", "'", "b"]);
+            var symbols = new SymbolsList(SymbolFactory, ["a", "'", "b"]);
             var context = new AutomatonContext();
 
             var readAction = new AppendToCurrentTerminalAction(context);

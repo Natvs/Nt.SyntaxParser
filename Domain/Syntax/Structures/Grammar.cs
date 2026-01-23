@@ -14,8 +14,8 @@ namespace Nt.Syntax.Structures
         public Grammar()
         {
             var configuration = SyntaxParserConfig.GetInstance();
-            Terminals = new SymbolsList<ISymbol>(configuration.SymbolFactory);
-            NonTerminals = new SymbolsList<ISymbol>(configuration.SymbolFactory);
+            Terminals = new SymbolsList(configuration.SymbolFactory);
+            NonTerminals = new SymbolsList(configuration.SymbolFactory);
         }
 
         #region Internal
@@ -49,7 +49,7 @@ namespace Nt.Syntax.Structures
         /// <param name="token">The parsed token to convert. Must contain a valid symbol name.</param>
         /// <returns>A <see cref="GrammarToken"/> representing the terminal or nonterminal symbol corresponding to the parsed token.</returns>
         /// <exception cref="UnknownSymbolException">Thrown if the symbol name in <paramref name="token"/> does not match any known terminal or nonterminal symbol.</exception>
-        internal GrammarToken ParseToGrammarToken(ParsedToken<ISymbol> token)
+        internal GrammarToken ParseToGrammarToken(ParsedToken token)
         {
             // Remove escape characters
             string new_content = RemoveEscapeCharacter(token.Symbol.Name);
@@ -71,8 +71,8 @@ namespace Nt.Syntax.Structures
         #region Public
 
         public char EscapeCharacter { get; internal set; } = '\'';
-        public SymbolsList<ISymbol> Terminals { get; }
-        public SymbolsList<ISymbol> NonTerminals { get; }
+        public SymbolsList Terminals { get; }
+        public SymbolsList NonTerminals { get; }
         public NonTerminal? Axiom { get; internal set; } = null;
         public RulesSet Rules { get; } = [];
         public RegExpSet RegularExpressions { get; } = [];
