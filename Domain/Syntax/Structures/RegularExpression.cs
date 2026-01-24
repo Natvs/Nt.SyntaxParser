@@ -12,10 +12,10 @@ namespace Nt.Syntax.Structures
         /// Sets the token of this regular expression to the specified non-terminal symbol.
         /// </summary>
         /// <param name="nt">The non-terminal symbol to assign as the current token. The non-terminal must be declared in the grammar;</param>
-        /// <exception cref="NotDeclaredNonTerminalException">Thrown if the specified non-terminal symbol is not declared in the grammar.</exception>
+        /// <exception cref="UnregisteredNonTerminalException">Thrown if the specified non-terminal symbol is not declared in the grammar.</exception>
         public void SetToken(NonTerminal nt)
         {
-            if (!grammar.NonTerminals.Contains(nt.Name)) throw new NotDeclaredNonTerminalException(nt.Name, nt.Line);
+            if (!grammar.NonTerminals.Contains(nt.Name)) throw new UnregisteredNonTerminalException(nt.Name, nt.Line);
             Token = nt;
         }
 

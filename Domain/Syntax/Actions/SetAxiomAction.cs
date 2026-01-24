@@ -29,12 +29,12 @@ namespace Nt.Syntax.Actions
                     {
                         grammar.SetAxiom(nt);
                     }
-                    else throw new NotDeclaredNonTerminalException(new_token.Name, new_token.Line);
+                    else throw new UnregisteredNonTerminalException(new_token.Name, new_token.Line);
                 }
             }
             catch (UnknownSymbolException ex)
             {
-                throw new NotDeclaredNonTerminalException(ex.TokenName, ex.Line);
+                throw new UnregisteredNonTerminalException(ex.TokenName, ex.Line);
             }
         }
 

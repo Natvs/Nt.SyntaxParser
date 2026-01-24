@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Nt.Syntax.Exceptions;
+using System.Collections;
 using System.Text;
 
 namespace Nt.Syntax.Structures
@@ -20,6 +21,16 @@ namespace Nt.Syntax.Structures
         internal void Add(RegularExpression regex)
         {
             Regexs.Add(regex);
+        }
+
+        /// <summary>
+        /// Removes the specified regular expression from the collection.
+        /// </summary>
+        /// <param name="regex">The regular expression to remove from the collection. Cannot be null.</param>
+        /// <exception cref="RegexNotFoundException">Thrown if the specified regular expression is not found in the collection.</exception>
+        internal void Remove(RegularExpression regex)
+        {
+            if (!Regexs.Remove(regex)) throw new RegexNotFoundException(regex, $"Regular expression {regex} not found in collection of regular expressions");
         }
 
         #endregion

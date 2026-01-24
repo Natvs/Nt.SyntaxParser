@@ -33,7 +33,7 @@ namespace Nt.Tests.Syntax.Actions
             grammar.NonTerminals.AddRange(["A", "B"]);
 
             var action = new SetAxiomAction(grammar);
-            Assert.Throws<NotDeclaredNonTerminalException>(() => action.Perform(new AutomatonToken(symbols.Get(2), 1)));
+            Assert.Throws<UnregisteredNonTerminalException>(() => action.Perform(new AutomatonToken(symbols.Get(2), 1)));
         }
     }
 }
