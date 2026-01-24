@@ -34,7 +34,7 @@ namespace Nt.Tests.Syntax.Actions
             var context = new AutomatonContext();
             var action = new AddNewRuleAction(grammar, context);
 
-            Assert.Throws<NotDeclaredNonTerminalException>(() => { action.Perform(new AutomatonToken(symbols.Get(0), 0)); });
+            Assert.Throws<UnregisteredNonTerminalException>(() => { action.Perform(new AutomatonToken(symbols.Get(0), 0)); });
         }
     }
 }

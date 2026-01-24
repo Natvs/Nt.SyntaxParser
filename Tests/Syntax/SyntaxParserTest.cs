@@ -179,7 +179,7 @@ namespace Nt.Tests.Syntax
         {
             var parser = new Nt.Syntax.SyntaxParser();
 
-            Assert.Throws<NotDeclaredNonTerminalException>(() => parser.ParseString("S=A"));
+            Assert.Throws<UnregisteredNonTerminalException>(() => parser.ParseString("S=A"));
         }
 
         #endregion
@@ -250,7 +250,7 @@ namespace Nt.Tests.Syntax
         public void SyntaxParser_RuleUndefinedSymbolTest1()
         {
             var parser = new Nt.Syntax.SyntaxParser();
-            Assert.Throws<NotDeclaredNonTerminalException>(() => parser.ParseString("T={a}\nR:A -> a;"));
+            Assert.Throws<UnregisteredNonTerminalException>(() => parser.ParseString("T={a}\nR:A -> a;"));
         }
 
         [Fact]
@@ -304,7 +304,7 @@ namespace Nt.Tests.Syntax
         public void SyntaxParser_RegexUndefinedSymbolTest()
         {
             var parser = new Nt.Syntax.SyntaxParser();
-            Assert.Throws<NotDeclaredNonTerminalException>(() => parser.ParseString("E:VAR = \"[a-zA-Z_]*\";"));
+            Assert.Throws<UnregisteredNonTerminalException>(() => parser.ParseString("E:VAR = \"[a-zA-Z_]*\";"));
         }
 
         #endregion

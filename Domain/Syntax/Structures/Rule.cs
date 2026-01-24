@@ -24,10 +24,10 @@ namespace Nt.Syntax.Structures
         /// Sets the token of this rule to the specified non-terminal symbol.
         /// </summary>
         /// <param name="nt">The non-terminal symbol to assign as the current token. The non-terminal must be declared in the grammar;</param>
-        /// <exception cref="NotDeclaredNonTerminalException">Thrown if the specified non-terminal symbol is not declared in the grammar.</exception>
+        /// <exception cref="UnregisteredNonTerminalException">Thrown if the specified non-terminal symbol is not declared in the grammar.</exception>
         public void SetToken(NonTerminal nt)
         {
-            if (!grammar.NonTerminals.Contains(nt.Name)) throw new NotDeclaredNonTerminalException(nt.Name, nt.Line);
+            if (!grammar.NonTerminals.Contains(nt.Name)) throw new UnregisteredNonTerminalException(nt.Name, nt.Line);
             Token = nt;
         }
 
@@ -47,10 +47,10 @@ namespace Nt.Syntax.Structures
         /// </summary>
         /// <param name="symbol">Symbol of the token</param>
         /// <param name="line">Line the token have been parsed</param>
-        /// <exception cref="NotDeclaredTerminalException">Thrown if the terminal is not declared in the grammar</exception>"
+        /// <exception cref="UnregisteredTerminalException">Thrown if the terminal is not declared in the grammar</exception>"
         public void Add(Terminal t)
         {
-            if (!grammar.Terminals.Contains(t.Name)) throw new NotDeclaredTerminalException(t.Name, t.Line);
+            if (!grammar.Terminals.Contains(t.Name)) throw new UnregisteredTerminalException(t.Name, t.Line);
             Derivation.Add(t);
         }
         /// <summary>
@@ -58,10 +58,10 @@ namespace Nt.Syntax.Structures
         /// </summary>
         /// <param name="symbol">Symbol of the token</param>
         /// <param name="line">Line the token have been parsed</param>
-        /// <exception cref="NotDeclaredNonTerminalException">Thrown if the non terminal is not declared in the grammar</exception>
+        /// <exception cref="UnregisteredNonTerminalException">Thrown if the non terminal is not declared in the grammar</exception>
         public void Add(NonTerminal nt)
         {
-            if (!grammar.NonTerminals.Contains(nt.Name)) throw new NotDeclaredNonTerminalException(nt.Name, nt.Line);
+            if (!grammar.NonTerminals.Contains(nt.Name)) throw new UnregisteredNonTerminalException(nt.Name, nt.Line);
             Derivation.Add(nt);
         }
 
@@ -83,10 +83,10 @@ namespace Nt.Syntax.Structures
         /// <param name="position">Position for inserting the terminal</param>
         /// <param name="symbol">Symbol of the token</param>
         /// <param name="line">Line of the new terminal</param>
-        /// <exception cref="NotDeclaredTerminalException">Thrown if the terminal is not declared in the grammar</exception>
+        /// <exception cref="UnregisteredTerminalException">Thrown if the terminal is not declared in the grammar</exception>
         public void Insert(int position, Terminal t)
         {
-            if (!grammar.Terminals.Contains(t.Name)) throw new NotDeclaredTerminalException(t.Name, t.Line);
+            if (!grammar.Terminals.Contains(t.Name)) throw new UnregisteredTerminalException(t.Name, t.Line);
             Derivation.Insert(position, t);
         }
         /// <summary>
@@ -95,10 +95,10 @@ namespace Nt.Syntax.Structures
         /// <param name="position">Position for inserting the non terminal</param>
         /// <param name="symbol">Symbol of the token</param>
         /// <param name="line">Line of the new non terminal</param>
-        /// <exception cref="NotDeclaredNonTerminalException">Thrown if the non terminal is not declared in the grammar</exception>"
+        /// <exception cref="UnregisteredNonTerminalException">Thrown if the non terminal is not declared in the grammar</exception>"
         public void Insert(int position, NonTerminal nt)
         {
-            if (!grammar.NonTerminals.Contains(nt.Name)) throw new NotDeclaredNonTerminalException(nt.Name, nt.Line);
+            if (!grammar.NonTerminals.Contains(nt.Name)) throw new UnregisteredNonTerminalException(nt.Name, nt.Line);
             Derivation.Insert(position, nt);
         }
 

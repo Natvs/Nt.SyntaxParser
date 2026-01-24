@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Nt.Syntax.Exceptions;
+using System.Collections;
 using System.Text;
 
 namespace Nt.Syntax.Structures
@@ -20,6 +21,16 @@ namespace Nt.Syntax.Structures
         internal void Add(Rule rule)
         {
             Rules.Add(rule);
+        }
+
+        /// <summary>
+        /// Removes the specified rule from the collection.
+        /// </summary>
+        /// <param name="rule">The rule to remove from the collection. Cannot be null.</param>
+        /// <exception cref="RuleNotFoundException">Thrown if the specified rule does not exist in the collection.</exception>
+        internal void Remove(Rule rule)
+        {
+            if (!Rules.Remove(rule)) throw new RuleNotFoundException(rule, $"Rule {rule} not found in collection of rules");
         }
 
         #endregion

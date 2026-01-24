@@ -16,7 +16,7 @@ namespace Nt.Syntax.Actions
                 {
                     throw new InvalidEscapeCharSymbolException(token.Symbol.Name, token.Line);
                 }
-                grammar.EscapeCharacter = token.Symbol.Name.ToCharArray()[0];
+                grammar.SetEscapeCharacter(token.Symbol.Name.ToCharArray()[0]);
             }
         }
     }
