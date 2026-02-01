@@ -17,7 +17,7 @@ namespace Nt.Syntax.Structures
         public string Name { get => Symbol.Name; }
         public int Line { get; } = line;
 
-        public override string ToString() => $"(Name: {Symbol.Name}, Line: {Line})";
+        public override string ToString() => Symbol.Name;
 
     }
 }
