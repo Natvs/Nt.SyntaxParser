@@ -1,10 +1,10 @@
 # Grammar file syntax
 
 Parsing the grammar file occurs in two steps. The grammar file is first parsed to process pre-parsing lines.
-The resulting file is then parsed into the final grammar file that would be parsed into a grammar structure.
+The resulted file is then parsed into the final grammar file that would be parsed into a grammar structure.
 
 ## Defining symbols used in the grammar
-You need to provide the grammar with a list of the symbol used before using them.
+You need to provide the grammar with a list of all symbols used before using them.
 These symbols are divided into terminals (constant strings) and non terminals (symbols to derive).
 
 Terminals and non terminals are both listed into a list of the form `{symbol1, symbol2, ...}`. What changes however is the start of the line.
@@ -48,7 +48,8 @@ You can use regular expressions without having to previously define the symbols 
 E: non-terminal = regex ;
 ```
 
-Unlike rules, the escape characters does not have the same meaning. See [official microsoft documentation](https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-language-quick-reference) to learn more about regex.
+See [official microsoft documentation](https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-language-quick-reference) to learn more about regex.
+Once again, pay attention that you need to [use escape characters](#escape-characters) for including the symbol `;`.
 
 ## Setting grammar first symbol
 The grammar needs a symbol to begin with for syntaxically defining if a string belongs to the grammar language. This symbol is called axiom and is defined with the syntax:

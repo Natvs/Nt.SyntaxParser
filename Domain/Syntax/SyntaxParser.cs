@@ -219,11 +219,18 @@ namespace Nt.Syntax
         /// <returns>A pre-parsed string of the grammar</returns>
         public string PreParseString(string content)
         {
-            GeneratePreAutomaton();
+            try
+            {
+                GeneratePreAutomaton();
 
-            var configuration = SyntaxParserConfig.GetInstance();
-            Nt.Parser.SymbolsParser parser = new(configuration.SymbolFactory, [' ', '\0', '\n', '\t'], ["import", "IMPORT", "addtopath", "ADDTOPATH", "escape", "ESCAPE", ";"]);
-            return PreParseString(content, parser);
+                var configuration = SyntaxParserConfig.GetInstance();
+                Nt.Parser.SymbolsParser parser = new(configuration.SymbolFactory, [' ', '\0', '\n', '\t'], ["import", "IMPORT", "addtopath", "ADDTOPATH", "escape", "ESCAPE", ";"]);
+                return PreParseString(content, parser);
+            }
+            catch
+            {
+                throw new Exception("An error occurred while trying to pre-parse the string.");
+            }
         }
 
         /// <summary>
@@ -233,21 +240,28 @@ namespace Nt.Syntax
         /// <returns>Grammar data structure from the given string</returns>
         public Grammar ParseString(string content)
         {
-            Grammar = new();
-            content = PreParseString(content);
-            GenerateAutomaton();
-
-            var configuration = SyntaxParserConfig.GetInstance();
-            SymbolsParser parser = new(configuration.SymbolFactory, [' ', '\0', '\n', '\t'], ParserSymbols);
-            ParserResult parsed = parser.Parse(content);
-
-            foreach (var token in parsed.GetParsed())
+            try
             {
-                Automaton?.Read(new AutomatonToken(token));
-            }
-            AutomatonEndAction?.Invoke();
+                Grammar = new();
+                content = PreParseString(content);
+                GenerateAutomaton();
 
-            return Grammar;
+                var configuration = SyntaxParserConfig.GetInstance();
+                SymbolsParser parser = new(configuration.SymbolFactory, [' ', '\0', '\n', '\t'], ParserSymbols);
+                ParserResult parsed = parser.Parse(content);
+
+                foreach (var token in parsed.GetParsed())
+                {
+                    Automaton?.Read(new AutomatonToken(token));
+                }
+                AutomatonEndAction?.Invoke();
+
+                return Grammar;
+            }
+            catch
+            {
+                throw new Exception("An error occurred while trying to parse the string.");
+            }
         }
 
         /// <summary>
@@ -257,9 +271,15 @@ namespace Nt.Syntax
         /// <returns>Grammar structure from content of the given file</returns>
         public Grammar ParseFile(string path)
         {
-            if (!File.Exists(path)) throw new FileNotFoundException($"Cannot parse {path}. The file cannot be found.");
-            string content = File.ReadAllText(path);
-            return ParseString(content);
+            try { 
+                if (!File.Exists(path)) throw new FileNotFoundException($"Cannot parse {path}. The file cannot be found.");
+                string content = File.ReadAllText(path);
+                return ParseString(content);
+            }
+            catch
+            {
+                throw new Exception($"An error occurred while trying to parse the file at {path}.");
+            }
         }
 
         #endregion
