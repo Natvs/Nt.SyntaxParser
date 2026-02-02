@@ -23,11 +23,12 @@ namespace Nt.Syntax.Actions
                 if (!context.CurrentTerminal.Equals(""))
                 { 
                     grammar.AddTerminal(grammar.RemoveEscapeCharacter(context.CurrentTerminal)); 
-                    context.CurrentTerminal = "";
                 }
             }
             catch (RegisteredNonTerminalException) { }
             catch (RegisteredTerminalException) { }
+
+            context.CurrentTerminal = "";
         }
     }
 }
