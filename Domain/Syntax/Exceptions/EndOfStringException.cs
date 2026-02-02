@@ -1,7 +1,6 @@
 ﻿namespace Nt.Syntax.Exceptions
 {
-    public class EndOfStringException : Exception
+    public class EndOfStringException() : InternalException("Unexpected end of grammar string. Some symbols should be missing.")
     {
-        public EndOfStringException() : base("Unexpected end of grammar string. Some symbols should be missing.") { }
     }
 }

@@ -481,7 +481,7 @@ namespace Nt.Tests.Syntax
         {
             var parser = new Nt.Syntax.SyntaxParser();
 
-            var filename = "../../../Resources/single_import_grammar.txt";
+            var filename = "../../../Resources/Importation/single_import_grammar.txt";
             Grammar grammar = parser.ParseFile(filename);
 
             AssertTokens(grammar.Terminals, ["a", "b"]);
@@ -496,7 +496,7 @@ namespace Nt.Tests.Syntax
         {
             var parser = new Nt.Syntax.SyntaxParser();
 
-            var filename = "../../../Resources/multiple_import_grammar.txt";
+            var filename = "../../../Resources/Importation/multiple_import_grammar.txt";
             Grammar grammar = parser.ParseFile(filename);
 
             AssertTokens(grammar.Terminals, ["a", "b"]);

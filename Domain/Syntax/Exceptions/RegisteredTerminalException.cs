@@ -1,7 +1,7 @@
 ﻿namespace Nt.Syntax.Exceptions
 {
 
-    public class RegisteredTerminalException : Exception
+    public class RegisteredTerminalException : InternalException
     {
 
         public RegisteredTerminalException(string name) : base($"Terminal {name} is already registered") { }

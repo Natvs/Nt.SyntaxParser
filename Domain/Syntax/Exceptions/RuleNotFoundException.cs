@@ -2,7 +2,7 @@
 
 namespace Nt.Syntax.Exceptions
 {
-    public class RuleNotFoundException(Rule rule, string message) : Exception(message)
+    public class RuleNotFoundException(Rule rule, string message) : InternalException(message)
     {
         public Rule Rule { get; } = rule;
     }
