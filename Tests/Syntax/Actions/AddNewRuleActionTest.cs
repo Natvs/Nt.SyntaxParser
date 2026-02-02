@@ -1,20 +1,23 @@
 ﻿using Nt.Syntax.Structures;
 using Nt.Syntax.Exceptions;
 using Nt.Syntax.Actions;
-using Nt.Parser.Structures;
 using Nt.Syntax.Automaton;
+using Nt.Parser.Symbols;
+using Nt.Parser.Structures;
 
 namespace Nt.Tests.Syntax.Actions
 {
     public class AddNewRuleActionTest
     {
+        private SymbolFactory SymbolFactory = new SymbolFactory();
+
         [Fact]
         public void AddNewRuleAction_Test1()
         {
             var grammar = new Grammar();
             grammar.NonTerminals.Add("A");
 
-            var symbols = new SymbolsList(["A"]);
+            var symbols = new SymbolsList(SymbolFactory, ["A"]);
             var context = new AutomatonContext();
             var action = new AddNewRuleAction(grammar, context);
             action.Perform(new AutomatonToken(symbols.Get(0), 0));
@@ -30,7 +33,7 @@ namespace Nt.Tests.Syntax.Actions
             var grammar = new Grammar();
             grammar.NonTerminals.Add("A");
 
-            var symbols = new SymbolsList(["B"]);
+            var symbols = new SymbolsList(SymbolFactory, ["B"]);
             var context = new AutomatonContext();
             var action = new AddNewRuleAction(grammar, context);
 

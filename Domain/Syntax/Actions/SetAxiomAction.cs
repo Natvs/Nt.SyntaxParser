@@ -34,7 +34,7 @@ namespace Nt.Syntax.Actions
             }
             catch (UnknownSymbolException ex)
             {
-                throw new UnregisteredNonTerminalException(ex.TokenName, ex.Line);
+                throw new UnregisteredNonTerminalException(ex.Name, ex.Line);
             }
         }
 

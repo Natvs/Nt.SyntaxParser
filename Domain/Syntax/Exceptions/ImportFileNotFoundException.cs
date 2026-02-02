@@ -1,7 +1,7 @@
 ﻿namespace Nt.Syntax.Exceptions
 {
-    public class ImportFileNotFoundException : Exception
+    public class ImportFileNotFoundException(string fileName) : InternalException($"The file {fileName} you are trying to import does not exists")
     {
-        public ImportFileNotFoundException(string fileName) : base($"The file {fileName} you are trying to import does not exists") { }
+        public string FileName { get; } = fileName;
     }
 }

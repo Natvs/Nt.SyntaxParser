@@ -1,0 +1,6 @@
+﻿IMPORT ../../../Resources/Importation/import_subgrammar1.txt;
+
+T = {b}
+S = A
+
+R: A -> b ;

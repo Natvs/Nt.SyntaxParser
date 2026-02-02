@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Nt.Parser.Structures;
+using Nt.Parser.Symbols;
 using Nt.Syntax.Exceptions;
 
 namespace Nt.Syntax.Structures
@@ -10,6 +11,13 @@ namespace Nt.Syntax.Structures
     /// </summary>
     public class Grammar
     {
+        public Grammar()
+        {
+            var configuration = SyntaxParserConfig.GetInstance();
+            Terminals = new SymbolsList(configuration.SymbolFactory);
+            NonTerminals = new SymbolsList(configuration.SymbolFactory);
+        }
+
         #region Internal
 
         /// <summary>

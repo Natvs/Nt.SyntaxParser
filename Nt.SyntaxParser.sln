@@ -1,13 +1,27 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.10.35013.160
+# Visual Studio Version 18
+VisualStudioVersion = 18.2.11408.102 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nt.SyntaxParser.Domain", "Domain\Nt.SyntaxParser.Domain.csproj", "{9EAAFA12-2512-400A-BE2E-2CADF6D1127D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nt.SyntaxParser.Tests", "Tests\Nt.SyntaxParser.Tests.csproj", "{7176D109-4EEA-4211-B53C-A3C1C7B2F8EA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nt.SyntaxParser.Application", "Application\Nt.SyntaxParser.Application.csproj", "{6447F3D0-6013-4552-BC95-9807F0803148}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{9F12868A-B098-4BAF-BF4F-634D34FC582B}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		nuget.config = nuget.config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{14004574-271D-4BE4-A955-501003C985E7}"
+	ProjectSection(SolutionItems) = preProject
+		Doc\Exceptions.md = Doc\Exceptions.md
+		Doc\Grammar.md = Doc\Grammar.md
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

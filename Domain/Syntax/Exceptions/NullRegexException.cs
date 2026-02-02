@@ -1,7 +1,6 @@
 ﻿namespace Nt.Syntax.Exceptions
 {
-    public class NullRegexException : Exception
+    public class NullRegexException(string message) : InternalException(message)
     {
-        public NullRegexException(string message) : base(message) { }
     }
 }

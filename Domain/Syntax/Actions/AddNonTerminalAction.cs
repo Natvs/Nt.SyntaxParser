@@ -24,11 +24,12 @@ namespace Nt.Syntax.Actions
                 if (!context.CurrentNonTerminal.Equals(""))
                 {
                     grammar.AddNonTerminal(grammar.RemoveEscapeCharacter(context.CurrentNonTerminal));
-                    context.CurrentNonTerminal = "";
                 }
             }
             catch (RegisteredNonTerminalException) { } // Ignore those 2 exceptions for now
             catch (RegisteredTerminalException) { } // Maybe someone should remove them later
+
+            context.CurrentNonTerminal = "";
         }
     }
 

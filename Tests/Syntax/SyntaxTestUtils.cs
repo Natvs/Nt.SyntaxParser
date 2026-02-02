@@ -1,4 +1,5 @@
 ﻿using Nt.Parser.Structures;
+using Nt.Parser.Symbols;
 using Nt.Syntax.Structures;
 
 namespace Nt.Tests.Syntax

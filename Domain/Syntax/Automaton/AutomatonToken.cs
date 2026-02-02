@@ -1,5 +1,6 @@
 ﻿using Nt.Parser.Structures;
 using Nt.Automaton.Tokens;
+using Nt.Parser.Symbols;
 
 namespace Nt.Syntax.Automaton
 {
@@ -12,7 +13,7 @@ namespace Nt.Syntax.Automaton
             Value = token.Symbol.Name;
         }
 
-        public AutomatonToken(Symbol symbol, int line) : base(symbol, line)
+        public AutomatonToken(ISymbol symbol, int line) : base(symbol, line)
         {
             Value = symbol.Name;
         }

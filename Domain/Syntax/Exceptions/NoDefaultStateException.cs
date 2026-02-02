@@ -1,7 +1,6 @@
 ﻿namespace Nt.Syntax.Exceptions
 {
-    public class NoDefaultStateException : Exception
+    public class NoDefaultStateException() : InternalException("Default state is not defined")
     {
-        public NoDefaultStateException() : base("Default state is not defined") { }
     }
 }

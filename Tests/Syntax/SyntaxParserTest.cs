@@ -47,6 +47,19 @@ namespace Nt.Tests.Syntax
             AssertRegex(grammar, []);
         }
 
+        [Fact]
+        public void SyntaxParser_ParseNonTerminalsTest3()
+        {
+            var parser = new Nt.Syntax.SyntaxParser();
+            var grammar = parser.ParseString("N = {A, B, C}\nN={C, D, E}");
+
+            AssertTokens(grammar.NonTerminals, ["A", "B", "C", "D", "E"]);
+            AssertTokens(grammar.Terminals, []);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, []);
+            AssertRegex(grammar, []);
+        }
+
         #endregion
 
         #region Terminals
@@ -84,6 +97,19 @@ namespace Nt.Tests.Syntax
             var grammar = parser.ParseString("T = {a, b}\nT={c, d}");
 
             AssertTokens(grammar.Terminals, ["a", "b", "c", "d"]);
+            AssertTokens(grammar.NonTerminals, []);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, []);
+            AssertRegex(grammar, []);
+        }
+
+        [Fact]
+        public void SyntaxParser_ParseTerminalsTest3()
+        {
+            var parser = new Nt.Syntax.SyntaxParser();
+            var grammar = parser.ParseString("T = {a, b, c}\nT={c, d, e}");
+
+            AssertTokens(grammar.Terminals, ["a", "b", "c", "d", "e"]);
             AssertTokens(grammar.NonTerminals, []);
             AssertAxiom(grammar, "");
             AssertRules(grammar, []);
@@ -481,7 +507,7 @@ namespace Nt.Tests.Syntax
         {
             var parser = new Nt.Syntax.SyntaxParser();
 
-            var filename = "../../../Resources/single_import_grammar.txt";
+            var filename = "../../../Resources/Importation/single_import_grammar.txt";
             Grammar grammar = parser.ParseFile(filename);
 
             AssertTokens(grammar.Terminals, ["a", "b"]);
@@ -496,7 +522,7 @@ namespace Nt.Tests.Syntax
         {
             var parser = new Nt.Syntax.SyntaxParser();
 
-            var filename = "../../../Resources/multiple_import_grammar.txt";
+            var filename = "../../../Resources/Importation/multiple_import_grammar.txt";
             Grammar grammar = parser.ParseFile(filename);
 
             AssertTokens(grammar.Terminals, ["a", "b"]);
@@ -507,5 +533,6 @@ namespace Nt.Tests.Syntax
         }
 
         #endregion
+
     }
 }

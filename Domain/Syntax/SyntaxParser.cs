@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Nt.Automaton.States;
 using Nt.Parser;
-using Nt.Parser.Structures;
+using Nt.Parser.Symbols;
 using Nt.Syntax.Actions;
 using Nt.Syntax.Exceptions;
 using Nt.Syntax.Structures;
@@ -11,8 +11,30 @@ using State = Nt.Automaton.States.State<string>;
 using Transition = Nt.Automaton.Transitions.Transition<string>;
 using Nt.Syntax.Automaton;
 
+
 namespace Nt.Syntax
 {
+
+    public class SyntaxParserConfig
+    {
+        public ISymbolFactory SymbolFactory { get; private set; } = new SymbolFactory();
+
+        public void SetSymbolFactory(ISymbolFactory factory)
+        {
+            SymbolFactory = factory;
+        }
+
+        private static SyntaxParserConfig? _instance = null;
+
+        public static SyntaxParserConfig GetInstance()
+        {
+            if (_instance == null)
+            {
+                _instance = new SyntaxParserConfig();
+            }
+            return _instance;
+        }
+    }
 
     public class SyntaxParser
     {
@@ -197,9 +219,22 @@ namespace Nt.Syntax
         /// <returns>A pre-parsed string of the grammar</returns>
         public string PreParseString(string content)
         {
-            GeneratePreAutomaton();
-            SymbolsParser parser = new([' ', '\0', '\n', '\t'], ["import", "IMPORT", "addtopath", "ADDTOPATH", "escape", "ESCAPE", ";"]);
-            return PreParseString(content, parser);
+            try
+            {
+                GeneratePreAutomaton();
+
+                var configuration = SyntaxParserConfig.GetInstance();
+                Nt.Parser.SymbolsParser parser = new(configuration.SymbolFactory, [' ', '\0', '\n', '\t'], ["import", "IMPORT", "addtopath", "ADDTOPATH", "escape", "ESCAPE", ";"]);
+                return PreParseString(content, parser);
+            }
+            catch (InternalException ex)
+            {
+                throw ex;
+            }
+            catch
+            {
+                throw new Exception("An error occurred while trying to pre-parse the string.");
+            }
         }
 
         /// <summary>
@@ -209,20 +244,32 @@ namespace Nt.Syntax
         /// <returns>Grammar data structure from the given string</returns>
         public Grammar ParseString(string content)
         {
-            Grammar = new();
-            content = PreParseString(content);
-
-            SymbolsParser parser = new([' ', '\0', '\n', '\t'], ParserSymbols);
-            ParserResult parsed = parser.Parse(content);
-
-            GenerateAutomaton();
-            foreach (ParsedToken token in parsed.GetParsed())
+            try
             {
-                Automaton?.Read(new AutomatonToken(token));
-            }
-            AutomatonEndAction?.Invoke();
+                Grammar = new();
+                content = PreParseString(content);
+                GenerateAutomaton();
 
-            return Grammar;
+                var configuration = SyntaxParserConfig.GetInstance();
+                SymbolsParser parser = new(configuration.SymbolFactory, [' ', '\0', '\n', '\t'], ParserSymbols);
+                ParserResult parsed = parser.Parse(content);
+
+                foreach (var token in parsed.GetParsed())
+                {
+                    Automaton?.Read(new AutomatonToken(token));
+                }
+                AutomatonEndAction?.Invoke();
+
+                return Grammar;
+            }
+            catch (InternalException ex)
+            {
+                throw ex;
+            }
+            catch
+            {
+                throw new Exception("An error occurred while trying to parse the string.");
+            }
         }
 
         /// <summary>
@@ -232,9 +279,19 @@ namespace Nt.Syntax
         /// <returns>Grammar structure from content of the given file</returns>
         public Grammar ParseFile(string path)
         {
-            if (!File.Exists(path)) throw new FileNotFoundException($"Cannot parse {path}. The file cannot be found.");
-            string content = File.ReadAllText(path);
-            return ParseString(content);
+            try { 
+                if (!File.Exists(path)) throw new FileNotFoundException($"Cannot parse {path}. The file cannot be found.");
+                string content = File.ReadAllText(path);
+                return ParseString(content);
+            }
+            catch (InternalException ex)
+            {
+                throw ex;
+            }
+            catch
+            {
+                throw new Exception($"An error occurred while trying to parse the file at {path}.");
+            }
         }
 
         #endregion
