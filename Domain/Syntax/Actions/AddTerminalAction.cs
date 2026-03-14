@@ -10,7 +10,7 @@ namespace Nt.Syntax.Actions
     /// Represents an action that adds a new terminal to the grammar
     /// </summary>
     /// <param name="grammar">Grammar datas</param>
-    public class AddTerminalAction(Structures.Grammar grammar, AutomatonContext context) : IAction<string>
+    public class AddTerminalAction(Structures.Grammar grammar, AutomatonContext context) : ITokenAction<string>
     {
         /// <summary>
         /// Adds a parsed token as a new non terminal of the grammar

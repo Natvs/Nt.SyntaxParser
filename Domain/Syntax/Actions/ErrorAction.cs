@@ -6,7 +6,7 @@ using Nt.Syntax.Automaton;
 
 namespace Nt.Syntax.Actions
 {
-    public class ErrorAction() : IAction<string>
+    public class ErrorAction() : ITokenAction<string>
     {
 
         public void Perform(IAutomatonToken<string> word)

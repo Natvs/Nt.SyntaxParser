@@ -4,7 +4,7 @@ using Nt.Syntax.Automaton;
 
 namespace Nt.Syntax.Actions
 {
-    public class AddImportPathAction(AutomatonContext context) : IAction<string>
+    public class AddImportPathAction(AutomatonContext context) : ITokenAction<string>
     {
         /// <summary>
         /// Add the token read to the import path.

@@ -6,7 +6,7 @@ using Nt.Syntax.Automaton;
 
 namespace Nt.Syntax.Actions
 {
-    public class SetEscapeCharAction(Grammar grammar) : IAction<string>
+    public class SetEscapeCharAction(Grammar grammar) : ITokenAction<string>
     {
         public void Perform(IAutomatonToken<string> word)
         {

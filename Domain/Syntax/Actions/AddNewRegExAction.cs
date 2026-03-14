@@ -5,7 +5,7 @@ using Nt.Syntax.Structures;
 
 namespace Nt.Syntax.Actions
 {
-    public class AddNewRegExAction(Grammar grammar, AutomatonContext context) : IAction<string>
+    public class AddNewRegExAction(Grammar grammar, AutomatonContext context) : ITokenAction<string>
     {
         public void Perform(IAutomatonToken<string> word)
         {

@@ -10,7 +10,7 @@ namespace Nt.Syntax.Actions
     /// <summary>
     /// Reads the performed token as a file name and gets its content
     /// </summary>
-    public class ImportFileAction(AutomatonContext context) : IAction<string>
+    public class ImportFileAction(AutomatonContext context) : ITokenAction<string>
     {
         public void Perform(IAutomatonToken<string> word)
         {
