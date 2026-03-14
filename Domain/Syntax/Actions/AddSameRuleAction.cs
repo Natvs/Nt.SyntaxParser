@@ -7,7 +7,7 @@ using Nt.Syntax.Automaton;
 
 namespace Nt.Syntax.Actions
 {
-    public class AddSameRuleAction(Grammar grammar, AutomatonContext context) : IAction<string>
+    public class AddSameRuleAction(Grammar grammar, AutomatonContext context) : ITokenAction<string>
     {
         public void Perform(IAutomatonToken<string> word)
         {

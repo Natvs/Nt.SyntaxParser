@@ -5,7 +5,7 @@ using Nt.Syntax.Automaton;
 
 namespace Nt.Syntax.Actions
 {
-    public class AppendToCurrentImportFileAction(AutomatonContext context) : IAction<string>
+    public class AppendToCurrentImportFileAction(AutomatonContext context) : ITokenAction<string>
     {
         /// <summary>
         /// Appends a parsed token to the current import file being built 

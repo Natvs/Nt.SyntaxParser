@@ -8,7 +8,7 @@ using System.Data;
 
 namespace Nt.Syntax.Actions
 {
-    public class AddRuleDerivationAction(Grammar grammar, AutomatonContext context) : IAction<string>
+    public class AddRuleDerivationAction(Grammar grammar, AutomatonContext context) : ITokenAction<string>
     {
         public void Perform(IAutomatonToken<string> word)
         {

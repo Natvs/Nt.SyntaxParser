@@ -11,7 +11,7 @@ namespace Nt.Syntax.Actions
     /// </summary>
     /// <param name="grammar">Grammar datas</param>
     /// <param name="tokens">List of all tokens</param>
-    public class AddNonTerminalAction(Structures.Grammar grammar, AutomatonContext context) : IAction<string>
+    public class AddNonTerminalAction(Structures.Grammar grammar, AutomatonContext context) : ITokenAction<string>
     {
         /// <summary>
         /// Adds a parsed token as new non terminal of the grammar

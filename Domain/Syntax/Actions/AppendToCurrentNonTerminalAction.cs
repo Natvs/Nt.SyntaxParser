@@ -4,7 +4,7 @@ using Nt.Syntax.Automaton;
 
 namespace Nt.Syntax.Actions
 {
-    public class AppendToCurrentNonTerminalAction(AutomatonContext context) : IAction<string>
+    public class AppendToCurrentNonTerminalAction(AutomatonContext context) : ITokenAction<string>
     {
         /// <summary>
         /// Appends a parsed token to the current non terminal being built

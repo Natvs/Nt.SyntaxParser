@@ -10,7 +10,7 @@ namespace Nt.Syntax.Actions
     /// <param name="grammar">Grammar datas</param>
     /// <param name="symbols">List of all symbols</param>
     /// <param name="context">Context of the automaton</param>
-    public class AppendToCurrentTerminalAction(AutomatonContext context) : IAction<string>
+    public class AppendToCurrentTerminalAction(AutomatonContext context) : ITokenAction<string>
     {
         public void Perform(IAutomatonToken<string> word)
         {

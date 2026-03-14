@@ -5,7 +5,7 @@ using Nt.Syntax.Structures;
 
 namespace Nt.Syntax.Actions
 {
-    public class AddNewRuleAction(Grammar grammar, AutomatonContext context) : IAction<string>
+    public class AddNewRuleAction(Grammar grammar, AutomatonContext context) : ITokenAction<string>
     {
         /// <summary>
         /// Adds the symbol of a rule

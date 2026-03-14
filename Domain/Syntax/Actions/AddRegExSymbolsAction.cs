@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace Nt.Syntax.Actions
 {
-    public class AddRegExSymbolsAction(Grammar grammar, AutomatonContext context) : IAction<string>
+    public class AddRegExSymbolsAction(Grammar grammar, AutomatonContext context) : ITokenAction<string>
     {
         public void Perform(IAutomatonToken<string> word)
         {
