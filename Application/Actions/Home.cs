@@ -5,14 +5,16 @@ namespace Nt.Applications.SyntaxParser.Actions
 {
     internal class Home(ApplicationContext context) : ProgramAction(context)
     {
-        public static State<string> GetState(ApplicationContext context)
+        public override State<string> GetState()
         {
-            var creationState = new State<string>(new GrammarCreation(context));
-            var loaderState = new State<string>(new GrammarLoader(context));
+            var creationState = new GrammarCreation(context).GetState();
+            var loaderState = new GrammarLoader(context).GetState();
+            var editState = new GrammarEditor(Context).GetState();
 
-            var newState = new State<string>(new Home(context));
+            var newState = base.GetState();
             newState.AddTransition(new Transition<string>("1", creationState));
             newState.AddTransition(new Transition<string>("2", loaderState));
+            newState.AddTransition(new Transition<string>("3", editState));
 
             return newState;
         }
@@ -23,7 +25,8 @@ namespace Nt.Applications.SyntaxParser.Actions
             Console.WriteLine("Select a program to execute");
             Console.WriteLine("1. Write new grammar");
             Console.WriteLine("2. Load existing grammar");
-            Console.WriteLine("3. Exit");
+            Console.WriteLine("3. Edit current grammar");
+            Console.WriteLine("4. Exit");
         }
     }
 

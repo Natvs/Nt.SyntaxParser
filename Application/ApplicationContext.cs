@@ -12,7 +12,7 @@ namespace Nt.Applications.SyntaxParser
     {
         public ApplicationContext()
         {
-            Automaton.Push(Home.GetState(this), true);
+            Automaton.Push(new Home(this).GetState(), true);
         }
 
         public StackAutomaton<string> Automaton { get; set; } = new StackAutomaton<string>().SetAutoPerformAction();

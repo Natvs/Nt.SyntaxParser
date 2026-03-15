@@ -1,4 +1,5 @@
-﻿using Nt.Syntax.Structures;
+﻿using Nt.Automaton.States;
+using Nt.Syntax.Structures;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
@@ -19,9 +20,9 @@ namespace Nt.Applications.SyntaxParser.Actions
             try
             {
                 // Creates a new grammar from the user's input
-                Grammar grammar = generator.ParseString(input);
+                Context.Grammar = generator.ParseString(input);
                 Console.WriteLine();
-                Console.WriteLine("Grammar successfully created and parsed to LL1. Do you want to save it?");
+                Console.WriteLine("Grammar successfully created. Do you want to save it?");
 
                 // Saves the grammar
                 string? answer = Console.ReadLine();
@@ -42,7 +43,7 @@ namespace Nt.Applications.SyntaxParser.Actions
 
                 // Displays the parsed grammar
                 Transition();
-                Console.WriteLine("Created grammar:\n" + grammar.ToString());
+                Console.WriteLine("Created grammar:\n" + Context.Grammar.ToString());
             }
             catch (Exception ex)
             {

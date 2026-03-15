@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Nt.Applications.SyntaxParser;
 using Nt.Automaton.Actions;
+using Nt.Automaton.States;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
@@ -15,6 +16,11 @@ namespace Nt.Applications.SyntaxParser.Actions
             Console.WriteLine();
             Console.WriteLine("- - - - - - - - - -");
             Console.WriteLine();
+        }
+
+        public virtual State<string> GetState()
+        {
+            return new State<string>(this);
         }
 
         public abstract void Perform();
