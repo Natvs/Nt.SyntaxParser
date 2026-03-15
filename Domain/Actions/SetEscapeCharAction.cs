@@ -1,7 +1,7 @@
-﻿using Nt.Syntax.Structures;
-using Nt.Syntax.Exceptions;
+﻿using Nt.Syntax.Exceptions;
 using Nt.Automaton.Actions;
 using Nt.Automaton.Tokens;
+using Nt.Syntax.Structures;
 using Nt.Syntax.Automaton;
 
 namespace Nt.Syntax.Actions

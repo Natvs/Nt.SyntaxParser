@@ -1,8 +1,8 @@
 ﻿using Nt.Syntax.Exceptions;
-using Nt.Syntax.Structures;
 using Nt.Parser.Structures;
 using Nt.Automaton.Actions;
 using Nt.Automaton.Tokens;
+using Nt.Syntax.Structures;
 using Nt.Syntax.Automaton;
 
 namespace Nt.Syntax.Actions

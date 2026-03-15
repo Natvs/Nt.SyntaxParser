@@ -1,9 +1,9 @@
 ﻿using Microsoft.VisualBasic.FileIO;
 using System.Text;
 using Nt.Syntax.Exceptions;
-using Nt.Syntax.Automaton;
 using Nt.Automaton.Actions;
 using Nt.Automaton.Tokens;
+using Nt.Syntax.Automaton;
 
 namespace Nt.Syntax.Actions
 {
