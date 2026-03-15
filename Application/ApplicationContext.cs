@@ -1,12 +1,12 @@
-﻿using Nt.Automaton.Automatons;
+﻿using Nt.Applications.SyntaxParser.Actions;
+using Nt.Automaton.Automatons;
 using Nt.Syntax;
-using Nt.Syntax.Programs;
 using Nt.Syntax.Structures;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Nt.SyntaxParser.Application
+namespace Nt.Applications.SyntaxParser
 {
     internal class ApplicationContext
     {

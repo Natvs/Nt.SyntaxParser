@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Nt.Applications.SyntaxParser;
 using Nt.Automaton.Actions;
 
-namespace Nt.SyntaxParser.Application.Actions
+namespace Nt.Applications.SyntaxParser.Actions
 {
     internal abstract class ProgramAction(ApplicationContext context) : IAction
     {

@@ -1,9 +1,7 @@
 ﻿using Nt.Automaton.States;
 using Nt.Automaton.Transitions;
-using Nt.SyntaxParser.Application;
-using Nt.SyntaxParser.Application.Actions;
 
-namespace Nt.Syntax.Programs
+namespace Nt.Applications.SyntaxParser.Actions
 {
     internal class Home(ApplicationContext context) : ProgramAction(context)
     {

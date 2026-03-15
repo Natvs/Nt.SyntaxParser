@@ -1,8 +1,6 @@
 ﻿using Nt.Syntax.Structures;
-using Nt.SyntaxParser.Application;
-using Nt.SyntaxParser.Application.Actions;
 
-namespace Nt.Syntax.Programs
+namespace Nt.Applications.SyntaxParser.Actions
 {
 
     internal class GrammarLoader(ApplicationContext context) : ProgramAction(context)
@@ -81,7 +79,7 @@ namespace Nt.Syntax.Programs
         /// <returns>A Grammar object representing the parsed grammar from the specified file.</returns>
         private static Grammar LoadFromPath(string filePath)
         {
-            var generator = new SyntaxParser();
+            var generator = new Syntax.SyntaxParser();
 
             // Generate grammar from file content
             string fileContent = File.ReadAllText(filePath);

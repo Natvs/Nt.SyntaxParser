@@ -1,8 +1,6 @@
 ﻿using Nt.Syntax.Structures;
-using Nt.SyntaxParser.Application;
-using Nt.SyntaxParser.Application.Actions;
 
-namespace Nt.Syntax.Programs
+namespace Nt.Applications.SyntaxParser.Actions
 {
     internal class GrammarCreation(ApplicationContext context) : ProgramAction(context)
     {
@@ -10,7 +8,7 @@ namespace Nt.Syntax.Programs
         {
             string? text = null;
             string input = "";
-            var generator = new SyntaxParser();
+            var generator = new Syntax.SyntaxParser();
             Console.WriteLine("Enter text to generate grammar. Write a new line 'end' when done with the grammar.");
             // Ask the user to fill the grammar
             while (text != "end")

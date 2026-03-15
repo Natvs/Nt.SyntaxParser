@@ -1,9 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
 // See https://aka.ms/new-console-template for more information
+using Nt.Applications.SyntaxParser;
 using Nt.Parser;
 using Nt.Parser.Symbols;
-using Nt.SyntaxParser.Application;
-using Nt.SyntaxParser.Automaton;
 internal class Program
 {
     private static void Main(string[] args)
