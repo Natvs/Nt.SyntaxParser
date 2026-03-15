@@ -8,8 +8,6 @@ using StateAutomaton = Nt.Automaton.Automatons.StateAutomaton<string>;
 using State = Nt.Automaton.States.State<string>;
 using Transition = Nt.Automaton.Transitions.Transition<string>;
 using Nt.Syntax.Automaton;
-using Nt.Actions;
-using Nt.Automaton;
 using Nt.Syntax.Structures;
 using Nt.Syntax.Exceptions;
 

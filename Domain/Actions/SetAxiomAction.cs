@@ -1,7 +1,5 @@
 ﻿using Nt.Automaton.Actions;
 using Nt.Automaton.Tokens;
-using Nt.Exceptions;
-using Nt.Parser.Structures;
 using Nt.Syntax.Automaton;
 using Nt.Syntax.Exceptions;
 using Nt.Syntax.Structures;

@@ -1,8 +1,6 @@
 ﻿using System.Text;
 using Nt.Parser.Structures;
 using Nt.Parser.Symbols;
-using Nt.Structures;
-using Nt.Syntax;
 using Nt.Syntax.Exceptions;
 
 namespace Nt.Syntax.Structures
