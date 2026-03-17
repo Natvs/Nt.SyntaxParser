@@ -136,12 +136,14 @@ namespace Nt.Syntax
             GenerateTerminalsStatesOldStyle(initial, errorAction);
             GenerateNonTerminalStatesOldStyle(initial, errorAction);
             GenerateAxiomStates(initial, errorAction);
-            GenerateNewRuleStates(initial, errorAction);
-            GenerateRegExStates(initial, errorAction);
+            GenerateNewRuleStatesOldStyle(initial, errorAction);
+            GenerateRegExStatesOldStyle(initial, errorAction);
 
             // New style
             GenerateTerminalsStatesNewStyle(initial, errorAction);
             GenerateNonTerminalsStatesNewStyle(initial, errorAction);
+            GenerateNewRuleStatesNewStyle(initial, errorAction);
+            GenerateRegExStatesNewStyle(initial, errorAction);
         }
 
         private void GenerateTerminalsStatesOldStyle(State initial, ErrorAction errorAction)
@@ -216,7 +218,7 @@ namespace Nt.Syntax
 
         }
 
-        private void GenerateNewRuleStates(State initial, ErrorAction errorAction)
+        private void GenerateNewRuleStatesOldStyle(State initial, ErrorAction errorAction)
         {
             State newRuleState = new State().SetDefault(initial, errorAction);
             State arrowState = new State().SetDefault(initial, errorAction);
@@ -232,7 +234,28 @@ namespace Nt.Syntax
             derivationState.AddTransition(new Transition("|", derivationState, new AddSameRuleAction(Grammar, AutomatonContext)));
         }
 
-        private void GenerateRegExStates(State initial, ErrorAction errorAction)
+        private void GenerateNewRuleStatesNewStyle(State initial, ErrorAction errorAction)
+        {
+            // New style:
+            // Rules: A -> a B | b, B -> c;
+            State newRuleState = new State().SetDefault(initial, errorAction);
+            State arrowState = new State().SetDefault(initial, errorAction);
+            State symbolState = new State().SetDefault(arrowState, new AddNewRuleAction(Grammar, AutomatonContext));
+            State derivationState = new();
+
+            initial.AddTransition(new Transition("RULES", newRuleState));
+            initial.AddTransition(new Transition("Rules", newRuleState));
+            initial.AddTransition(new Transition("rules", newRuleState));
+            newRuleState.AddTransition(new Transition(":", symbolState));
+            arrowState.AddTransition(new Transition("-", arrowState));
+            arrowState.AddTransition(new Transition(">", derivationState));
+            derivationState.SetDefault(derivationState, new AddRuleDerivationAction(Grammar, AutomatonContext));
+            derivationState.AddTransition(new Transition(",", symbolState));
+            derivationState.AddTransition(new Transition(";", initial));
+            derivationState.AddTransition(new Transition("|", derivationState, new AddSameRuleAction(Grammar, AutomatonContext)));
+        }
+
+        private void GenerateRegExStatesOldStyle(State initial, ErrorAction errorAction)
         {
             State newRegExState = new State().SetDefault(initial, errorAction);
             State equalState = new State().SetDefault(initial, errorAction);
@@ -242,6 +265,22 @@ namespace Nt.Syntax
             initial.AddTransition(new Transition("E", newRegExState));
             newRegExState.AddTransition(new Transition(":", symbolState));
             equalState.AddTransition(new Transition("=", readState));
+            readState.AddTransition(new Transition(";", initial));
+        }
+
+        private void GenerateRegExStatesNewStyle(State initial, ErrorAction errorAction)
+        {
+            State newRegExState = new State().SetDefault(initial, errorAction);
+            State equalState = new State().SetDefault(initial, errorAction);
+            State symbolState = new State().SetDefault(equalState, new AddNewRegExAction(Grammar, AutomatonContext));
+            var readState = new State(); readState.SetDefault(readState, new AddRegExSymbolsAction(Grammar, AutomatonContext));
+
+            initial.AddTransition(new Transition("REGULAR EXPRESSIONS:", newRegExState));
+            initial.AddTransition(new Transition("Regular Expressions:", newRegExState));
+            initial.AddTransition(new Transition("regular expressions:", newRegExState));
+            newRegExState.AddTransition(new Transition(":", symbolState));
+            equalState.AddTransition(new Transition("=", readState));
+            readState.AddTransition(new Transition(",", symbolState));
             readState.AddTransition(new Transition(";", initial));
         }
 
