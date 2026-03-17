@@ -132,15 +132,22 @@ namespace Nt.Syntax
                 if (Automaton.CurrentState != initial) throw new EndOfStringException();
             };
 
-            GenerateTerminalsStates(initial, errorAction);
-            GenerateNonTerminalStates(initial, errorAction);
+            // Old style
+            GenerateTerminalsStatesOldStyle(initial, errorAction);
+            GenerateNonTerminalStatesOldStyle(initial, errorAction);
             GenerateAxiomStates(initial, errorAction);
             GenerateNewRuleStates(initial, errorAction);
             GenerateRegExStates(initial, errorAction);
+
+            // New style
+            GenerateTerminalsStatesNewStyle(initial, errorAction);
+            GenerateNonTerminalsStatesNewStyle(initial, errorAction);
         }
 
-        private void GenerateTerminalsStates(State initial, ErrorAction errorAction)
+        private void GenerateTerminalsStatesOldStyle(State initial, ErrorAction errorAction)
         {
+            // Old style:
+            // T = { a, b, c }
             State terminalState = new State().SetDefault(initial, errorAction);
             State affectationState = new State().SetDefault(initial, errorAction);
             State newState = new();
@@ -153,7 +160,23 @@ namespace Nt.Syntax
             newState.AddTransition(new Transition("}", initial, new AddTerminalAction(Grammar, AutomatonContext)));
         }
 
-        private void GenerateNonTerminalStates(State initial, ErrorAction errorAction)
+        private void GenerateTerminalsStatesNewStyle(State initial, ErrorAction errorAction)
+        {
+            // New style:
+            // Terminals: a, b, c;
+            State terminalState = new State().SetDefault(initial, errorAction);
+            State newState = new();
+
+            initial.AddTransition(new Transition("TERMINALS", terminalState));
+            initial.AddTransition(new Transition("terminals", terminalState));
+            initial.AddTransition(new Transition("Terminals", terminalState));
+            terminalState.AddTransition(new Transition(":", newState));
+            newState.SetDefault(newState, new AppendToCurrentTerminalAction(AutomatonContext));
+            newState.AddTransition(new Transition(",", newState, new AddTerminalAction(Grammar, AutomatonContext)));
+            newState.AddTransition(new Transition(";", initial, new AddTerminalAction(Grammar, AutomatonContext)));
+        }
+
+        private void GenerateNonTerminalStatesOldStyle(State initial, ErrorAction errorAction)
         {
             State nonTerminalState = new State().SetDefault(initial, errorAction);
             State affectationState = new State().SetDefault(initial, errorAction);
@@ -165,6 +188,22 @@ namespace Nt.Syntax
             newState.SetDefault(newState, new AppendToCurrentNonTerminalAction(AutomatonContext));
             newState.AddTransition(new Transition(",", newState, new AddNonTerminalAction(Grammar, AutomatonContext)));
             newState.AddTransition(new Transition("}", initial, new AddNonTerminalAction(Grammar, AutomatonContext)));
+        }
+
+        private void GenerateNonTerminalsStatesNewStyle(State initial, ErrorAction errorAction)
+        {
+            // New style:
+            // Terminals: a, b, c;
+            State nonTerminalsState = new State().SetDefault(initial, errorAction);
+            State newState = new();
+
+            initial.AddTransition(new Transition("NONTERMINALS", nonTerminalsState));
+            initial.AddTransition(new Transition("nonterminals", nonTerminalsState));
+            initial.AddTransition(new Transition("NonTerminals", nonTerminalsState));
+            nonTerminalsState.AddTransition(new Transition(":", newState));
+            newState.SetDefault(newState, new AppendToCurrentNonTerminalAction(AutomatonContext));
+            newState.AddTransition(new Transition(",", newState, new AddNonTerminalAction(Grammar, AutomatonContext)));
+            newState.AddTransition(new Transition(";", initial, new AddNonTerminalAction(Grammar, AutomatonContext)));
         }
 
         private void GenerateAxiomStates(State initial, ErrorAction errorAction)
