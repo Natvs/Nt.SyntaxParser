@@ -168,3 +168,60 @@ E: INT = (0|[0-9]*) ;
 E: FLOAT = [0-9]+(,[0-9]+)? ;
 E: TYPE = (int|double|char|string) ;
 ```
+
+## Lightweight grammars
+An other syntax is also accepted for defining grammars. The new syntax is lighter and more readable.
+
+### Defining terminals
+To define terminals, use the syntax:
+
+```
+TERMINALS:
+	terminal1,
+	terminal2,
+	...,
+	terminaln;
+```
+
+The header `TERMINALS` can also be written `Terminals` or `terminals`.
+
+### Defining non-terminals
+To define non-terminals, use the syntax:
+
+```
+NON TERMINALS:
+	nonterminal1,
+	nonterminal2,
+	...,
+	nonterminaln;
+```
+
+The header `NON TERMINALS` can also be written `Non Terminals` or `non terminals`.
+
+### Defining rules
+You can define rules with the following syntax:
+
+```
+RULES:
+	non-terminal1 -> symbol11 symbol12 symbol13 ...,
+	non-terminal2 -> symbol21 symbol22 symbol23 ...,
+	...,
+	non-terminaln -> symboln1 symboln2 symboln3 ...;
+```
+
+The header `RULES` can also be written `Rules` or `rules`.
+
+### Defining regex
+You can define regular expressions with the following syntax:
+
+```
+REGULAR EXPRESSIONS:
+	non-terminal1 = regex1,
+	non-terminal2 = regex2,
+	...,
+	non-terminaln = regexn;
+```
+
+The header `REGULAR EXPRESSIONS` can also be written `Regular Expressions` or `regular expressions`.
+
+The new syntax is entirely compatible with the old syntax and both can be used in the same file.
