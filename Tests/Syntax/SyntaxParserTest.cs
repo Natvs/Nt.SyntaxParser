@@ -265,7 +265,7 @@ namespace Nt.Tests.Syntax
         public void SyntaxParser_MultipleUniqueNewStyleRules_ValidResult()
         {
             var parser = new Nt.Syntax.SyntaxParser();
-            var grammar = parser.ParseString("N={A}\nT={a,b}\nRULES: a | b;");
+            var grammar = parser.ParseString("N={A}\nT={a,b}\nRULES: A -> a | b;");
 
             AssertTokens(grammar.NonTerminals, ["A"]);
             AssertTokens(grammar.Terminals, ["a", "b"]);
@@ -294,7 +294,7 @@ namespace Nt.Tests.Syntax
         public void SyntaxParser_MultipleNewStyleRules_ValidResult()
         {
             var parser = new Nt.Syntax.SyntaxParser();
-            var grammar = parser.ParseString("N={A,B}\nT={a,b}\nRULES:\nA -> a B,\nR:B -> b;");
+            var grammar = parser.ParseString("N={A,B}\nT={a,b}\nRULES:\nA -> a B,\nB -> b;");
 
             AssertTokens(grammar.NonTerminals, ["A", "B"]);
             AssertTokens(grammar.Terminals, ["a", "b"]);
@@ -332,7 +332,7 @@ namespace Nt.Tests.Syntax
         #region Regular Expressions
 
         [Fact]
-        public void SyntaxParser_SingleRegexTest()
+        public void SyntaxParser_SingleOldStyleRegex_ValidResult()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("N={VAR}\nE:VAR = \"[a-zA-Z_]*\";");
@@ -345,7 +345,20 @@ namespace Nt.Tests.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_MultipleRegexTest()
+        public void SyntaxParser_SingleNewStyleRegex_ValidResult()
+        {
+            var parser = new Nt.Syntax.SyntaxParser();
+            var grammar = parser.ParseString("N={VAR}\nREGULAR EXPRESSIONS: VAR = \"[a-zA-Z_]*\";");
+
+            AssertTokens(grammar.Terminals, []);
+            AssertTokens(grammar.NonTerminals, ["VAR"]);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, []);
+            AssertRegex(grammar, [("VAR", "\"[a-zA-Z_]*\"")]);
+        }
+
+        [Fact]
+        public void SyntaxParser_MultipleOldStyleRegex_ValidResult()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("N={VAR, NUM}\nE:VAR = \"[a-zA-Z_]*\";\nE:NUM = \"[0-9]+\";");
@@ -361,7 +374,23 @@ namespace Nt.Tests.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_RegexUndefinedSymbolTest()
+        public void SyntaxParser_MultipleNewStyleRegex_ValidResult()
+        {
+            var parser = new Nt.Syntax.SyntaxParser();
+            var grammar = parser.ParseString("N={VAR, NUM}\nREGULAR EXPRESSIONS: VAR = \"[a-zA-Z_]*\",\nNUM = \"[0-9]+\";");
+
+            AssertTokens(grammar.Terminals, []);
+            AssertTokens(grammar.NonTerminals, ["VAR", "NUM"]);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, []);
+            AssertRegex(grammar, [
+                ("VAR", "\"[a-zA-Z_]*\""),
+                ("NUM", "\"[0-9]+\"")
+            ]);
+        }
+
+        [Fact]
+        public void SyntaxParser_Regex_ThrowOnUndeclaredSymbol()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             Assert.Throws<UnregisteredNonTerminalException>(() => parser.ParseString("E:VAR = \"[a-zA-Z_]*\";"));
