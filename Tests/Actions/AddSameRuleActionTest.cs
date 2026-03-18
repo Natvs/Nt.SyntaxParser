@@ -4,7 +4,7 @@ using Nt.Syntax.Actions;
 using Nt.Syntax.Automaton;
 using Nt.Parser.Structures;
 using Nt.Parser.Symbols;
-using static Nt.Tests.Syntax.SyntaxTestUtils;
+using static Nt.Tests.SyntaxTestUtils;
 
 namespace Nt.Tests.Syntax.Actions
 {

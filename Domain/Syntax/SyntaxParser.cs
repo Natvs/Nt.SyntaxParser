@@ -197,12 +197,16 @@ namespace Nt.Syntax
             // New style:
             // Terminals: a, b, c;
             State nonTerminalsState = new State().SetDefault(initial, errorAction);
+            State nonTerminalsState2 = new State().SetDefault(initial, errorAction);
             State newState = new();
 
-            initial.AddTransition(new Transition("NONTERMINALS", nonTerminalsState));
-            initial.AddTransition(new Transition("nonterminals", nonTerminalsState));
-            initial.AddTransition(new Transition("NonTerminals", nonTerminalsState));
-            nonTerminalsState.AddTransition(new Transition(":", newState));
+            initial.AddTransition(new Transition("NON", nonTerminalsState));
+            initial.AddTransition(new Transition("non", nonTerminalsState));
+            initial.AddTransition(new Transition("Non", nonTerminalsState));
+            nonTerminalsState.AddTransition(new Transition("TERMINALS", nonTerminalsState2));
+            nonTerminalsState.AddTransition(new Transition("terminals", nonTerminalsState2));
+            nonTerminalsState.AddTransition(new Transition("Terminals", nonTerminalsState2));
+            nonTerminalsState2.AddTransition(new Transition(":", newState));
             newState.SetDefault(newState, new AppendToCurrentNonTerminalAction(AutomatonContext));
             newState.AddTransition(new Transition(",", newState, new AddNonTerminalAction(Grammar, AutomatonContext)));
             newState.AddTransition(new Transition(";", initial, new AddNonTerminalAction(Grammar, AutomatonContext)));

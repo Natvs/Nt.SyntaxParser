@@ -1,6 +1,6 @@
 ﻿using Nt.Syntax.Exceptions;
 using Nt.Syntax.Structures;
-using static Nt.Tests.Syntax.SyntaxTestUtils;
+using static Nt.Tests.SyntaxTestUtils;
 
 namespace Nt.Tests.Syntax
 {
@@ -39,7 +39,7 @@ namespace Nt.Tests.Syntax
         public void SyntaxParser_NewStyleSingleNonTerminal_ValidResult()
         {
             var parser = new Nt.Syntax.SyntaxParser();
-            var grammar = parser.ParseString("NONTERMINALS: A;");
+            var grammar = parser.ParseString("NON TERMINALS: A;");
             AssertTokens(grammar.NonTerminals, ["A"]);
             AssertTokens(grammar.Terminals, []);
             AssertAxiom(grammar, "");
@@ -51,7 +51,7 @@ namespace Nt.Tests.Syntax
         public void SyntaxParser_NewStyleMultipleNonTerminal_ValidResult()
         {
             var parser = new Nt.Syntax.SyntaxParser();
-            var grammar = parser.ParseString("NONTERMINALS: A, B, C, D;");
+            var grammar = parser.ParseString("NON TERMINALS: A, B, C, D;");
             AssertTokens(grammar.NonTerminals, ["A", "B", "C", "D"]);
             AssertTokens(grammar.Terminals, []);
             AssertAxiom(grammar, "");
@@ -184,7 +184,7 @@ namespace Nt.Tests.Syntax
         public void SyntaxParser_NewStyleTerminalsAndNonTerminals_ValidResult()
         {
             var parser = new Nt.Syntax.SyntaxParser();
-            var grammar = parser.ParseString("NONTERMINALS: A, B;\nTERMINALS: a, b;");
+            var grammar = parser.ParseString("NON TERMINALS: A, B;\nTERMINALS: a, b;");
 
             AssertTokens(grammar.NonTerminals, ["A", "B"]);
             AssertTokens(grammar.Terminals, ["a", "b"]);
