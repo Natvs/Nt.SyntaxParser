@@ -1,6 +1,6 @@
 ﻿using Nt.Syntax.Exceptions;
 using Nt.Syntax.Structures;
-using static Nt.Tests.SyntaxTestUtils;
+using static Nt.Tests.Syntax.SyntaxTestUtils;
 
 namespace Nt.Tests.Syntax
 {

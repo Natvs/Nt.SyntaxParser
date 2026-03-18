@@ -3,8 +3,8 @@ using Nt.Syntax.Structures;
 using Nt.Syntax.Actions;
 using Nt.Parser.Structures;
 using Nt.Syntax.Automaton;
-using static Nt.Tests.SyntaxTestUtils;
 using Nt.Parser.Symbols;
+using static Nt.Tests.Syntax.SyntaxTestUtils;
 
 namespace Nt.Tests.Syntax.Actions
 {
