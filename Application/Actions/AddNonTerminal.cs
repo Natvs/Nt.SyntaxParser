@@ -4,7 +4,6 @@
     {
         public override void Perform()
         {
-            Transition();
             if (Context.Grammar == null)
             {
                 Console.WriteLine("No current grammar. Please load or create a grammar first.");

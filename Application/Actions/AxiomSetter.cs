@@ -44,7 +44,7 @@ namespace Nt.Applications.SyntaxParser.Actions
                 Context.Grammar.SetAxiom(new NonTerminal(symbol, -1));
                 Context.Automaton.Pop(true);
             }
-            catch (KeyNotFoundException e) 
+            catch (KeyNotFoundException) 
             {
                 Console.WriteLine($"There are no non terminal '{name}' in the grammar.");
                 Context.Automaton.Pop(true);

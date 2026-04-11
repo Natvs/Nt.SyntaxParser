@@ -14,10 +14,12 @@ namespace Nt.Applications.SyntaxParser.Actions
             var nonTerminalsState = new NonTerminalsEditor(Context).GetState();
             var termianlsState = new TerminalsEditor(Context).GetState();
             var axiomState = new AxiomSetter(Context).GetState();
+            var rulesState = new RulesEditor(Context).GetState();
 
             state.AddTransition(new Transition<string>("1", nonTerminalsState));
             state.AddTransition(new Transition<string>("2", termianlsState));
             state.AddTransition(new Transition<string>("3", axiomState));
+            state.AddTransition(new Transition<string>("4", rulesState));
 
             return state;
         }

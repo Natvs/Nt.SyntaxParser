@@ -6,7 +6,7 @@ namespace Nt.Applications.SyntaxParser.Actions
 
     internal class GrammarLoader(ApplicationContext context) : ProgramAction(context)
     {
-        private static List<string> paths = [".", "../../../Resources"];
+        private static List<string> paths = [".", "..", "../../../Resources"];
 
         public override void Perform()
         {

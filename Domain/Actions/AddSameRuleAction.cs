@@ -15,7 +15,7 @@ namespace Nt.Syntax.Actions
             if (context.Rule.Token == null) throw new Exception("Attempting to set a new rule with same symbol while the symbol is not defined");
             if (word is AutomatonToken token)
             {
-                context.Rule = grammar.AddRule(new(context.Rule.Token.Symbol, token.Line));
+                context.Rule = grammar.AddRule(new NonTerminal(context.Rule.Token.Symbol, token.Line));
             }
         }
     }

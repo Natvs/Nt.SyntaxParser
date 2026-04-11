@@ -15,7 +15,7 @@ namespace Nt.Syntax.Actions
         {
             if (word is AutomatonToken token)
             {
-                context.Rule = grammar.AddRule(new(token.Symbol, token.Line));
+                context.Rule = grammar.AddRule(new NonTerminal(token.Symbol, token.Line));
             }
         }
     }
