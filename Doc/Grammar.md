@@ -1,5 +1,20 @@
 # Grammar file syntax
 
+- [Defining symbols used in the grammar](#defining-symbols-used-in-the-grammar)
+- [Setting grammar rules](#setting-grammar-rules)
+- [Defining regular expression](#defining-regular-expressions)
+- [Setting grammar axiom](#setting-grammar-axiom)
+- [Escape characters](#escape-characters)
+- [Pre-parsing instructions](#pre-parsing-instructions)
+	- [More about importing files](#more-about-importing-files)
+	- [Configuration commands](#configuration-commands)
+- [Example of use case of a grammar file](#example-of-grammar-file-use-case)
+- [Lightweight grammars](#lightweight-grammars)
+	- [Defining terminals](#defining-terminals)
+	- [Defining non-terminals](#defining-non-terminals)
+	- [Defining rules](#defining-rules)
+	- [Defining regex](#defining-regex)
+
 Parsing the grammar file occurs in two steps. The grammar file is first parsed to process pre-parsing lines.
 The resulted file is then parsed into the final grammar file that would be parsed into a grammar structure.
 
@@ -51,7 +66,7 @@ E: non-terminal = regex ;
 See [official microsoft documentation](https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-language-quick-reference) to learn more about regex.
 Once again, pay attention that you need to [use escape characters](#escape-characters) for including the symbol `;`.
 
-## Setting grammar first symbol
+## Setting grammar axiom
 The grammar needs a symbol to begin with for syntaxically defining if a string belongs to the grammar language. This symbol is called axiom and is defined with the syntax:
 ```
 S = axiom
@@ -133,7 +148,7 @@ E: TYPE = (int|double|char|string) ;
 ```
 
 These files can't be directly used as grammars as they don't define any axiom. In params, the symbol `STRING` that is used is not even defined.
-Where these files could be of interest, is when imported into other big files.
+Where these files could be of interest however, is when imported into other big files.
 
 ```body.txt
 IMPORT const.txt ;
@@ -168,3 +183,60 @@ E: INT = (0|[0-9]*) ;
 E: FLOAT = [0-9]+(,[0-9]+)? ;
 E: TYPE = (int|double|char|string) ;
 ```
+
+## Lightweight grammars
+An other syntax is also accepted for defining grammars. The new syntax is lighter and more readable.
+
+### Defining terminals
+To define terminals, use the syntax:
+
+```
+TERMINALS:
+	terminal1,
+	terminal2,
+	...,
+	terminaln;
+```
+
+The header `TERMINALS` can also be written `Terminals` or `terminals`.
+
+### Defining non-terminals
+To define non-terminals, use the syntax:
+
+```
+NON TERMINALS:
+	nonterminal1,
+	nonterminal2,
+	...,
+	nonterminaln;
+```
+
+The header `NON TERMINALS` can also be written `Non Terminals` or `non terminals`.
+
+### Defining rules
+You can define rules with the following syntax:
+
+```
+RULES:
+	non-terminal1 -> symbol11 symbol12 symbol13 ...,
+	non-terminal2 -> symbol21 symbol22 symbol23 ...,
+	...,
+	non-terminaln -> symboln1 symboln2 symboln3 ...;
+```
+
+The header `RULES` can also be written `Rules` or `rules`.
+
+### Defining regex
+You can define regular expressions with the following syntax:
+
+```
+REGULAR EXPRESSIONS:
+	non-terminal1 = regex1,
+	non-terminal2 = regex2,
+	...,
+	non-terminaln = regexn;
+```
+
+The header `REGULAR EXPRESSIONS` can also be written `Regular Expressions` or `regular expressions`.
+
+The new syntax is entirely compatible with the old syntax and both can be used in the same file.

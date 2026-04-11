@@ -9,7 +9,7 @@ namespace Nt.Tests.Syntax
         #region NonTerminals
 
         [Fact]
-        public void SyntaxParser_ParseNonTerminalTest()
+        public void SyntaxParser_OldStyleSingleNonTerminal_ValidResult()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("N = {A}");
@@ -22,7 +22,7 @@ namespace Nt.Tests.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_ParseNonTerminalsTest1()
+        public void SyntaxParser_OldStyleMultipleNonTerminals_ValidResult()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("N = {A, B, C, D}");
@@ -34,13 +34,13 @@ namespace Nt.Tests.Syntax
             AssertRegex(grammar, []);
         }
 
+
         [Fact]
-        public void SyntaxParser_ParseNonTerminalsTest2()
+        public void SyntaxParser_NewStyleSingleNonTerminal_ValidResult()
         {
             var parser = new Nt.Syntax.SyntaxParser();
-            var grammar = parser.ParseString("N = {A, B}\nN={C, D}");
-
-            AssertTokens(grammar.NonTerminals, ["A", "B", "C", "D"]);
+            var grammar = parser.ParseString("NON TERMINALS: A;");
+            AssertTokens(grammar.NonTerminals, ["A"]);
             AssertTokens(grammar.Terminals, []);
             AssertAxiom(grammar, "");
             AssertRules(grammar, []);
@@ -48,12 +48,11 @@ namespace Nt.Tests.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_ParseNonTerminalsTest3()
+        public void SyntaxParser_NewStyleMultipleNonTerminal_ValidResult()
         {
             var parser = new Nt.Syntax.SyntaxParser();
-            var grammar = parser.ParseString("N = {A, B, C}\nN={C, D, E}");
-
-            AssertTokens(grammar.NonTerminals, ["A", "B", "C", "D", "E"]);
+            var grammar = parser.ParseString("NON TERMINALS: A, B, C, D;");
+            AssertTokens(grammar.NonTerminals, ["A", "B", "C", "D"]);
             AssertTokens(grammar.Terminals, []);
             AssertAxiom(grammar, "");
             AssertRules(grammar, []);
@@ -65,7 +64,7 @@ namespace Nt.Tests.Syntax
         #region Terminals
 
         [Fact]
-        public void SyntaxParser_ParseTerminalTest()
+        public void SyntaxParser_OldStyleSingleTerminal_ValidResult()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("T = {a}");
@@ -78,7 +77,7 @@ namespace Nt.Tests.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_ParseTerminalsTest1()
+        public void SyntaxParser_OldStyleMultipleTerminals_ValidResult()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("T = {a, b, c, d}");
@@ -91,10 +90,23 @@ namespace Nt.Tests.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_ParseTerminalsTest2()
+        public void SyntaxParser_NewStyleSingleTerminal_ValidResult()
         {
             var parser = new Nt.Syntax.SyntaxParser();
-            var grammar = parser.ParseString("T = {a, b}\nT={c, d}");
+            var grammar = parser.ParseString("TERMINALS: a;");
+
+            AssertTokens(grammar.Terminals, ["a"]);
+            AssertTokens(grammar.NonTerminals, []);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, []);
+            AssertRegex(grammar, []);
+        }
+
+        [Fact]
+        public void SyntaxParser_NewStyleMultipleTerminals_ValidResult()
+        {
+            var parser = new Nt.Syntax.SyntaxParser();
+            var grammar = parser.ParseString("TERMINALS: a, b, c, d;");
 
             AssertTokens(grammar.Terminals, ["a", "b", "c", "d"]);
             AssertTokens(grammar.NonTerminals, []);
@@ -104,33 +116,19 @@ namespace Nt.Tests.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_ParseTerminalsTest3()
-        {
-            var parser = new Nt.Syntax.SyntaxParser();
-            var grammar = parser.ParseString("T = {a, b, c}\nT={c, d, e}");
-
-            AssertTokens(grammar.Terminals, ["a", "b", "c", "d", "e"]);
-            AssertTokens(grammar.NonTerminals, []);
-            AssertAxiom(grammar, "");
-            AssertRules(grammar, []);
-            AssertRegex(grammar, []);
-        }
-
-        [Fact]
-        public void SyntaxParser_ParseSymbolTest1()
+        public void SyntaxParser_OldStyleSimpleSymbol_ValidResult()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("T = {=}");
-
-            AssertTokens(grammar.Terminals, ["="]);
             AssertTokens(grammar.NonTerminals, []);
+            AssertTokens(grammar.Terminals, ["="]);
             AssertAxiom(grammar, "");
             AssertRules(grammar, []);
             AssertRegex(grammar, []);
         }
 
         [Fact]
-        public void SyntaxParser_ParseSymbolTest2()
+        public void SyntaxParser_OldStyleDoubleSymbol_ValidResult()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("T = {==}");
@@ -142,12 +140,24 @@ namespace Nt.Tests.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_ParseSymbolTest3()
+        public void SyntaxParser_NewStyleSimpleSymbol_ValidResult()
         {
             var parser = new Nt.Syntax.SyntaxParser();
-            var grammar = parser.ParseString("T = {===}");
+            var grammar = parser.ParseString("TERMINALS: =;");
             AssertTokens(grammar.NonTerminals, []);
-            AssertTokens(grammar.Terminals, ["==="]);
+            AssertTokens(grammar.Terminals, ["="]);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, []);
+            AssertRegex(grammar, []);
+        }
+
+        [Fact]
+        public void SyntaxParser_NewStyleDoubleSymbol_ValidResult()
+        {
+            var parser = new Nt.Syntax.SyntaxParser();
+            var grammar = parser.ParseString("TERMINALS: ==;");
+            AssertTokens(grammar.NonTerminals, []);
+            AssertTokens(grammar.Terminals, ["=="]);
             AssertAxiom(grammar, "");
             AssertRules(grammar, []);
             AssertRegex(grammar, []);
@@ -158,7 +168,7 @@ namespace Nt.Tests.Syntax
         #region Terminals and NonTerminals
 
         [Fact]
-        public void SyntaxParser_ParseTerminalsAndNonTerminalsTest1()
+        public void SyntaxParser_OldStyleTerminalsAndNonTerminals_ValidResult()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("N = {A, B}\nT = {a, b}");
@@ -171,13 +181,13 @@ namespace Nt.Tests.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_ParseTerminalsAndNonTerminalsTest2()
+        public void SyntaxParser_NewStyleTerminalsAndNonTerminals_ValidResult()
         {
             var parser = new Nt.Syntax.SyntaxParser();
-            var grammar = parser.ParseString("T = {a, b}\nN = {A, B}\nT={c, d}\nN={C, D}");
+            var grammar = parser.ParseString("NON TERMINALS: A, B;\nTERMINALS: a, b;");
 
-            AssertTokens(grammar.NonTerminals, ["A", "B", "C", "D"]);
-            AssertTokens(grammar.Terminals, ["a", "b", "c", "d"]);
+            AssertTokens(grammar.NonTerminals, ["A", "B"]);
+            AssertTokens(grammar.Terminals, ["a", "b"]);
             AssertAxiom(grammar, "");
             AssertRules(grammar, []);
             AssertRegex(grammar, []);
@@ -213,7 +223,7 @@ namespace Nt.Tests.Syntax
         #region Rules
 
         [Fact]
-        public void SyntaxParser_SingleRuleTest()
+        public void SyntaxParser_SingleOldStyleRuleRule_ValidResult()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("N={A}\nT={a}\nR:A -> a;");
@@ -226,7 +236,20 @@ namespace Nt.Tests.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_MultipleUniqueRules()
+        public void SyntaxParser_SingleNewStyleRuleTest_ValidResult()
+        {
+            var parser = new Nt.Syntax.SyntaxParser();
+            var grammar = parser.ParseString("N={A}\nT={a}\nRULES: A -> a;");
+
+            AssertTokens(grammar.NonTerminals, ["A"]);
+            AssertTokens(grammar.Terminals, ["a"]);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, [("A", ["a"])]);
+            AssertRegex(grammar, []);
+        }
+
+        [Fact]
+        public void SyntaxParser_MultipleUniqueOldStyleRules_ValidResult()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("N={A}\nT={a, b}\nR: A -> a | b;");
@@ -239,7 +262,20 @@ namespace Nt.Tests.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_MultipleRulesTest1()
+        public void SyntaxParser_MultipleUniqueNewStyleRules_ValidResult()
+        {
+            var parser = new Nt.Syntax.SyntaxParser();
+            var grammar = parser.ParseString("N={A}\nT={a,b}\nRULES: A -> a | b;");
+
+            AssertTokens(grammar.NonTerminals, ["A"]);
+            AssertTokens(grammar.Terminals, ["a", "b"]);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, [("A", ["a"]), ("A", ["b"])]);
+            AssertRegex(grammar, []);
+        }
+
+        [Fact]
+        public void SyntaxParser_MultipleOldStyleRules_ValidResult()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("N={A,B}\nT={a,b}\nR:A -> a B;\nR:B -> b;");
@@ -255,39 +291,37 @@ namespace Nt.Tests.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_MultipleUniqueRulesTest()
+        public void SyntaxParser_MultipleNewStyleRules_ValidResult()
         {
             var parser = new Nt.Syntax.SyntaxParser();
-            var grammar = parser.ParseString("N={A,B}\nT={a,b,c,d}\nR:A -> a B | c;\nR:B -> b | d A;");
+            var grammar = parser.ParseString("N={A,B}\nT={a,b}\nRULES:\nA -> a B,\nB -> b;");
 
             AssertTokens(grammar.NonTerminals, ["A", "B"]);
-            AssertTokens(grammar.Terminals, ["a", "b", "c", "d"]);
+            AssertTokens(grammar.Terminals, ["a", "b"]);
             AssertAxiom(grammar, "");
             AssertRules(grammar, [
                 ("A", ["a", "B"]),
-                ("A", ["c"]),
-                ("B", ["b"]),
-                ("B", ["d", "A"])
+                ("B", ["b"])
             ]);
             AssertRegex(grammar, []);
         }
 
         [Fact]
-        public void SyntaxParser_RuleUndefinedSymbolTest1()
+        public void SyntaxParser_Rule_ThrowOnUndeclaredSymbol()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             Assert.Throws<UnregisteredNonTerminalException>(() => parser.ParseString("T={a}\nR:A -> a;"));
         }
 
         [Fact]
-        public void SyntaxParser_RuleUndefinedSymbolTest2()
+        public void SyntaxParser_Rule_ThrowOnUndeclaredTerminal()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             Assert.Throws<UnknownSymbolException>(() => parser.ParseString("N={A}\nR:A -> a;"));
         }
 
         [Fact]
-        public void SyntaxParser_RuleUndefinedSymbolTest3()
+        public void SyntaxParser_Rule_ThrowOnUndeclaredNonTerminal()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             Assert.Throws<UnknownSymbolException>(() => parser.ParseString("N={A}\nT={a}\nR:A -> a B;"));
@@ -298,7 +332,7 @@ namespace Nt.Tests.Syntax
         #region Regular Expressions
 
         [Fact]
-        public void SyntaxParser_SingleRegexTest()
+        public void SyntaxParser_SingleOldStyleRegex_ValidResult()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("N={VAR}\nE:VAR = \"[a-zA-Z_]*\";");
@@ -311,7 +345,20 @@ namespace Nt.Tests.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_MultipleRegexTest()
+        public void SyntaxParser_SingleNewStyleRegex_ValidResult()
+        {
+            var parser = new Nt.Syntax.SyntaxParser();
+            var grammar = parser.ParseString("N={VAR}\nREGULAR EXPRESSIONS: VAR = \"[a-zA-Z_]*\";");
+
+            AssertTokens(grammar.Terminals, []);
+            AssertTokens(grammar.NonTerminals, ["VAR"]);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, []);
+            AssertRegex(grammar, [("VAR", "\"[a-zA-Z_]*\"")]);
+        }
+
+        [Fact]
+        public void SyntaxParser_MultipleOldStyleRegex_ValidResult()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("N={VAR, NUM}\nE:VAR = \"[a-zA-Z_]*\";\nE:NUM = \"[0-9]+\";");
@@ -327,7 +374,23 @@ namespace Nt.Tests.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_RegexUndefinedSymbolTest()
+        public void SyntaxParser_MultipleNewStyleRegex_ValidResult()
+        {
+            var parser = new Nt.Syntax.SyntaxParser();
+            var grammar = parser.ParseString("N={VAR, NUM}\nREGULAR EXPRESSIONS: VAR = \"[a-zA-Z_]*\",\nNUM = \"[0-9]+\";");
+
+            AssertTokens(grammar.Terminals, []);
+            AssertTokens(grammar.NonTerminals, ["VAR", "NUM"]);
+            AssertAxiom(grammar, "");
+            AssertRules(grammar, []);
+            AssertRegex(grammar, [
+                ("VAR", "\"[a-zA-Z_]*\""),
+                ("NUM", "\"[0-9]+\"")
+            ]);
+        }
+
+        [Fact]
+        public void SyntaxParser_Regex_ThrowOnUndeclaredSymbol()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             Assert.Throws<UnregisteredNonTerminalException>(() => parser.ParseString("E:VAR = \"[a-zA-Z_]*\";"));
@@ -338,7 +401,7 @@ namespace Nt.Tests.Syntax
         #region Escape Characters
 
         [Fact]
-        public void SyntaxParser_EscapeCharacterTest1()
+        public void SyntaxParser_UpdateEscapeCharacter_UpdateSuccessful()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("ESCAPE $");
@@ -347,7 +410,7 @@ namespace Nt.Tests.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_EscapeCharacterTest2()
+        public void SyntaxParser_UpdateEscapeCharacter_ReadSuccessfulForTerminal()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("ESCAPE $\nT={$a}");
@@ -360,7 +423,7 @@ namespace Nt.Tests.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_EscapeCharacterTest3()
+        public void SyntaxParser_UpdateEscapeCharacter_ReadSuccessfulForNonTerminal()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("ESCAPE $\nN={$A}");
@@ -373,7 +436,7 @@ namespace Nt.Tests.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_EscapeCharacterTest4()
+        public void SyntaxParser_UpdateEscapeTerminal_ReadSuccessfulForAxiom()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("ESCAPE $\nN={A}\nS=$A");
@@ -385,7 +448,7 @@ namespace Nt.Tests.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_EscapeCharacterTest5()
+        public void SyntaxParser_UpdateEscapeCharacter_ReadSuccessfulForRule()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("ESCAPE $\nT={a}\nN={A}\nR:A->$a;");
@@ -398,7 +461,7 @@ namespace Nt.Tests.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_EscapeCharacterTest6()
+        public void SyntaxParser_UpdateEscapeCharacter_ReadSuccessfulForRegex()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("ESCAPE $\nN={A}\nE:A=$a;");
@@ -411,7 +474,7 @@ namespace Nt.Tests.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_Test1()
+        public void SyntaxParser_ParsingOldStyle_ReadSuccessful()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("N={S,A,B,C,D}" +
@@ -441,15 +504,26 @@ namespace Nt.Tests.Syntax
             ]);
         }
 
+        #endregion
+
+        #region Incomplete Parsing
+
         [Fact]
-        public void SyntaxParser_Test2()
+        public void SyntaxParser_IncompleteParsing_ThrowOnMissingNonTerminalsDeclaration()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             Assert.Throws<EndOfStringException>(() => parser.ParseString("N=")); // Missing non-terminals declaration
         }
 
         [Fact]
-        public void SyntaxParser_Test3()
+        public void SyntaxParser_IncompleteParsing_ThrowOnMissingTerminalsDeclaration()
+        {
+            var parser = new Nt.Syntax.SyntaxParser();
+            Assert.Throws<EndOfStringException>(() => parser.ParseString("T=")); // Missing terminals declaration
+        }
+
+        [Fact]
+        public void SyntaxParser_IncompleteParsing_ThrowOnMissingRuleDerivation()
         {
 
             var parser = new Nt.Syntax.SyntaxParser();
@@ -457,45 +531,59 @@ namespace Nt.Tests.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_Test4()
+        public void SyntaxParser_IncompleteParsing_ThrowOnMissingRegularExpressionDeclaration()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             Assert.Throws<EndOfStringException>(() => parser.ParseString("N={S}\nE:S =")); // Missing regex pattern
         }
 
         [Fact]
-        public void SyntaxParser_Test5()
+        public void SyntaxParser_IncompletParsing_ThrowOnMissingSemiColumnAfterRule()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             Assert.Throws<EndOfStringException>(() => parser.ParseString("N={S}\nT={a}\nR:S -> a")); // Missing semicolon
         }
 
         [Fact]
-        public void SyntaxParser_Test6()
+        public void SyntaxParser_IncompletParsing_ThrowOnMissingSemiColumnAfterRegex()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             Assert.Throws<EndOfStringException>(() => parser.ParseString("N={S}\nE: S = a+")); // Missing semicolon
         }
 
         [Fact]
-        public void SyntaxParser_Test7()
+        public void SyntaxParser_IncompleteParsing_ThrowOnUnknowSymbol()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             Assert.Throws<SyntaxError>(() => parser.ParseString("ERROR"));
         }
 
         [Fact]
-        public void SyntaxParser_Test8()
+        public void SyntaxParser_IncompleteParsing_ThrowOnAxiomInvalidSymbol()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             Assert.Throws<SyntaxError>(() => parser.ParseString("S +"));
         }
 
         [Fact]
-        public void SyntaxParser_Test9()
+        public void SyntaxParser_IncompletParsing_ThrowOnRuleSymbol1()
         {
             var parser = new Nt.Syntax.SyntaxParser();
-            Assert.Throws<SyntaxError>(() => parser.ParseString("N={A}\nT={a}\nR: A -* a"));
+            Assert.Throws<SyntaxError>(() => parser.ParseString("N={A}\nT={a}\nR: A *-> a;"));
+        }
+
+        [Fact]
+        public void SyntaxParser_IncompleParsing_ThrowOnRuleSymbol2()
+        {
+            var parser = new Nt.Syntax.SyntaxParser();
+            Assert.Throws<SyntaxError>(() => parser.ParseString("N={A}\nT={a}\nR: A --* a;"));
+        }
+
+        [Fact]
+        public void SyntaxParser_IncompleteParsing_ThrowOnRegexInvalidSymbol()
+        {
+            var parser = new Nt.Syntax.SyntaxParser();
+            Assert.Throws<SyntaxError>(() => parser.ParseString("N={INT}\nE: INT + [0-9];"));
         }
 
         #endregion

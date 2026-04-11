@@ -29,13 +29,6 @@ Includes a grammar string parser and a simple text parser.</Description>
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Nt.Automaton" Version="1.1.0" />
     <PackageReference Include="Nt.Parser" Version="1.0.3" />
   </ItemGroup>
