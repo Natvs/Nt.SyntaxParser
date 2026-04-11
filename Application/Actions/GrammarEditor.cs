@@ -11,15 +11,17 @@ namespace Nt.Applications.SyntaxParser.Actions
         public override State<string> GetState()
         {
             var state = base.GetState();
-            var nonTerminalsState = new NonTerminalsEditor(Context).GetState();
-            var termianlsState = new TerminalsEditor(Context).GetState();
+            var nonTerminalsState = new EditNonTerminals(Context).GetState();
+            var termianlsState = new EditTerminals(Context).GetState();
             var axiomState = new AxiomSetter(Context).GetState();
-            var rulesState = new RulesEditor(Context).GetState();
+            var rulesState = new EditRules(Context).GetState();
+            var regexState = new EditRegexs(Context).GetState();
 
             state.AddTransition(new Transition<string>("1", nonTerminalsState));
             state.AddTransition(new Transition<string>("2", termianlsState));
             state.AddTransition(new Transition<string>("3", axiomState));
             state.AddTransition(new Transition<string>("4", rulesState));
+            state.AddTransition(new Transition<string>("5", regexState));
 
             return state;
         }

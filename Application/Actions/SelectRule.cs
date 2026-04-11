@@ -5,13 +5,12 @@ using System.Text;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
-    internal class RuleSelection(ApplicationContext context) : ProgramAction(context)
+    internal partial class SelectRule(ApplicationContext context) : ProgramAction(context)
     {
 
         public override void Perform()
         {
             Transition();
-
             if (Context.Grammar == null)
             {
                 Console.WriteLine("No current grammar. Please load or create a grammar first.");
@@ -19,17 +18,13 @@ namespace Nt.Applications.SyntaxParser.Actions
             }
 
             // Display the list of rules in the current grammar
-            List<Rule> rules = new List<Rule>();
-            foreach (var rule in Context.Grammar.Rules)
-            {
-                rules.Add(rule);
-            }
+            List<Rule> rules = [.. Context.Grammar.Rules];
             Console.WriteLine("Select a rule to edit:");
             for (int i = 0; i < rules.Count; i++)
             {
                 Console.WriteLine($"{i + 1}. {rules[i]}");
             }
-            Console.WriteLine($"{rules.Count+1}. Cancel");
+            Console.WriteLine($"{rules.Count + 1}. Cancel");
             Console.WriteLine();
 
             // Prompt the user to select a rule
@@ -44,7 +39,7 @@ namespace Nt.Applications.SyntaxParser.Actions
             // Push a new state for editing the selected rule
             if (ruleIndex > 0 && ruleIndex <= rules.Count)
             {
-                var state = new RuleEditor(Context, rules[ruleIndex - 1]).GetState();
+                var state = new EditRule(Context, rules[ruleIndex - 1]).GetState();
                 Context.Automaton.Push(state, true);
             }
             else
@@ -54,6 +49,5 @@ namespace Nt.Applications.SyntaxParser.Actions
             }
 
         }
-
     }
 }

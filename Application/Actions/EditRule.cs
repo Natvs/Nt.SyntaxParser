@@ -4,7 +4,7 @@ using Nt.Syntax.Structures;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
-    internal class RuleEditor(ApplicationContext context, Rule rule) : ProgramAction(context)
+    internal class EditRule(ApplicationContext context, Rule rule) : ProgramAction(context)
     {
         private Rule Rule { get; set; } = rule;
 
