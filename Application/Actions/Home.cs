@@ -7,8 +7,8 @@ namespace Nt.Applications.SyntaxParser.Actions
     {
         public override State<string> GetState()
         {
-            var creationState = new GrammarCreation(context).GetState();
-            var loaderState = new GrammarLoader(context).GetState();
+            var creationState = new GrammarCreation(Context).GetState();
+            var loaderState = new GrammarLoader(Context).GetState();
             var editState = new GrammarEditor(Context).GetState();
 
             var newState = base.GetState();

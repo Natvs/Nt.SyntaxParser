@@ -12,8 +12,10 @@ namespace Nt.Applications.SyntaxParser.Actions
         {
             var state = base.GetState();
             var nonTerminalsState = new NonTerminalsEditor(Context).GetState();
+            var termianlsState = new TerminalsEditor(Context).GetState();
 
             state.AddTransition(new Transition<string>("1", nonTerminalsState));
+            state.AddTransition(new Transition<string>("2", termianlsState));
 
             return state;
         }

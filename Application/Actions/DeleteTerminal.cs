@@ -1,6 +1,6 @@
 ﻿namespace Nt.Applications.SyntaxParser.Actions
 {
-    internal class DeleteNonTerminal(ApplicationContext context) : ProgramAction(context)
+    internal class DeleteTerminal(ApplicationContext context) : ProgramAction(context)
     {
         public override void Perform()
         {
@@ -11,24 +11,24 @@
                 Context.Automaton.Pop(true);
                 return;
             }
-            Console.WriteLine("Enter the name of the non terminal to delete:");
+            Console.WriteLine("Enter the name of the terminal to delete:");
             string? name = Console.ReadLine();
             if (name == null || name.Trim().Length == 0)
             {
-                Console.WriteLine("Invalid name for a non terminal. Operation cancelled.");
+                Console.WriteLine("Invalid name for a terminal. Operation cancelled.");
                 Transition();
                 Context.Automaton.Pop(true);
                 return;
             }
-            if (!Context.Grammar.NonTerminals.Contains(name))
+            if (!Context.Grammar.Terminals.Contains(name))
             {
-                Console.WriteLine($"Non terminal '{name}' does not exist in the grammar.");
+                Console.WriteLine($"Terminal '{name}' does not exist in the grammar.");
                 Transition();
                 Context.Automaton.Pop(true);
                 return;
             }
-            Context.Grammar.NonTerminals.Remove(name);
-            Console.WriteLine($"Non terminal '{name}' deleted successfully.");
+            Context.Grammar.Terminals.Remove(name);
+            Console.WriteLine($"Terminal '{name}' deleted successfully.");
             Transition();
             Context.Automaton.Pop(true);
         }
