@@ -4,6 +4,7 @@
     {
         public override void Perform()
         {
+            Transition();
             if (Context.Grammar == null)
             {
                 Console.WriteLine("No current grammar. Please load or create a grammar first.");
@@ -17,20 +18,17 @@
             if (name == null || name.Trim().Length == 0)
             {
                 Console.WriteLine("Invalid name for a non terminal. Operation cancelled.");
-                Transition();
                 Context.Automaton.Pop(true);
                 return;
             }
             if (Context.Grammar.Terminals.Contains(name))
             {
                 Console.WriteLine($"A non terminal '{name}' already exists in the grammar.");
-                Transition();
                 Context.Automaton.Pop(true);
                 return;
             }
             Context.Grammar.NonTerminals.Add(name);
             Console.WriteLine($"Non terminal '{name}' added successfully.");
-            Transition();
             Context.Automaton.Pop(true);
         }
     }

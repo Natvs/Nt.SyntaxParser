@@ -10,6 +10,7 @@ namespace Nt.Applications.SyntaxParser.Actions
 
         public override void Perform()
         {
+            Transition();
             var files = new List<string>();
             foreach (var path in paths)
             {
@@ -29,7 +30,6 @@ namespace Nt.Applications.SyntaxParser.Actions
             }
             finally
             {
-                Transition();
                 Context.Automaton.Pop(true);
             }
         }
@@ -87,7 +87,7 @@ namespace Nt.Applications.SyntaxParser.Actions
             var grammar = generator.ParseString(fileContent);
 
             // Display loaded grammar
-            Transition();
+            Console.WriteLine();
             Console.WriteLine("Loaded grammar:\n" + grammar.ToString());
 
             return grammar;

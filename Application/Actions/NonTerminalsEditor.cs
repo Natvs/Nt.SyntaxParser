@@ -22,22 +22,21 @@ namespace Nt.Applications.SyntaxParser.Actions
 
         public override void Perform()
         {
+            Transition();
             if (Context.Grammar == null)
             {
                 Console.WriteLine("No current grammar. Please load or create a grammar first.");
-                Transition();
                 Context.Automaton.Pop(true);
                 return;
             }
 
-            Transition();
             Console.WriteLine("Current non terminals:");
             foreach (var non_terminal in Context.Grammar.NonTerminals.GetSymbols())
             {
                 Console.WriteLine(non_terminal);
             }
-            Transition();
 
+            Console.WriteLine();
             Console.WriteLine("1. Add a non terminal");
             Console.WriteLine("2. Remove a non terminal");
             Console.WriteLine("3. Exit");

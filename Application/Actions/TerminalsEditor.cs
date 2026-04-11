@@ -16,20 +16,20 @@ namespace Nt.Applications.SyntaxParser.Actions
         }
         public override void Perform()
         {
+            Transition();
             if (Context.Grammar == null)
             {
                 Console.WriteLine("No current grammar. Please load or create a grammar first.");
-                Transition();
                 Context.Automaton.Pop(true);
                 return;
             }
-            Transition();
             Console.WriteLine("Current terminals:");
             foreach (var terminal in Context.Grammar.Terminals.GetSymbols())
             {
                 Console.WriteLine(terminal);
             }
-            Transition();
+            
+            Console.WriteLine();
             Console.WriteLine("1. Add a terminal");
             Console.WriteLine("2. Remove a terminal");
             Console.WriteLine("3. Exit");

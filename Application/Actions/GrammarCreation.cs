@@ -7,10 +7,13 @@ namespace Nt.Applications.SyntaxParser.Actions
     {
         public override void Perform()
         {
+            Transition();
+
             string? text = null;
             string input = "";
             var generator = new Syntax.SyntaxParser();
             Console.WriteLine("Enter text to generate grammar. Write a new line 'end' when done with the grammar.");
+
             // Ask the user to fill the grammar
             while (text != "end")
             {
@@ -51,7 +54,6 @@ namespace Nt.Applications.SyntaxParser.Actions
             }
             finally
             {
-                Transition();
                 Context.Automaton.Pop(true);
             }
         }
