@@ -47,6 +47,40 @@ Also parsing a grammar always applies the pre-parser on it, it's also possible t
 > In this case, the custom symbol must extend the `ISymbol` interface and you have to provide a custom symbol factory implementing the `ISymbolFactory`.
 > You can then set this factory as default factory for parsing with `SyntaxParserConfig.GetInstance().SetSymbolFactory(new_factory)`.
 
+
+## Export the grammar
+The grammar is meant to get different transformation in your code. After that, you may need to get the grammar displayed or written back in a file.
+This is why this project supports exporting grammars.
+
+For example, you can display the grammar using the method `ToString()`. This method will display the content of the grammar in a user-friendly way.
+
+Grammar file:
+```
+TERMINALS: a, b;
+NON TERMINALS: S, D;
+AXIOM: S
+RULES: S -> D, D -> a;
+```
+
+The grammar after exportation:
+```
+Terminals:
+- a
+- b
+
+Non Terminals:
+- S
+- D
+
+Axiom: S
+
+Rules:
+- S -> D
+- D -> a b
+```
+
+There are different modes of exporting a grammar, please read the [exportation documentation](Doc/Exportation.md) which describes how to export a grammar and contains more informations about methods of exporting it.
+
 ## Escape character
 The escape character '\\' is a special character that allows any symbol following it to be parsed in the continuity of the token being currently parsed instead of creating a new one. The escape character is used when you need to include symbols or separators in a token.
 

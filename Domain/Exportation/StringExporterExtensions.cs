@@ -176,8 +176,8 @@ namespace Nt.Syntax.Exportation
         {
             var terminals = Reorder(grammar.Terminals.GetSymbols(), mode);
             var nonterminals = Reorder(grammar.NonTerminals.GetSymbols(), mode);
-            var rules = Reorder(grammar.Rules, grammar.NonTerminals.GetSymbols(), mode);
-            var regexes = Reorder(grammar.RegularExpressions, grammar.NonTerminals.GetSymbols(), mode);
+            var rules = Reorder(grammar.Rules, mode);
+            var regexes = Reorder(grammar.RegularExpressions, mode);
             return StringExporter.ToString(terminals, nonterminals, grammar.Axiom, rules, regexes);
         }
 
