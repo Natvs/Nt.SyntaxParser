@@ -1,4 +1,5 @@
 ﻿using Nt.Syntax.Exceptions;
+using Nt.Syntax.Exportation;
 using System.Collections;
 using System.Text;
 
@@ -6,36 +7,7 @@ namespace Nt.Syntax.Structures
 {
     public class RegExpSet() : IEnumerable<RegularExpression>
     {
-        #region Private
-
-        private HashSet<RegularExpression> Regexs { get; } = [];
-
-        #endregion
-
-        #region Internal
-
-        /// <summary>
-        /// Adds the specified regular expression to the collection of rules.
-        /// </summary>
-        /// <param name="rule">The regular expression to add to the collection.</param>
-        internal void Add(RegularExpression regex)
-        {
-            Regexs.Add(regex);
-        }
-
-        /// <summary>
-        /// Removes the specified regular expression from the collection.
-        /// </summary>
-        /// <param name="regex">The regular expression to remove from the collection. Cannot be null.</param>
-        /// <exception cref="RegexNotFoundException">Thrown if the specified regular expression is not found in the collection.</exception>
-        internal void Remove(RegularExpression regex)
-        {
-            if (!Regexs.Remove(regex)) throw new RegexNotFoundException(regex, $"Regular expression {regex} not found in collection of regular expressions");
-        }
-
-        #endregion
-
-        #region Public
+        #region Implementation of IEnumerable
 
         public int Count { get => Regexs.Count; }
 
@@ -51,15 +23,54 @@ namespace Nt.Syntax.Structures
             return GetEnumerator();
         }
 
+        #endregion
+
+        #region Private
+
+        private HashSet<RegularExpression> Regexs { get; } = [];
+
+        #endregion
+
+        #region Public
+
+        /// <summary>
+        /// Add the specified regular expression to the collection of rules.
+        /// </summary>
+        /// <param name="rule">The regular expression to add to the collection.</param>
+        public void Add(RegularExpression regex)
+        {
+            Regexs.Add(regex);
+        }
+
+        /// <summary>
+        /// Adds the elements of the specified collection of regular expressions to the current collection.
+        /// </summary>
+        /// <param name="regexs">The collection of <see cref="RegularExpression"/> objects to add.</param>
+        public void AddRange(IEnumerable<RegularExpression> regexs)
+        {
+            foreach (var regex in regexs)
+            {
+                Add(regex);
+            }
+        }
+
+        /// <summary>
+        /// Remove the specified regular expression from the collection.
+        /// </summary>
+        /// <param name="regex">The regular expression to remove from the collection. Cannot be null.</param>
+        /// <exception cref="RegexNotFoundException">Thrown if the specified regular expression is not found in the collection.</exception>
+        public void Remove(RegularExpression regex)
+        {
+            if (!Regexs.Remove(regex)) throw new RegexNotFoundException(regex, $"Regular expression {regex} not found in collection of regular expressions");
+        }
+
         /// <summary>
         /// Returns a string that represents the collection in a comma-separated list enclosed in braces.
         /// </summary>
         /// <returns>A string containing the elements of the collection, separated by commas and enclosed in curly bracets.</returns>
         public override string ToString()
         {
-            var sb = new StringBuilder();
-            sb.Append('{').Append(string.Join(",", this)).Append('}');
-            return sb.ToString();
+            return this.ToString(ExportationMode.Original);
         }
 
         #endregion

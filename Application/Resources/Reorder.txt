@@ -1,0 +1,23 @@
+NON TERMINALS:
+    C,
+    E,
+    G,
+    A,
+    K,
+    B;
+
+TERMINALS:
+    c,
+    e,
+    g,
+    a,
+    k,
+    b;
+
+RULES:
+    C -> c,
+    E -> e,
+    G -> g,
+    A -> a,
+    K -> k,
+    B -> b;

@@ -2,6 +2,7 @@
 using Nt.Parser.Structures;
 using Nt.Parser.Symbols;
 using Nt.Syntax.Exceptions;
+using Nt.Syntax.Exportation;
 
 namespace Nt.Syntax.Structures
 {
@@ -215,25 +216,7 @@ namespace Nt.Syntax.Structures
         /// <returns>A string representing this grammar</returns>
         public override string ToString()
         {
-            var sb = new StringBuilder();
-
-            sb.Append("Terminals: ").Append(Terminals.ToString()).Append('\n');
-            sb.Append("Non terminals: ").Append(NonTerminals.ToString()).Append('\n');
-            if (Axiom != null) sb.Append("Axiom: ").Append(Axiom.Name).Append('\n');
-
-            if (Rules.Count > 0) sb.Append("\nRules\n");
-            foreach (Rule rule in Rules)
-            {
-                sb.Append("  ").Append(rule.ToString()).Append('\n');
-            }
-
-            if (RegularExpressions.Count > 0) sb.Append("\nRegular expressions\n");
-            foreach (RegularExpression regularExpression in RegularExpressions)
-            {
-                sb.Append("  ").Append(regularExpression.ToString()).Append('\n');
-            }
-
-            return sb.ToString();
+           return this.ToString(ExportationMode.Original);
         }
 
         #endregion
