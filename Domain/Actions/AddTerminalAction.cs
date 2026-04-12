@@ -3,6 +3,7 @@ using Nt.Automaton.Tokens;
 using Nt.Parser.Structures;
 using Nt.Syntax.Automaton;
 using Nt.Syntax.Exceptions;
+using Nt.Syntax.Structures;
 
 namespace Nt.Syntax.Actions
 {
@@ -10,7 +11,7 @@ namespace Nt.Syntax.Actions
     /// Represents an action that adds a new terminal to the grammar
     /// </summary>
     /// <param name="grammar">Grammar datas</param>
-    public class AddTerminalAction(Structures.Grammar grammar, AutomatonContext context) : ITokenAction<string>
+    public class AddTerminalAction(Grammar grammar, AutomatonContext context) : ITokenAction<string>
     {
         /// <summary>
         /// Adds a parsed token as a new non terminal of the grammar

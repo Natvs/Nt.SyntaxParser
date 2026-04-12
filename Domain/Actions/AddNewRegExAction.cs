@@ -11,7 +11,7 @@ namespace Nt.Syntax.Actions
         {
             if (word is AutomatonToken token) 
             {
-                context.Regex = grammar.AddRegex(new(token.Symbol, token.Line));               
+                context.Regex = grammar.AddRegex(new NonTerminal(token.Symbol, token.Line));               
             }
         }
     }

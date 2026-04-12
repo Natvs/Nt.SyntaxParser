@@ -1,6 +1,5 @@
 ﻿using Nt.Automaton.Actions;
 using Nt.Automaton.Tokens;
-using Nt.Parser.Structures;
 using Nt.Syntax.Automaton;
 using Nt.Syntax.Exceptions;
 using Nt.Syntax.Structures;
@@ -12,7 +11,7 @@ namespace Nt.Syntax.Actions
     /// </summary>
     /// <param name="grammar">Grammar datas</param>
     /// <param name="tokens">List of all tokens</param>
-    public class SetAxiomAction(Structures.Grammar grammar) : ITokenAction<string>
+    public class SetAxiomAction(Grammar grammar) : ITokenAction<string>
     {
         /// <summary>
         /// Sets a parsed token as new axiom of the grammar. Axiom should be a valid non terminal.

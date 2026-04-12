@@ -1,5 +1,4 @@
 ﻿using Nt.Syntax.Structures;
-using Nt.Automaton;
 
 namespace Nt.Syntax.Automaton
 {

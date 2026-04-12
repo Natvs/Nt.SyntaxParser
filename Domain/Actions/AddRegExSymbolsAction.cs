@@ -1,10 +1,8 @@
 ﻿using Nt.Automaton.Actions;
 using Nt.Automaton.Tokens;
-using Nt.Parser.Structures;
 using Nt.Syntax.Automaton;
 using Nt.Syntax.Exceptions;
 using Nt.Syntax.Structures;
-using System.Text.RegularExpressions;
 
 namespace Nt.Syntax.Actions
 {

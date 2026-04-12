@@ -3,13 +3,13 @@ using Nt.Automaton.States;
 using Nt.Parser;
 using Nt.Parser.Symbols;
 using Nt.Syntax.Actions;
-using Nt.Syntax.Exceptions;
-using Nt.Syntax.Structures;
 
 using StateAutomaton = Nt.Automaton.Automatons.StateAutomaton<string>;
 using State = Nt.Automaton.States.State<string>;
 using Transition = Nt.Automaton.Transitions.Transition<string>;
 using Nt.Syntax.Automaton;
+using Nt.Syntax.Structures;
+using Nt.Syntax.Exceptions;
 
 
 namespace Nt.Syntax

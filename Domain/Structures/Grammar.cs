@@ -147,7 +147,6 @@ namespace Nt.Syntax.Structures
         /// Adds a new grammar rule for the specified non-terminal symbol at the given source line.
         /// </summary>
         /// <param name="nonTerminal">The non-terminal symbol for which the rule is to be created. Must be declared in the grammar.</param>
-        /// <param name="line">The line number in the source where the rule is defined. Used for error reporting and diagnostics.</param>
         /// <returns>A Rule instance representing the newly added grammar rule.</returns>
         /// <exception cref="UnregisteredNonTerminalException">Thrown if the specified non-terminal symbol has not been declared in the grammar.</exception>
         public Rule AddRule(NonTerminal nt)
@@ -156,6 +155,38 @@ namespace Nt.Syntax.Structures
             Rules.Add(rule);
             rule.SetToken(nt);
             return rule;
+        }
+
+        /// <summary>
+        /// Add a rule to the collection of rules of this grammar
+        /// </summary>
+        /// <param name="rule">Rule to add</param>
+        public void AddRule(Rule rule)
+        {
+            Rules.Add(rule);
+        }
+
+        /// <summary>
+        /// Adds a new regular expression associated with the specified non-terminal symbol at the given source line.
+        /// </summary>
+        /// <param name="nonTerminal">The non-terminal symbol to associate with the new regular expression. Must be declared prior to calling this method.</param>
+        /// <returns>A RegularExpression instance representing the newly added regular expression.</returns>
+        /// <exception cref="UnregisteredNonTerminalException">Thrown if the specified non-terminal symbol has not been declared.</exception>
+        public RegularExpression AddRegex(NonTerminal nt)
+        {
+            var regex = new RegularExpression(this);
+            RegularExpressions.Add(regex);
+            regex.SetToken(nt);
+            return regex;
+        }
+
+        /// <summary>
+        /// Add a regular expression to the collection of regular expressions of this grammar
+        /// </summary>
+        /// <param name="regex">Regular expression to add</param>
+        public void AddRegex(RegularExpression regex)
+        {
+            RegularExpressions.Add(regex);
         }
 
         /// <summary>
@@ -176,22 +207,6 @@ namespace Nt.Syntax.Structures
         public void Remove(RegularExpression regex)
         {
             RegularExpressions.Remove(regex);
-        }
-
-        /// <summary>
-        /// Adds a new regular expression associated with the specified non-terminal symbol at the given source line.
-        /// </summary>
-        /// <param name="nonTerminal">The non-terminal symbol to associate with the new regular expression. Must be declared prior to calling this
-        /// method.</param>
-        /// <param name="line">The line number in the source where the regular expression is defined.</param>
-        /// <returns>A RegularExpression instance representing the newly added regular expression.</returns>
-        /// <exception cref="UnregisteredNonTerminalException">Thrown if the specified non-terminal symbol has not been declared.</exception>
-        public RegularExpression AddRegex(NonTerminal nt)
-        {
-            var regex = new RegularExpression(this);
-            RegularExpressions.Add(regex);
-            regex.SetToken(nt);
-            return regex;
         }
 
         /// <summary>
