@@ -1,10 +1,10 @@
-﻿using Nt.Syntax.Structures;
+﻿using Nt.Syntax.Exceptions;
+using Nt.Syntax.Structures;
 using Nt.Syntax.Actions;
 using Nt.Parser.Structures;
 using Nt.Syntax.Automaton;
-using static Nt.Tests.Syntax.SyntaxTestUtils;
 using Nt.Parser.Symbols;
-using Nt.Syntax.Exceptions;
+using static Nt.Tests.Syntax.SyntaxTestUtils;
 
 namespace Nt.Tests.Syntax.Actions
 {
