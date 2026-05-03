@@ -1,4 +1,6 @@
-﻿namespace Nt.Applications.SyntaxParser.Actions
+﻿using Nt.Syntax.Builders;
+
+namespace Nt.Applications.SyntaxParser.Actions
 {
     internal class AddNonTerminal(ApplicationContext context) : ProgramAction(context)
     {
@@ -26,7 +28,7 @@
                 Context.Automaton.Pop(true);
                 return;
             }
-            Context.Grammar.NonTerminals.Add(name);
+            Context.Grammar.GetBuilder().AddNonTerminal(name);
             Console.WriteLine($"Non terminal '{name}' added successfully.");
             Context.Automaton.Pop(true);
         }

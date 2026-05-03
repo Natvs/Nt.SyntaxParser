@@ -74,6 +74,32 @@ namespace Nt.Syntax.Builders
         }
 
         /// <summary>
+        /// Remove a terminal symbol from the grammar by its name.
+        /// </summary>
+        /// <param name="name">Name of the terminal to remove.</param>
+        /// <returns>The current instance of <see cref="GrammarBuilder"/> for method chaining.</returns>
+        /// <exception cref="UnregisteredTerminalException">Thrown if the specified terminal name is not registered in the grammar.</exception>
+        public GrammarBuilder RemoveTerminal(string name)
+        {
+            if (!_grammar.Terminals.Contains(name)) throw new UnregisteredTerminalException(name, -1);
+            _grammar.Terminals.Remove(name);
+            return this;
+        }
+
+        /// <summary>
+        /// Removes a non-terminal from the grammar  by its name.
+        /// </summary>
+        /// <param name="name">Name of the non-terminal symbol to remove.</param>
+        /// <returns>The current instance of<see cref="GrammarBuilder"/> for method chaining.</returns>
+        /// <exception cref="UnregisteredNonTerminalException">Thrown if the specifed non-terminal name is not registered in the grammar.</exception>
+        public GrammarBuilder RemoveNonTerminal(string name)
+        {
+            if (!_grammar.NonTerminals.Contains(name)) throw new UnregisteredNonTerminalException(name, -1);
+            _grammar.NonTerminals.Remove(name);
+            return this;
+        }
+
+        /// <summary>
         /// Sets the axiom (start symbol) of the grammar to the specified non-terminal.
         /// </summary>
         /// <param name="name">The name of the non-terminal to set as the axiom. Cannot be null or empty. Must refer to a registered non-terminal.</param>

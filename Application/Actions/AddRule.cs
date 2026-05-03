@@ -1,4 +1,5 @@
 ﻿using Nt.Syntax.Structures;
+using Nt.Syntax.Builders;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
@@ -24,7 +25,7 @@ namespace Nt.Applications.SyntaxParser.Actions
 
             if (valid)
             {
-                Context.Grammar.Rules.Add(rule);
+                Context.Grammar.GetBuilder().Add(rule);
                 Console.WriteLine($"The new rule {rule} has been added to the grammar");
             }
             else Console.WriteLine("The rule was not added to the grammar due to invalid input.");

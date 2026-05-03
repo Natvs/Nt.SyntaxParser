@@ -9,7 +9,7 @@ namespace Nt.Syntax.Structures
     /// </summary>
     /// <param name="terminals">Terminal tokens of the rule</param>
     /// <param name="nonterminals">Non terminal tokens of the rule</param>
-    public class Derivation : IReadOnlyList<GrammarToken>
+    public class RuleDerivation : IReadOnlyList<GrammarToken>
     {
         #region Private
 

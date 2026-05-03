@@ -14,7 +14,7 @@ namespace Nt.Applications.SyntaxParser.Actions
                 Context.Automaton.Pop(true);
                 return;
             }
-            if (Context.Grammar.NonTerminals.GetCount() == 0)
+            if (Context.Grammar.NonTerminals.Count == 0)
             {
                 Console.WriteLine("There are no non terminals in the grammar. Please add some non terminals first.");
                 Context.Automaton.Pop(true);

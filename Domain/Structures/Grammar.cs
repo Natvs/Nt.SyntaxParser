@@ -1,5 +1,4 @@
 ﻿using Nt.Parser.Structures;
-using Nt.Parser.Symbols;
 using Nt.Syntax.Exceptions;
 using Nt.Syntax.Exportation;
 
@@ -14,8 +13,8 @@ namespace Nt.Syntax.Structures
         public Grammar()
         {
             var configuration = SyntaxParserConfig.GetInstance();
-            Terminals = new SymbolsList(configuration.SymbolFactory);
-            NonTerminals = new SymbolsList(configuration.SymbolFactory);
+            Terminals = new GrammarSymbolsSet(configuration.SymbolFactory);
+            NonTerminals = new GrammarSymbolsSet(configuration.SymbolFactory);
         }
 
         #region Internal
@@ -71,8 +70,8 @@ namespace Nt.Syntax.Structures
         #region Public
 
         public char EscapeCharacter { get; private set; } = '\'';
-        public SymbolsList Terminals { get; }
-        public SymbolsList NonTerminals { get; }
+        public GrammarSymbolsSet Terminals { get; }
+        public GrammarSymbolsSet NonTerminals { get; }
         public NonTerminal? Axiom { get; internal set; } = null;
         public RulesSet Rules { get; } = [];
         public RegexSet RegularExpressions { get; } = [];

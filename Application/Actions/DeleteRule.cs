@@ -1,5 +1,5 @@
 ﻿using Nt.Syntax.Structures;
-using System.Text.RegularExpressions;
+using Nt.Syntax.Builders;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
@@ -14,7 +14,7 @@ namespace Nt.Applications.SyntaxParser.Actions
                 Context.Automaton.Pop(true);
                 return;
             }
-            Context.Grammar.Rules.Remove(Rule);
+            Context.Grammar.GetBuilder().Remove(Rule);
             Console.WriteLine($"Rule {Rule} has been removed");
             Context.Automaton.Pop(false);
             Context.Automaton.Pop(true);
