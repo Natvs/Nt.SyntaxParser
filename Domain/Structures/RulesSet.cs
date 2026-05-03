@@ -36,7 +36,7 @@ namespace Nt.Syntax.Structures
         /// Add the specified rule to the collection of rules.
         /// </summary>
         /// <param name="rule">The rule to add to the collection.</param>
-        public void Add(Rule rule)
+        internal void Add(Rule rule)
         {
             Rules.Add(rule);
         }
@@ -45,7 +45,7 @@ namespace Nt.Syntax.Structures
         /// Add a range of rules to the collection of rules.
         /// </summary>
         /// <param name="rules">The collection of <see cref="Rule"> objects to add</param>
-        public void AddRange(IEnumerable<Rule> rules)
+        internal void AddRange(IEnumerable<Rule> rules)
         {
             foreach (var rule in rules)
             {
@@ -58,7 +58,7 @@ namespace Nt.Syntax.Structures
         /// </summary>
         /// <param name="rule">The rule to remove from the collection. Cannot be null.</param>
         /// <exception cref="RuleNotFoundException">Thrown if the specified rule does not exist in the collection.</exception>
-        public void Remove(Rule rule)
+        internal void Remove(Rule rule)
         {
             if (!Rules.Remove(rule)) throw new RuleNotFoundException(rule, $"Rule {rule} not found in collection of rules");
         }

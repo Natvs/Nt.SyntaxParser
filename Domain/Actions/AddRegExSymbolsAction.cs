@@ -3,6 +3,7 @@ using Nt.Automaton.Tokens;
 using Nt.Syntax.Automaton;
 using Nt.Syntax.Exceptions;
 using Nt.Syntax.Structures;
+using Nt.Syntax.Builders;
 
 namespace Nt.Syntax.Actions
 {
@@ -18,7 +19,7 @@ namespace Nt.Syntax.Actions
                 var new_token = grammar.RemoveEscapeCharacter(token.Symbol.Name);
 
                 // Adds the symbols to the regex
-                context.Regex.AddSymbols(new_token);
+                context.Regex.GetBuilder().AddSymbols(new_token);
             }
         }
     }

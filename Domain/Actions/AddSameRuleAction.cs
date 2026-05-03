@@ -4,6 +4,7 @@ using Nt.Automaton.Actions;
 using Nt.Automaton.Tokens;
 using Nt.Syntax.Structures;
 using Nt.Syntax.Automaton;
+using Nt.Syntax.Builders;
 
 namespace Nt.Syntax.Actions
 {
@@ -15,7 +16,10 @@ namespace Nt.Syntax.Actions
             if (context.Rule.Token == null) throw new Exception("Attempting to set a new rule with same symbol while the symbol is not defined");
             if (word is AutomatonToken token)
             {
-                context.Rule = grammar.AddRule(new NonTerminal(context.Rule.Token.Symbol, token.Line));
+                var rule = new Rule(grammar);
+                rule.GetBuilder().SetToken(new NonTerminal(context.Rule.Token.Symbol, token.Line));
+                context.Rule = rule;
+                grammar.Rules.Add(context.Rule);
             }
         }
     }

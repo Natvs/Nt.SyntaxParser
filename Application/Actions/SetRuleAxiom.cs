@@ -1,5 +1,5 @@
-﻿using Nt.Automaton.States;
-using Nt.Syntax.Structures;
+﻿using Nt.Syntax.Structures;
+using Nt.Syntax.Builders;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
@@ -34,7 +34,7 @@ namespace Nt.Applications.SyntaxParser.Actions
             try
             {
                 var symbol = Context.Grammar.NonTerminals.Get(input);
-                Rule.SetToken(new NonTerminal(symbol, -1));
+                Rule.GetBuilder().SetToken(new NonTerminal(symbol, -1));
             }
             catch (KeyNotFoundException)
             {

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Nt.Syntax.Structures
 {
-    public class RegExpSet() : IEnumerable<RegularExpression>
+    public class RegexSet() : IEnumerable<RegularExpression>
     {
         #region Implementation of IEnumerable
 
@@ -37,7 +37,7 @@ namespace Nt.Syntax.Structures
         /// Add the specified regular expression to the collection of rules.
         /// </summary>
         /// <param name="rule">The regular expression to add to the collection.</param>
-        public void Add(RegularExpression regex)
+        internal void Add(RegularExpression regex)
         {
             Regexs.Add(regex);
         }
@@ -46,7 +46,7 @@ namespace Nt.Syntax.Structures
         /// Adds the elements of the specified collection of regular expressions to the current collection.
         /// </summary>
         /// <param name="regexs">The collection of <see cref="RegularExpression"/> objects to add.</param>
-        public void AddRange(IEnumerable<RegularExpression> regexs)
+        internal void AddRange(IEnumerable<RegularExpression> regexs)
         {
             foreach (var regex in regexs)
             {
@@ -59,7 +59,7 @@ namespace Nt.Syntax.Structures
         /// </summary>
         /// <param name="regex">The regular expression to remove from the collection. Cannot be null.</param>
         /// <exception cref="RegexNotFoundException">Thrown if the specified regular expression is not found in the collection.</exception>
-        public void Remove(RegularExpression regex)
+        internal void Remove(RegularExpression regex)
         {
             if (!Regexs.Remove(regex)) throw new RegexNotFoundException(regex, $"Regular expression {regex} not found in collection of regular expressions");
         }

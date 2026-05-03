@@ -24,7 +24,7 @@ namespace Nt.Applications.SyntaxParser.Actions
 
             if (valid)
             {
-                Context.Grammar.AddRule(rule);
+                Context.Grammar.Rules.Add(rule);
                 Console.WriteLine($"The new rule {rule} has been added to the grammar");
             }
             else Console.WriteLine("The rule was not added to the grammar due to invalid input.");

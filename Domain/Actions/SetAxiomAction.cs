@@ -3,6 +3,7 @@ using Nt.Automaton.Tokens;
 using Nt.Syntax.Automaton;
 using Nt.Syntax.Exceptions;
 using Nt.Syntax.Structures;
+using Nt.Syntax.Builders;
 
 namespace Nt.Syntax.Actions
 {
@@ -26,7 +27,7 @@ namespace Nt.Syntax.Actions
                     var new_token = grammar.ParseToGrammarToken(token);
                     if (new_token is NonTerminal nt)
                     {
-                        grammar.SetAxiom(nt);
+                        grammar.GetBuilder().SetAxiom(nt);
                     }
                     else throw new UnregisteredNonTerminalException(new_token.Name, new_token.Line);
                 }

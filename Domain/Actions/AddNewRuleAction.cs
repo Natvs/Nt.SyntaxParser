@@ -2,6 +2,7 @@
 using Nt.Automaton.Tokens;
 using Nt.Syntax.Automaton;
 using Nt.Syntax.Structures;
+using Nt.Syntax.Builders;
 
 namespace Nt.Syntax.Actions
 {
@@ -15,7 +16,9 @@ namespace Nt.Syntax.Actions
         {
             if (word is AutomatonToken token)
             {
-                context.Rule = grammar.AddRule(new NonTerminal(token.Symbol, token.Line));
+                context.Rule = new Rule(grammar);
+                context.Rule.GetBuilder().SetToken(new NonTerminal(token.Symbol, token.Line));
+                grammar.Rules.Add(context.Rule);
             }
         }
     }

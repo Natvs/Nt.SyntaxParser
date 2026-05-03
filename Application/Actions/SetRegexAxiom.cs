@@ -1,4 +1,5 @@
 ﻿using Nt.Syntax.Structures;
+using Nt.Syntax.Builders;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
@@ -32,7 +33,7 @@ namespace Nt.Applications.SyntaxParser.Actions
             try
             {
                 var symbol = Context.Grammar.NonTerminals.Get(input);
-                Regex.SetToken(new NonTerminal(symbol, -1));
+                Regex.GetBuilder().SetToken(new NonTerminal(symbol, -1));
             }
             catch (KeyNotFoundException)
             {

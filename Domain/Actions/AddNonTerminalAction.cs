@@ -1,9 +1,9 @@
 ﻿using Nt.Automaton.Actions;
 using Nt.Automaton.Tokens;
-using Nt.Parser.Structures;
 using Nt.Syntax.Automaton;
 using Nt.Syntax.Exceptions;
 using Nt.Syntax.Structures;
+using Nt.Syntax.Builders;
 
 namespace Nt.Syntax.Actions
 {
@@ -24,7 +24,7 @@ namespace Nt.Syntax.Actions
             {
                 if (!context.CurrentNonTerminal.Equals(""))
                 {
-                    grammar.AddNonTerminal(grammar.RemoveEscapeCharacter(context.CurrentNonTerminal));
+                    grammar.GetBuilder().AddNonTerminal(grammar.RemoveEscapeCharacter(context.CurrentNonTerminal));
                 }
             }
             catch (RegisteredNonTerminalException) { } // Ignore those 2 exceptions for now

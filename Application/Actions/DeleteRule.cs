@@ -14,7 +14,7 @@ namespace Nt.Applications.SyntaxParser.Actions
                 Context.Automaton.Pop(true);
                 return;
             }
-            Context.Grammar.Remove(Rule);
+            Context.Grammar.Rules.Remove(Rule);
             Console.WriteLine($"Rule {Rule} has been removed");
             Context.Automaton.Pop(false);
             Context.Automaton.Pop(true);
