@@ -8,7 +8,7 @@
     <PackageId>Nt.SyntaxParser</PackageId>
     <AssemblyName>Nt.SyntaxParser</AssemblyName>
     <RootNamespace>Nt.Syntax</RootNamespace>
-    <Version>1.1.4</Version>
+    <Version>1.2.0</Version>
     <Authors>Natvs</Authors>
     <Description>Library containing tools for syntax parsing.
 Includes a grammar string parser and a simple text parser.</Description>
@@ -16,7 +16,7 @@ Includes a grammar string parser and a simple text parser.</Description>
     <RepositoryUrl>https://github.com/Natvs/Nt.SyntaxParser</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>parser ; grammar ; syntax</PackageTags>
-    <PackageReleaseNotes>Update dependency version Nt.Automaton to 1.1.0</PackageReleaseNotes>
+    <PackageReleaseNotes>Add string exportation methods for grammar with 3 different modes.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,6 +26,13 @@ Includes a grammar string parser and a simple text parser.</Description>
     <EmbeddedResource Remove="obj\**" />
     <None Remove="bin\**" />
     <None Remove="obj\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
