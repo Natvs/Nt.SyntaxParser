@@ -66,7 +66,7 @@ jobs:
       - name: Publish
         shell: pwsh
         run: |
-          $items = Get-ChildItem -Path ${{env.NuGetDirectory}} -Filter "*.nupkg" \
+          $items = Get-ChildItem -Path "${{env.NuGetDirectory}}" -Filter "*.nupkg" \
           for ($i = 0; $i -lt $items.Count; $i++) {
               $item = $items[$i]
               dotnet nuget push "$item.FullName" --source "github"
