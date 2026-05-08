@@ -1,10 +1,11 @@
 # Grammar file syntax
 
-- [Defining symbols used in the grammar](#defining-symbols-used-in-the-grammar)
-- [Setting grammar rules](#setting-grammar-rules)
-- [Defining regular expression](#defining-regular-expressions)
-- [Setting grammar axiom](#setting-grammar-axiom)
-- [Escape characters](#escape-characters)
+- [Syntax of a grammar file](#syntax-of-a-grammar-file)
+	- [Defining symbols used in the grammar](#defining-symbols-used-in-the-grammar)
+	- [Setting grammar rules](#setting-grammar-rules)
+	- [Defining regular expression](#defining-regular-expressions)
+	- [Setting grammar axiom](#setting-grammar-axiom)
+	- [Escape characters](#escape-characters)
 - [Pre-parsing instructions](#pre-parsing-instructions)
 	- [More about importing files](#more-about-importing-files)
 	- [Configuration commands](#configuration-commands)
@@ -14,11 +15,14 @@
 	- [Defining non-terminals](#defining-non-terminals)
 	- [Defining rules](#defining-rules)
 	- [Defining regex](#defining-regex)
+	- [Setting the axiom](#setting-the-axiom)
 
 Parsing the grammar file occurs in two steps. The grammar file is first parsed to process pre-parsing lines.
 The resulted file is then parsed into the final grammar file that would be parsed into a grammar structure.
 
-## Defining symbols used in the grammar
+## Syntax of a grammar file
+
+### Defining symbols used in the grammar
 You need to provide the grammar with a list of all symbols used before using them.
 These symbols are divided into terminals (constant strings) and non terminals (symbols to derive).
 
@@ -35,7 +39,7 @@ N = {nonterminal1, nonterminal2, ...}
 
 Note that symbols defined here can contain any characthers except the symbols `,` `}` `\` or any white space. If you wish to add a symbol containing such a character into your grammar, you must use the escape character `\`.  See [the parser escape characters](../README.md#escape-character) for more details.
 
-## Setting grammar rules
+### Setting grammar rules
 You need to provide each non-terminal at least one derivation rule. The derivation can be any sequence of previously defined symbols.
 
 These rules have the following syntax:
@@ -54,7 +58,7 @@ A derivation should be followed with `;` to mark the end of the rule. Remark tha
 
 > Note that the arrow `->` can be as long as you want. It must begin with `-` and ends with a `>`. So `---->` is also valid.
 
-## Defining regular expressions
+### Defining regular expressions
 Alternatively, you define a derivation for non-terminal as a regular expression.
 Regular expressions can always be described by a grammar. However it is sometimes a hassle to set terminals, non-terminals and many rules that can make your code less manageable.
 You can use regular expressions without having to previously define the symbols used in it and define it all in just one rule. The syntax is a follow:
@@ -66,14 +70,14 @@ E: non-terminal = regex ;
 See [official microsoft documentation](https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-language-quick-reference) to learn more about regex.
 Once again, pay attention that you need to [use escape characters](#escape-characters) for including the symbol `;`.
 
-## Setting grammar axiom
+### Setting grammar axiom
 The grammar needs a symbol to begin with for syntaxically defining if a string belongs to the grammar language. This symbol is called axiom and is defined with the syntax:
 ```
 S = axiom
 ```
 The axiom can be any non-terminal, but only one of those.
 
-## Escape characters
+### Escape characters
 Here there is a need to distinguish the [escape character for text parsing](../README.md#escape-character) and the one for syntax parsing.
 - For **text parsing**, the escape character is `\` and only ensures the next character is in the continuity of the token.
 - For **syntax parsing**, the escape character is `'` by default and is used in rules definitions to ensure the derivation symbol is treated as as part of a terminal or non terminal.
@@ -82,9 +86,15 @@ When writing a grammar, here is how to use each escape character:
 
 1. Use `\` for symbols `:`, `,`, `=`, `{`, `}`, `;`, `-`, `>`, `+`, `*` and `\` to include them in the continuity of the token. If not present, it will create a new token. Note that this escape character also works for any symbol.
 
+> Example: `a+b` will be parsed as three tokens `a`, `+` and `b`. However, if you write `a\+b`, it will be parsed as one token `a+b`.
+
 2. Use `'` in rule derivations definitions for symbols `|` and `'` to define them as rule symbols and not rule end markers. The escape character `'` can also be used for any character, though it has no effect.
 
+> Example: `R: A -> a | b ;` will be parsed as a rule with two derivations `a` and `b`. However, if you write `R: A -> a \| b \| c ;`, it will be parsed as a rule with one derivation `a | b | c`.
+
 3. To include a terminal containing `,` or `}` in a terminals set (`T={...}`), use the combination `'\,` and `'\}`
+
+> Example: `T = {a, '\,, '\}};` will be parsed as a set of three terminals `a`, `,` and `}`.
 
 4. To include `;` in a rule derivation or a regular expression, use the combination `'\;`.
 
@@ -238,5 +248,11 @@ REGULAR EXPRESSIONS:
 ```
 
 The header `REGULAR EXPRESSIONS` can also be written `Regular Expressions` or `regular expressions`.
+
+### Setting the axiom
+To set the axiom, use the syntax:
+```
+AXIOM: axiom;
+```
 
 The new syntax is entirely compatible with the old syntax and both can be used in the same file.

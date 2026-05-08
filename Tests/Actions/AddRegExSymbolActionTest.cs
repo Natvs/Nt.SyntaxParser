@@ -5,6 +5,7 @@ using Nt.Parser.Structures;
 using Nt.Syntax.Automaton;
 using Nt.Parser.Symbols;
 using static Nt.Tests.Syntax.SyntaxTestUtils;
+using Nt.Syntax.Builders;
 
 namespace Nt.Tests.Syntax.Actions
 {
@@ -17,8 +18,7 @@ namespace Nt.Tests.Syntax.Actions
         {
             var symbols = new SymbolsList(SymbolFactory, ["S", "ab*"]);
             var context = new AutomatonContext();
-            var grammar = new Grammar();
-            grammar.NonTerminals.Add("S");
+            var grammar = new Grammar().GetBuilder().AddNonTerminal("S").Build();
 
             var newaction = new AddNewRegExAction(grammar, context);
             newaction.Perform(new AutomatonToken(symbols.Get(0), 0));
@@ -34,8 +34,7 @@ namespace Nt.Tests.Syntax.Actions
         {
             var symbols = new SymbolsList(SymbolFactory, ["S", "a", "+", "(", "bc", ")", "*"]);
             var context = new AutomatonContext();
-            var grammar = new Grammar();
-            grammar.NonTerminals.Add("S");
+            var grammar = new Grammar().GetBuilder().AddNonTerminal("S").Build();
 
             var newaction = new AddNewRegExAction(grammar, context);
             newaction.Perform(new AutomatonToken(symbols.Get(0), 0));
@@ -54,7 +53,7 @@ namespace Nt.Tests.Syntax.Actions
         {
             var symbols = new SymbolsList(SymbolFactory, ["S", "(ab)+"]);
             var context = new AutomatonContext();
-            var grammar = new Grammar();
+            var grammar = new Grammar().GetBuilder().AddNonTerminal("S").Build();
 
             var action = new AddRegExSymbolsAction(grammar, context);
             Assert.Throws<NullRegexException>(() => action.Perform(new AutomatonToken(symbols.Get(1), 0)));
@@ -65,8 +64,7 @@ namespace Nt.Tests.Syntax.Actions
         {
             var symbols = new SymbolsList(SymbolFactory, ["S", "'a"]);
             var context = new AutomatonContext();
-            var grammar = new Grammar();
-            grammar.NonTerminals.Add("S");
+            var grammar = new Grammar().GetBuilder().AddNonTerminal("S").Build();
 
             var newaction = new AddNewRegExAction(grammar, context);
             newaction.Perform(new AutomatonToken(symbols.Get(0), 0));
@@ -82,8 +80,7 @@ namespace Nt.Tests.Syntax.Actions
         {
             var symbols = new SymbolsList(SymbolFactory, ["S", "a'b"]);
             var context = new AutomatonContext();
-            var grammar = new Grammar();
-            grammar.NonTerminals.Add("S");
+            var grammar = new Grammar().GetBuilder().AddNonTerminal("S").Build();
 
             var newaction = new AddNewRegExAction(grammar, context);
             newaction.Perform(new AutomatonToken(symbols.Get(0), 0));

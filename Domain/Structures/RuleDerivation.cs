@@ -57,7 +57,7 @@ namespace Nt.Syntax.Structures
         /// Adds the specified grammar token to the collection.
         /// </summary>
         /// <param name="token">The grammar token to add to the collection.</param>
-        public void Add(GrammarToken token)
+        internal void Add(GrammarToken token)
         {
             Tokens.Add(token);
         }
@@ -67,7 +67,7 @@ namespace Nt.Syntax.Structures
         /// </summary>
         /// <param name="position">The zero-based index at which the token should be inserted.</param>
         /// <param name="token">The token to insert into the collection.</param>
-        public void Insert(int position, GrammarToken token)
+        internal void Insert(int position, GrammarToken token)
         {
             Tokens.Insert(position, token);
         }

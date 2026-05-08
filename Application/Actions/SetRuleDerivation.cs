@@ -1,5 +1,5 @@
-﻿using Nt.Automaton.States;
-using Nt.Syntax.Structures;
+﻿using Nt.Syntax.Structures;
+using Nt.Syntax.Builders;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
@@ -34,11 +34,11 @@ namespace Nt.Applications.SyntaxParser.Actions
             {
                 if (Context.Grammar.Terminals.Contains(token))
                 {
-                    Rule.Derivation.Add(new Terminal(Context.Grammar.Terminals.Get(token), -1));
+                    Rule.GetBuilder().Add(new Terminal(Context.Grammar.Terminals.Get(token), -1));
                 }
                 else if (Context.Grammar.NonTerminals.Contains(token))
                 {
-                    Rule.Derivation.Add(new NonTerminal(Context.Grammar.NonTerminals.Get(token), -1));
+                    Rule.GetBuilder().Add(new NonTerminal(Context.Grammar.NonTerminals.Get(token), -1));
                 }
                 else
                 {

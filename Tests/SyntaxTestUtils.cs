@@ -5,7 +5,7 @@ namespace Nt.Tests.Syntax
 {
     public class SyntaxTestUtils
     {
-        private static bool DerivationEquals(Grammar grammar, Derivation derivation, List<string> referenceList)
+        private static bool DerivationEquals(Grammar grammar, RuleDerivation derivation, List<string> referenceList)
         {
             if (referenceList.Count != derivation.Count) return false;
             for (int i = 0; i < derivation.Count; i++)
@@ -16,10 +16,10 @@ namespace Nt.Tests.Syntax
         }
 
         #region Grammar checking
-        internal static void AssertTokens(SymbolsList symbols, List<string> reference)
+        internal static void AssertTokens(GrammarSymbolsSet symbols, List<string> reference)
         {
-            Assert.Equal(reference.Count, symbols.GetCount());
-            for (int i = 0; i < symbols.GetCount(); i++)
+            Assert.Equal(reference.Count, symbols.Count);
+            for (int i = 0; i < symbols.Count; i++)
             {
                 Assert.Equal(reference[i], symbols.Get(i).Name);
             }

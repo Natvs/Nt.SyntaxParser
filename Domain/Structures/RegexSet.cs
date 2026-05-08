@@ -65,6 +65,18 @@ namespace Nt.Syntax.Structures
         }
 
         /// <summary>
+        /// Get a regular expression at the specified index
+        /// </summary>
+        /// <param name="index">Index of the regular expression</param>
+        /// <returns>The regular expression at the specified index</returns>
+        /// <exception cref="IndexOutOfRangeException">Thrown if the index is out of range</exception>
+        public RegularExpression Get(int index)
+        {
+            if (index < 0 || index >= Regexs.Count) throw new IndexOutOfRangeException($"Index {index} is out of range for collection of regular expressions with count {Regexs.Count}");
+            return Regexs.ElementAt(index);
+        }
+
+        /// <summary>
         /// Returns a string that represents the collection in a comma-separated list enclosed in braces.
         /// </summary>
         /// <returns>A string containing the elements of the collection, separated by commas and enclosed in curly bracets.</returns>

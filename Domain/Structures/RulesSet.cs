@@ -64,6 +64,18 @@ namespace Nt.Syntax.Structures
         }
 
         /// <summary>
+        /// Get a rule at a specified index
+        /// </summary>
+        /// <param name="index">Index of the rule to get</param>
+        /// <returns>The rule at the specified index</returns>
+        /// <exception cref="IndexOutOfRangeException">Thrown if the index is out of range</exception>
+        public Rule Get(int index)
+        {
+            if (index < 0 || index >= Rules.Count) throw new IndexOutOfRangeException($"Index {index} is out of range for collection of rules with count {Rules.Count}");
+            return Rules.ElementAt(index);
+        }
+
+        /// <summary>
         /// Returns a string that represents the collection in a comma-separated list enclosed in braces.
         /// </summary>
         /// <returns>A string containing the elements of the collection, separated by commas and enclosed in curly braces.</returns>
