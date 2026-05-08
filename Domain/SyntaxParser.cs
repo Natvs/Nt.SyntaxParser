@@ -291,7 +291,7 @@ namespace Nt.Syntax
             }
             catch (InternalException ex)
             {
-                throw ex;
+                throw new Exception("An error occurred while trying to pre-parse the string.", ex);
             }
             catch
             {
@@ -326,7 +326,7 @@ namespace Nt.Syntax
             }
             catch (InternalException ex)
             {
-                throw ex;
+                throw new Exception("An error occurred while trying to parse the string.", ex);
             }
             catch
             {
@@ -348,7 +348,7 @@ namespace Nt.Syntax
             }
             catch (InternalException ex)
             {
-                throw ex;
+                throw new Exception($"An error occurred while trying to parse the file at {path}.", ex);
             }
             catch
             {
