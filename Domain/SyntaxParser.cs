@@ -289,9 +289,9 @@ namespace Nt.Syntax
                 Nt.Parser.SymbolsParser parser = new(configuration.SymbolFactory, [' ', '\0', '\n', '\t'], ["import", "IMPORT", "addtopath", "ADDTOPATH", "escape", "ESCAPE", ";"]);
                 return PreParseString(content, parser);
             }
-            catch (InternalException ex)
+            catch (InternalException)
             {
-                throw new Exception("An error occurred while trying to pre-parse the string.", ex);
+                throw;
             }
             catch
             {
@@ -324,9 +324,9 @@ namespace Nt.Syntax
 
                 return Grammar;
             }
-            catch (InternalException ex)
+            catch (InternalException)
             {
-                throw new Exception("An error occurred while trying to parse the string.", ex);
+                throw;
             }
             catch
             {
@@ -346,9 +346,9 @@ namespace Nt.Syntax
                 string content = File.ReadAllText(path);
                 return ParseString(content);
             }
-            catch (InternalException ex)
+            catch (InternalException)
             {
-                throw new Exception($"An error occurred while trying to parse the file at {path}.", ex);
+                throw;
             }
             catch
             {
