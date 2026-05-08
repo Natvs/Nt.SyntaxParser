@@ -4,6 +4,7 @@ using Nt.Syntax.Automaton;
 using Nt.Parser.Symbols;
 using Nt.Parser.Structures;
 using Nt.Syntax.Exceptions;
+using Nt.Syntax.Builders;
 
 namespace Nt.Tests.Syntax.Actions
 {
@@ -14,8 +15,7 @@ namespace Nt.Tests.Syntax.Actions
         [Fact]
         public void AddNewRuleAction_Test1()
         {
-            var grammar = new Grammar();
-            grammar.NonTerminals.Add("A");
+            var grammar = new Grammar().GetBuilder().AddNonTerminal("A").Build();
 
             var symbols = new SymbolsList(SymbolFactory, ["A"]);
             var context = new AutomatonContext();
@@ -30,8 +30,7 @@ namespace Nt.Tests.Syntax.Actions
         [Fact]
         public void AddNewRuleAction_Test2()
         {
-            var grammar = new Grammar();
-            grammar.NonTerminals.Add("A");
+            var grammar = new Grammar().GetBuilder().AddNonTerminal("A").Build();
 
             var symbols = new SymbolsList(SymbolFactory, ["B"]);
             var context = new AutomatonContext();

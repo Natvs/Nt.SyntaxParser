@@ -1,4 +1,6 @@
-﻿namespace Nt.Applications.SyntaxParser.Actions
+﻿using Nt.Syntax.Builders;
+
+namespace Nt.Applications.SyntaxParser.Actions
 {
     internal class DeleteTerminal(ApplicationContext context) : ProgramAction(context)
     {
@@ -24,7 +26,7 @@
                 Context.Automaton.Pop(true);
                 return;
             }
-            Context.Grammar.Terminals.Remove(name);
+            Context.Grammar.GetBuilder().RemoveTerminal(name);
             Console.WriteLine($"Terminal '{name}' deleted successfully.");
             Context.Automaton.Pop(true);
         }

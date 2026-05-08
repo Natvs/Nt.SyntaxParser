@@ -1,4 +1,6 @@
-﻿namespace Nt.Applications.SyntaxParser.Actions
+﻿using Nt.Syntax.Builders;
+
+namespace Nt.Applications.SyntaxParser.Actions
 {
     internal class DeleteNonTerminal(ApplicationContext context) : ProgramAction(context)
     {
@@ -24,7 +26,7 @@
                 Context.Automaton.Pop(true);
                 return;
             }
-            Context.Grammar.NonTerminals.Remove(name);
+            Context.Grammar.GetBuilder().RemoveNonTerminal(name);
             Console.WriteLine($"Non terminal '{name}' deleted successfully.");
             Context.Automaton.Pop(true);
         }

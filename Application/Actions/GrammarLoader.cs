@@ -1,4 +1,4 @@
-﻿using Nt.Automaton.States;
+﻿using Nt.Syntax.Exportation;
 using Nt.Syntax.Structures;
 
 namespace Nt.Applications.SyntaxParser.Actions

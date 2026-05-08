@@ -1,5 +1,5 @@
-﻿using Nt.Automaton.States;
-using Nt.Syntax.Structures;
+﻿using Nt.Syntax.Structures;
+using Nt.Syntax.Builders;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
@@ -14,7 +14,7 @@ namespace Nt.Applications.SyntaxParser.Actions
                 Context.Automaton.Pop(true);
                 return;
             }
-            if (Context.Grammar.NonTerminals.GetCount() == 0)
+            if (Context.Grammar.NonTerminals.Count == 0)
             {
                 Console.WriteLine("There are no non terminals in the grammar. Please add some non terminals first.");
                 Context.Automaton.Pop(true);
@@ -41,7 +41,7 @@ namespace Nt.Applications.SyntaxParser.Actions
             try
             {
                 var symbol = Context.Grammar.NonTerminals.Get(name);
-                Context.Grammar.SetAxiom(new NonTerminal(symbol, -1));
+                Context.Grammar.GetBuilder().SetAxiom(new NonTerminal(symbol, -1));
                 Context.Automaton.Pop(true);
             }
             catch (KeyNotFoundException) 

@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using Nt.Automaton.States;
 using Nt.Parser;
-using Nt.Parser.Symbols;
 using Nt.Syntax.Actions;
 
 using StateAutomaton = Nt.Automaton.Automatons.StateAutomaton<string>;
@@ -14,27 +13,6 @@ using Nt.Syntax.Exceptions;
 
 namespace Nt.Syntax
 {
-
-    public class SyntaxParserConfig
-    {
-        public ISymbolFactory SymbolFactory { get; private set; } = new SymbolFactory();
-
-        public void SetSymbolFactory(ISymbolFactory factory)
-        {
-            SymbolFactory = factory;
-        }
-
-        private static SyntaxParserConfig? _instance = null;
-
-        public static SyntaxParserConfig GetInstance()
-        {
-            if (_instance == null)
-            {
-                _instance = new SyntaxParserConfig();
-            }
-            return _instance;
-        }
-    }
 
     public class SyntaxParser
     {
@@ -311,9 +289,9 @@ namespace Nt.Syntax
                 Nt.Parser.SymbolsParser parser = new(configuration.SymbolFactory, [' ', '\0', '\n', '\t'], ["import", "IMPORT", "addtopath", "ADDTOPATH", "escape", "ESCAPE", ";"]);
                 return PreParseString(content, parser);
             }
-            catch (InternalException ex)
+            catch (InternalException)
             {
-                throw ex;
+                throw;
             }
             catch
             {
@@ -346,9 +324,9 @@ namespace Nt.Syntax
 
                 return Grammar;
             }
-            catch (InternalException ex)
+            catch (InternalException)
             {
-                throw ex;
+                throw;
             }
             catch
             {
@@ -368,9 +346,9 @@ namespace Nt.Syntax
                 string content = File.ReadAllText(path);
                 return ParseString(content);
             }
-            catch (InternalException ex)
+            catch (InternalException)
             {
-                throw ex;
+                throw;
             }
             catch
             {

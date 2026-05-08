@@ -5,6 +5,7 @@ using Nt.Parser.Symbols;
 using static Nt.Tests.Syntax.SyntaxTestUtils;
 using Nt.Syntax.Structures;
 using Nt.Syntax.Exceptions;
+using Nt.Syntax.Builders;
 
 namespace Nt.Tests.Syntax.Actions
 {
@@ -17,9 +18,10 @@ namespace Nt.Tests.Syntax.Actions
         {
             var symbols = new SymbolsList(SymbolFactory, ["S", "a"]);
             var context = new AutomatonContext();
-            var grammar = new Grammar();
-            grammar.NonTerminals.Add("S");
-            grammar.Terminals.Add("a");
+            var grammar = new Grammar().GetBuilder()
+                .AddNonTerminal("S")
+                .AddTerminal("a")
+                .Build();
 
             var newaction = new AddNewRuleAction(grammar, context);
             newaction.Perform(new AutomatonToken(symbols.Get(0), 0));
@@ -36,8 +38,9 @@ namespace Nt.Tests.Syntax.Actions
         {
             var symbols = new SymbolsList(SymbolFactory, ["S", "A"]);
             var context = new AutomatonContext();
-            var grammar = new Grammar();
-            grammar.NonTerminals.AddRange(["S", "A"]);
+            var grammar = new Grammar().GetBuilder()
+                .AddNonTerminals(["S", "A"])
+                .Build();
 
             var newaction = new AddNewRuleAction(grammar, context);
             newaction.Perform(new AutomatonToken(symbols.Get(0), 0));
@@ -54,8 +57,7 @@ namespace Nt.Tests.Syntax.Actions
         {
             var symbols = new SymbolsList(SymbolFactory, ["S", "a"]);
             var context = new AutomatonContext();
-            var grammar = new Grammar();
-            grammar.NonTerminals.Add("S");
+            var grammar = new Grammar().GetBuilder().AddNonTerminal("S").Build();
 
             var newaction = new AddNewRuleAction(grammar, context);
             newaction.Perform(new AutomatonToken(symbols.Get(0), 0));
@@ -80,9 +82,10 @@ namespace Nt.Tests.Syntax.Actions
         {
             var symbols = new SymbolsList(SymbolFactory, ["S", "'a"]);
             var context = new AutomatonContext();
-            var grammar = new Grammar();
-            grammar.NonTerminals.Add("S");
-            grammar.Terminals.Add("a");
+            var grammar = new Grammar().GetBuilder()
+                .AddNonTerminal("S")
+                .AddTerminal("a")
+                .Build();
 
             var newaction = new AddNewRuleAction(grammar, context);
             newaction.Perform(new AutomatonToken(symbols.Get(0), 0));
@@ -99,9 +102,10 @@ namespace Nt.Tests.Syntax.Actions
         {
             var symbols = new SymbolsList(SymbolFactory, ["S", "a'b"]);
             var context = new AutomatonContext();
-            var grammar = new Grammar();
-            grammar.NonTerminals.Add("S");
-            grammar.Terminals.Add("ab");
+            var grammar = new Grammar().GetBuilder()
+                .AddNonTerminal("S")
+                .AddTerminal("ab")
+                .Build();
 
             var newaction = new AddNewRuleAction(grammar, context);
             newaction.Perform(new AutomatonToken(symbols.Get(0), 0));

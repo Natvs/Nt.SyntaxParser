@@ -1,4 +1,5 @@
 ﻿using Nt.Syntax.Structures;
+using Nt.Syntax.Builders;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
@@ -13,7 +14,7 @@ namespace Nt.Applications.SyntaxParser.Actions
                 Context.Automaton.Pop(true);
                 return;
             }
-            Context.Grammar.Remove(Regex);
+            Context.Grammar.GetBuilder().Remove(Regex);
             Console.WriteLine($"Regular expression {Regex} has been removed");
             Context.Automaton.Pop(false);
             Context.Automaton.Pop(true);

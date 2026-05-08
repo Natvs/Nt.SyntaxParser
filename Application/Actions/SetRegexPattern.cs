@@ -1,4 +1,5 @@
 ﻿using Nt.Syntax.Structures;
+using Nt.Syntax.Builders;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
@@ -28,7 +29,7 @@ namespace Nt.Applications.SyntaxParser.Actions
                 return false;
             }
 
-            Regex.AddSymbols(input);
+            Regex.GetBuilder().AddSymbols(input);
             return true;
         }
     }

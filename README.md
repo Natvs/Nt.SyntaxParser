@@ -1,5 +1,12 @@
 # SyntaxParser
 
+- [Introduction](#introduction)
+- [Grammar structure](#grammar-structure)
+- [Grammar file](#grammar-file)
+- [Using the syntax parser](#using-the-syntax-parser)
+- [Export the grammar](#export-the-grammar)
+- [Exceptions](#exceptions)
+
 ## Introduction
 This project takes a grammar file as input and parses into a grammar structure.
 It aims to be used when creating new software languages.
@@ -47,12 +54,39 @@ Also parsing a grammar always applies the pre-parser on it, it's also possible t
 > In this case, the custom symbol must extend the `ISymbol` interface and you have to provide a custom symbol factory implementing the `ISymbolFactory`.
 > You can then set this factory as default factory for parsing with `SyntaxParserConfig.GetInstance().SetSymbolFactory(new_factory)`.
 
-## Escape character
-The escape character '\\' is a special character that allows any symbol following it to be parsed in the continuity of the token being currently parsed instead of creating a new one. The escape character is used when you need to include symbols or separators in a token.
 
-For example, consider the two following cases:
-1. Consider a parser with `+` defined as a symbol. Then "a+b" will be parsed as 3 tokens : 'a', '+' and 'b'. With the escape character, "a\\+b" is parsed as a unique symbol "a+b".
-2. Consider a parser with "\_" defined as a separator. Then "a_b" will be parsed as 3 tokens: 'a', '\_' and 'b'. But "a\\\_b" is parsed as the unique symbol "a\_b".
+## Export the grammar
+The grammar is meant to get different transformation in your code. After that, you may need to get the grammar displayed or written back in a file.
+This is why this project supports exporting grammars.
+
+For example, you can display the grammar using the method `ToString()`. This method will display the content of the grammar in a user-friendly way.
+
+Grammar file:
+```
+TERMINALS: a, b;
+NON TERMINALS: S, D;
+AXIOM: S
+RULES: S -> D, D -> a;
+```
+
+The grammar after exportation:
+```
+Terminals:
+- a
+- b
+
+Non Terminals:
+- S
+- D
+
+Axiom: S
+
+Rules:
+- S -> D
+- D -> a b
+```
+
+There are different modes of exporting a grammar, please read the [exportation documentation](Doc/Exportation.md) which describes how to export a grammar and contains more informations about methods of exporting it.
 
 ## Exceptions
 This project contains several custom exceptions to handle errors that may occur during the parsing of grammar files or input strings. See a list of exceptions [here](Doc/Exceptions.md).

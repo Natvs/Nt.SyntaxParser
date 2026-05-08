@@ -1,10 +1,9 @@
 ﻿using Nt.Automaton.Actions;
 using Nt.Automaton.Tokens;
-using Nt.Parser.Structures;
 using Nt.Syntax.Automaton;
 using Nt.Syntax.Exceptions;
 using Nt.Syntax.Structures;
-using System.Data;
+using Nt.Syntax.Builders;
 
 namespace Nt.Syntax.Actions
 {
@@ -18,7 +17,7 @@ namespace Nt.Syntax.Actions
 
                 // Handles escape characters
                 var new_token = grammar.ParseToGrammarToken(token);
-                context.Rule.Add(new_token);
+                context.Rule.GetBuilder().Add(new_token);
             }
         }
     }

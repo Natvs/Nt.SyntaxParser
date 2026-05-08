@@ -1,7 +1,6 @@
-﻿using System.Text;
-using Nt.Parser.Structures;
-using Nt.Parser.Symbols;
+﻿using Nt.Parser.Structures;
 using Nt.Syntax.Exceptions;
+using Nt.Syntax.Exportation;
 
 namespace Nt.Syntax.Structures
 {
@@ -14,8 +13,8 @@ namespace Nt.Syntax.Structures
         public Grammar()
         {
             var configuration = SyntaxParserConfig.GetInstance();
-            Terminals = new SymbolsList(configuration.SymbolFactory);
-            NonTerminals = new SymbolsList(configuration.SymbolFactory);
+            Terminals = new GrammarSymbolsSet(configuration.SymbolFactory);
+            NonTerminals = new GrammarSymbolsSet(configuration.SymbolFactory);
         }
 
         #region Internal
@@ -71,142 +70,19 @@ namespace Nt.Syntax.Structures
         #region Public
 
         public char EscapeCharacter { get; private set; } = '\'';
-        public SymbolsList Terminals { get; }
-        public SymbolsList NonTerminals { get; }
-        public NonTerminal? Axiom { get; private set; } = null;
+        public GrammarSymbolsSet Terminals { get; }
+        public GrammarSymbolsSet NonTerminals { get; }
+        public NonTerminal? Axiom { get; internal set; } = null;
         public RulesSet Rules { get; } = [];
-        public RegExpSet RegularExpressions { get; } = [];
+        public RegexSet RegularExpressions { get; } = [];
 
         /// <summary>
         /// Sets the character used to escape special characters in parsing or formatting operations.
         /// </summary>
         /// <param name="c">The character to use as the escape character.</param>
-        public void SetEscapeCharacter(char c)
+        public void SetEscapeChar(char c)
         {
             EscapeCharacter = c;
-        }
-
-        /// <summary>
-        /// Adds a new terminal to the terminals list of this grammar
-        /// </summary>
-        /// <param name="name">Name of the terminal to add</param>
-        /// <exception cref="RegisteredTerminalException">The terminal may already exists in the list of terminals</exception>
-        /// <exception cref="RegisteredNonTerminalException">The non terminal may already exists in the list of non terminals</exception>
-        public ISymbol AddTerminal(string name)
-        {
-            if (Terminals.Contains(name)) throw new RegisteredTerminalException(name);
-            if (NonTerminals.Contains(name)) throw new RegisteredNonTerminalException(name);
-            return Terminals.Add(name);
-        }
-
-        /// <summary>
-        /// Adds a new non terminal to the non terminals list of this grammar
-        /// </summary>
-        /// <param name="name">Name of the non terminal to add</param>
-        /// <exception cref="RegisteredNonTerminalException">The non terminal may already exists in the list of non terminals</exception>
-        /// <exception cref="RegisteredNonTerminalException">The non terminal may already exists in the list of non terminals</exception>
-        public ISymbol AddNonTerminal(string name)
-        {
-            if (NonTerminals.Contains(name)) throw new RegisteredNonTerminalException(name);
-            if (Terminals.Contains(name)) throw new RegisteredTerminalException(name);
-            return NonTerminals.Add(name);
-        }
-
-        /// <summary>
-        /// Removes the specified terminal symbol from the collection of terminals.
-        /// </summary>
-        /// <param name="symbol">The terminal symbol to remove from the collection. Cannot be null.</param>
-        /// <exception cref="KeyNotFoundException">Thrown when symbol does not exists in collection of terminals.</exception>
-        public void RemoveTerminal(ISymbol symbol)
-        {
-            Terminals.Remove(symbol);
-        }
-
-        /// <summary>
-        /// Removes the specified non-terminal symbol from the collection of non-terminals.
-        /// </summary>
-        /// <param name="symbol">The non-terminal symbol to remove from the collection. Cannot be null.</param>
-        /// <exception cref="KeyNotFoundException">Thrown when symbol does not exists in collection of non-terminals.</exception>"
-        public void RemoveNonTerminal(ISymbol symbol)
-        {
-            NonTerminals.Remove(symbol);
-        }
-
-        /// <summary>
-        /// Sets the axiom of this grammar
-        /// </summary>
-        /// <param name="name">Non terminal to set for axiom</param>
-        /// <exception cref="UnregisteredNonTerminalException">The axiom might not exist in the non terminals list of this grammar</exception>
-        public void SetAxiom(NonTerminal token)
-        {
-            if (!NonTerminals.Contains(token.Name)) throw new UnregisteredNonTerminalException(token.Name, token.Line);
-            Axiom = token;
-        }
-
-        /// <summary>
-        /// Adds a new grammar rule for the specified non-terminal symbol at the given source line.
-        /// </summary>
-        /// <param name="nonTerminal">The non-terminal symbol for which the rule is to be created. Must be declared in the grammar.</param>
-        /// <returns>A Rule instance representing the newly added grammar rule.</returns>
-        /// <exception cref="UnregisteredNonTerminalException">Thrown if the specified non-terminal symbol has not been declared in the grammar.</exception>
-        public Rule AddRule(NonTerminal nt)
-        {
-            var rule = new Rule(this);
-            Rules.Add(rule);
-            rule.SetToken(nt);
-            return rule;
-        }
-
-        /// <summary>
-        /// Add a rule to the collection of rules of this grammar
-        /// </summary>
-        /// <param name="rule">Rule to add</param>
-        public void AddRule(Rule rule)
-        {
-            Rules.Add(rule);
-        }
-
-        /// <summary>
-        /// Adds a new regular expression associated with the specified non-terminal symbol at the given source line.
-        /// </summary>
-        /// <param name="nonTerminal">The non-terminal symbol to associate with the new regular expression. Must be declared prior to calling this method.</param>
-        /// <returns>A RegularExpression instance representing the newly added regular expression.</returns>
-        /// <exception cref="UnregisteredNonTerminalException">Thrown if the specified non-terminal symbol has not been declared.</exception>
-        public RegularExpression AddRegex(NonTerminal nt)
-        {
-            var regex = new RegularExpression(this);
-            RegularExpressions.Add(regex);
-            regex.SetToken(nt);
-            return regex;
-        }
-
-        /// <summary>
-        /// Add a regular expression to the collection of regular expressions of this grammar
-        /// </summary>
-        /// <param name="regex">Regular expression to add</param>
-        public void AddRegex(RegularExpression regex)
-        {
-            RegularExpressions.Add(regex);
-        }
-
-        /// <summary>
-        /// Removes the specified rule from the collection of rules.
-        /// </summary>
-        /// <param name="rule">The rule to remove from the collection.</param>
-        /// <exception cref="RuleNotFoundException">The rule is not part of the grammar</exception>
-        public void Remove(Rule rule)
-        {
-            Rules.Remove(rule);
-        }
-
-        /// <summary>
-        /// Removes the specified regular expression from the collection.
-        /// </summary>
-        /// <param name="regex">The regular expression to remove from the collection. Cannot be null.</param>
-        /// <exception cref="RegexNotFoundException">The regular expression is not part of the grammar</exception>
-        public void Remove(RegularExpression regex)
-        {
-            RegularExpressions.Remove(regex);
         }
 
         /// <summary>
@@ -215,25 +91,7 @@ namespace Nt.Syntax.Structures
         /// <returns>A string representing this grammar</returns>
         public override string ToString()
         {
-            var sb = new StringBuilder();
-
-            sb.Append("Terminals: ").Append(Terminals.ToString()).Append('\n');
-            sb.Append("Non terminals: ").Append(NonTerminals.ToString()).Append('\n');
-            if (Axiom != null) sb.Append("Axiom: ").Append(Axiom.Name).Append('\n');
-
-            if (Rules.Count > 0) sb.Append("\nRules\n");
-            foreach (Rule rule in Rules)
-            {
-                sb.Append("  ").Append(rule.ToString()).Append('\n');
-            }
-
-            if (RegularExpressions.Count > 0) sb.Append("\nRegular expressions\n");
-            foreach (RegularExpression regularExpression in RegularExpressions)
-            {
-                sb.Append("  ").Append(regularExpression.ToString()).Append('\n');
-            }
-
-            return sb.ToString();
+           return this.ToString(ExportationMode.Original);
         }
 
         #endregion

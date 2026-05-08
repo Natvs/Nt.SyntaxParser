@@ -1,4 +1,6 @@
-﻿namespace Nt.Applications.SyntaxParser.Actions
+﻿using Nt.Syntax.Builders;
+
+namespace Nt.Applications.SyntaxParser.Actions
 {
     internal class AddTerminal(ApplicationContext context) : ProgramAction(context)
     {
@@ -24,7 +26,7 @@
                 Context.Automaton.Pop(true);
                 return;
             }
-            Context.Grammar.Terminals.Add(name);
+            Context.Grammar.GetBuilder().AddTerminal(name);
             Console.WriteLine($"Terminal '{name}' added successfully.");
             Context.Automaton.Pop(true);
         }

@@ -1,4 +1,5 @@
-﻿using Nt.Syntax.Structures;
+﻿using Nt.Syntax.Builders;
+using Nt.Syntax.Structures;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
@@ -24,7 +25,7 @@ namespace Nt.Applications.SyntaxParser.Actions
 
             if (valid)
             {
-                Context.Grammar.AddRegex(regex);
+                Context.Grammar.GetBuilder().Add(regex);
                 Console.WriteLine($"The new regular expression {regex} has been added to the grammar");
             }
             else Console.WriteLine("The regular expression was not added to the grammar due to invalid input.");

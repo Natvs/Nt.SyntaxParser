@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution files", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
+		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
 		nuget.config = nuget.config
 		README.md = README.md
 	EndProjectSection
@@ -20,6 +21,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{14004574-271D-4BE4-A955-501003C985E7}"
 	ProjectSection(SolutionItems) = preProject
 		Doc\Exceptions.md = Doc\Exceptions.md
+		Doc\Exportation.md = Doc\Exportation.md
 		Doc\Grammar.md = Doc\Grammar.md
 		README.md = README.md
 	EndProjectSection

@@ -2,6 +2,7 @@
 using Nt.Parser.Symbols;
 using Nt.Syntax.Actions;
 using Nt.Syntax.Automaton;
+using Nt.Syntax.Builders;
 using Nt.Syntax.Exceptions;
 using Nt.Syntax.Structures;
 
@@ -15,8 +16,7 @@ namespace Nt.Tests.Syntax.Actions
         public void SetAxiomAction_Test1()
         {
             var symbols = new SymbolsList(SymbolFactory, ["A", "B", "C"]);
-            var grammar = new Grammar();
-            grammar.NonTerminals.AddRange(["A", "B", "C"]);
+            var grammar = new Grammar().GetBuilder().AddNonTerminals(["A", "B", "C"]).Build();
 
             var action = new SetAxiomAction(grammar);
             action.Perform(new AutomatonToken(symbols.Get(2), 1));
@@ -29,8 +29,7 @@ namespace Nt.Tests.Syntax.Actions
         public void SetAxiomAction_Test2()
         {
             var symbols = new SymbolsList(SymbolFactory, ["A", "B", "C"]);
-            var grammar = new Grammar();
-            grammar.NonTerminals.AddRange(["A", "B"]);
+            var grammar = new Grammar().GetBuilder().AddNonTerminals(["A", "B"]).Build();
 
             var action = new SetAxiomAction(grammar);
             Assert.Throws<UnregisteredNonTerminalException>(() => action.Perform(new AutomatonToken(symbols.Get(2), 1)));
