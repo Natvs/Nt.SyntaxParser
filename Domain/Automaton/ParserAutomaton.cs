@@ -8,26 +8,12 @@ using Transition = Nt.Automaton.Transitions.Transition<string>;
 namespace Nt.Syntax.Automaton
 {
 
-    public class ParserAutomaton
+    internal class ParserAutomaton(Grammar grammar) : BaseAutomaton(grammar)
     {
-        public ParserAutomaton(Grammar grammar)
-        {
-            this.Grammar = grammar;
-            GenerateAutomaton();
-        }
-
-        #region private
-
-        private AutomatonContext Context { get; set; } = new AutomatonContext();
-        private StateAutomaton? Automaton { get; set; }
         private Action? EndAction { get; set; }
-        private Grammar Grammar { get; set; }
 
-        /// <summary>
-        /// Initializes an automaton that can read a grammar file
-        /// </summary>
-        /// <exception cref="EndOfStringException">The automaton might end on a state different from the initial state</exception>
-        private void GenerateAutomaton()
+        // Generation
+        protected override void Build()
         {
             Context.Reset();
 
@@ -55,6 +41,7 @@ namespace Nt.Syntax.Automaton
             GenerateRegExStatesNewStyle(initial, errorAction);
         }
 
+        // Old style generation
         private void GenerateTerminalsStatesOldStyle(State initial, ErrorAction errorAction)
         {
             // Old style:
@@ -131,6 +118,7 @@ namespace Nt.Syntax.Automaton
 
         }
 
+        // New style generation
         private void GenerateNewRuleStatesOldStyle(State initial, ErrorAction errorAction)
         {
             State newRuleState = new State().SetDefault(initial, errorAction);
@@ -201,21 +189,12 @@ namespace Nt.Syntax.Automaton
             readState.AddTransition(new Transition(";", initial));
         }
 
-        #endregion
-
-        #region Internal 
-
-        internal void Read(AutomatonToken token)
-        {
-            Automaton?.Read(token);
-        }
-
+        // Internal methods
         internal void Stop()
         {
             EndAction?.Invoke();
         }
 
-        #endregion
 
     }
 }

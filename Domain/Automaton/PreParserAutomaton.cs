@@ -8,25 +8,11 @@ using Transition = Nt.Automaton.Transitions.Transition<string>;
 
 namespace Nt.Syntax.Automaton
 {
-    public class PreParserAutomaton
+    internal class PreParserAutomaton(Grammar grammar) : BaseAutomaton(grammar)
     {
-        private StateAutomaton? Automaton { get; set; }
-        private AutomatonContext Context { get; set; } = new AutomatonContext();
-        private Grammar Grammar { get; set; }
 
-        public PreParserAutomaton(Grammar grammar)
-        {
-            this.Grammar = grammar;
-            GeneratePreAutomaton();
-        }
-
-        #region Private
-
-        /// <summary>
-        /// Initializes the pre-automaton structure used for parsing pre-parsing instructions.
-        /// </summary>
-        /// <exception cref="EndOfStringException">The pre-automaton might end on a state different from the initial state</exception>
-        private void GeneratePreAutomaton()
+        // Generation
+        protected override void Build()
         {
             var initial = new State(); initial.SetDefault(initial);
             Context.Reset();
@@ -51,11 +37,7 @@ namespace Nt.Syntax.Automaton
             initial.AddTransition(new Transition("escape", escapeState));
         }
 
-
-        #endregion
-
-        #region Internal
-
+        // Internal methods
         internal string? GetImportedString()
         {
             return Context.ImportedString;
@@ -66,11 +48,5 @@ namespace Nt.Syntax.Automaton
             Context.ImportedString = null;
         }
 
-        internal void Read(AutomatonToken token)
-        {
-            Automaton?.Read(token);
-        }
-
-        #endregion
     }
 }
