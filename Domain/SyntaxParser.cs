@@ -1,11 +1,7 @@
 ﻿using System.Text;
-using Nt.Automaton.States;
 using Nt.Parser;
-using Nt.Syntax.Actions;
 
-using StateAutomaton = Nt.Automaton.Automatons.StateAutomaton<string>;
-using State = Nt.Automaton.States.State<string>;
-using Transition = Nt.Automaton.Transitions.Transition<string>;
+using IState = Nt.Automaton.States.IState<string>;
 using Nt.Syntax.Automaton;
 using Nt.Syntax.Structures;
 using Nt.Syntax.Exceptions;
@@ -20,16 +16,16 @@ namespace Nt.Syntax
         #region Private
 
         private Grammar Grammar { get; set; } = new();
-        private PreParserAutomaton? PreAutomaton { get; set; }
-        private ParserAutomaton? Automaton { get; set; }
+        internal PreParserAutomaton PreAutomaton { get; } = new PreParserAutomaton();
+        internal ParserAutomaton Automaton { get; } = new ParserAutomaton();
         private List<string> ParserSymbols { get; } = [":", ",", "=", "{", "}", ";", "-", ">", "+", "*"];
-        
+
         #endregion
 
         #region Public
 
         /// <summary>
-        /// Applies the pre-parser on a given grammar string
+        /// Apply the pre-parser on a given grammar string
         /// </summary>
         /// <param name="content">String to pre-parse</param>
         /// <returns>A pre-parsed string of the grammar</returns>
@@ -37,7 +33,7 @@ namespace Nt.Syntax
         {
             try
             {
-                PreAutomaton = new PreParserAutomaton(Grammar);
+                PreAutomaton.SetGrammar(Grammar);
 
                 var configuration = SyntaxParserConfig.GetInstance();
                 var parser = new SymbolsParser(configuration.SymbolFactory, [' ', '\0', '\n', '\t'], ["import", "IMPORT", "addtopath", "ADDTOPATH", "escape", "ESCAPE", ";"]);
@@ -85,7 +81,7 @@ namespace Nt.Syntax
         }
 
         /// <summary>
-        /// Reads a string and generates a grammar structure from it. Also applies pre-parsing on it.
+        /// Read a string and generate a grammar structure from it. Also applies pre-parsing on it.
         /// </summary>
         /// <param name="content">String to read</param>
         /// <returns>Grammar data structure from the given string</returns>
@@ -94,7 +90,7 @@ namespace Nt.Syntax
             try
             {
                 Grammar = new Grammar();
-                Automaton = new ParserAutomaton(Grammar);
+                Automaton.SetGrammar(Grammar);
 
                 content = PreParseString(content);
 

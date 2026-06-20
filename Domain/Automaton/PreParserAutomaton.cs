@@ -8,7 +8,7 @@ using Transition = Nt.Automaton.Transitions.Transition<string>;
 
 namespace Nt.Syntax.Automaton
 {
-    internal class PreParserAutomaton(Grammar grammar) : BaseAutomaton(grammar)
+    internal class PreParserAutomaton : BaseAutomaton
     {
 
         // Generation
