@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Application\Nt.SyntaxParser.Application.csproj" />
     <ProjectReference Include="..\Domain\Nt.SyntaxParser.Domain.csproj" />
+    <ProjectReference Include="..\Nt.SyntaxParser.Domain\Nt.SyntaxParser.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
