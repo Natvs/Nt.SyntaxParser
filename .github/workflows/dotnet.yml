@@ -1,52 +1,157 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
 name: .NET
-
 on:
   push:
     branches: [ "master" ]
   pull_request:
-    types: 
-      - opened
-      - synchronize
     branches: [ "master" ]
+
+env:
+  PROJECT_PATH: "Nt.SyntaxAnalyser.Domain"
+  PROJECT_FILE: "Nt.SyntaxAnalyser.Domain.csproj"
+  SBOM_DIR: "Nt.SyntaxAnalyser.Domain/bom"                   
+  SBOM_ARTIFACT: sbom.json
+  GH_TOKEN: ${{github.token}}
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 10.0.x
-    - name: Authenticate GitHub package source
-      run: |
-        dotnet nuget add source \
-        https://nuget.pkg.github.com/Natvs/index.json \
-          --name github \
-          --username Natvs \
-          --password ${{ secrets.PACKAGE_REPO_TOKEN }} \
-          --store-password-in-clear-text
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      - name: Checkout solution
+        uses: actions/checkout@v7
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
+    
+  generate-sbom:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout solution
+        uses: actions/checkout@v7
+      - name: Generate SBOM
+        uses: CycloneDX/gh-dotnet-generate-sbom@v1.0.1
+        with:
+          path: ${{env.PROJECT_PATH}}/${{env.PROJECT_FILE}}
+          out: ${{env.SBOM_DIR}}
+          json: true
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: ${{env.SBOM_ARTIFACT}}
+          path: ${{env.SBOM_DIR}}
+
+  check-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout solution
+        uses: actions/checkout@v7 
+      - name: Retrieve version
+        id: version
+        run: |
+          cd ${{env.PROJECT_PATH}}  
+          VERSION=$(dotnet msbuild ${{env.PROJECT_FILE}} -getProperty:Version)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Project version: $VERSION"
+      - name: Create tag
+        id: tag
+        run: |
+          TAG="v${{steps.version.outputs.version}}"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+      - name: Check release
+        id: check
+        shell: pwsh
+        run: |
+          $TAG = "${{steps.tag.outputs.tag}}"
+          if (gh release view "$TAG") {     
+            echo "create=false" >> "$env:GITHUB_OUTPUT"
+            echo "Release $TAG already exists. No release will be created."
+          } else {     
+            echo "create=true" >> "$env:GITHUB_OUTPUT"
+            echo "Release $TAG does not exist. A new release will be created."
+          }
+          exit 0
+    outputs:
+      tag: ${{steps.tag.outputs.tag}}
+      create-release: ${{steps.check.outputs.create}}
+
+  check-nuget:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Retrieve version
+        id: version
+        run: |
+          cd ${{env.PROJECT_PATH}}  
+          VERSION=$(dotnet msbuild ${{env.PROJECT_FILE}} -getProperty:PackageVersion)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Package version: $VERSION"
+      - name: Check package
+        id: check
+        shell: pwsh
+        run: |
+          $obj = gh api "/users/natvs/packages/nuget/Nt.Automaton/versions" | ConvertFrom-Json
+          $version = "${{steps.version.outputs.version}}"
+          if ($obj.name | Select-String $version) {
+            echo "create=false" >> "$env:GITHUB_OUTPUT"
+            echo "Package for version $version already exists. No additional to create." 
+          } else {
+            echo "create=true" >> "$env:GITHUB_OUTPUT"
+            echo "Package for version $version inexistant. A new package will be created."
+          }
+    outputs:
+      create-package: ${{steps.check.outputs.create}}
+
+  # This job requires a file release-notes.md in the root of the repository with the release notes for the new release.
+  create-release:
+    needs:
+      - build
+      - check-release
+      - generate-sbom
+    if: github.event_name == 'push' && needs.check-release.outputs.create-release == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  
+    env:
+      title: ${{needs.check-release.outputs.tag}}
+      tag: ${{needs.check-release.outputs.tag}}
+      release-file: release-notes.md
+    steps:
+      - name: Checkout solution
+        uses: actions/checkout@v7
+      - name: Download SBOM
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{env.SBOM_ARTIFACT}}
+          path: ${{env.SBOM_DIR}}
+      - name: Create release
+        run: |
+          gh release create \
+            ${{env.tag}} \
+            "${{env.SBOM_DIR}}/bom.json#${{env.SBOM_ARTIFACT}}" \
+            --title ${{env.title}}
+      - name: Upload release notes
+        shell: pwsh
+        run: |
+            Get-Content ${{env.release-file}} | gh release edit ${{env.tag}} --notes-file -
 
   publish-nuget:
-
-    needs: build
-    if: github.event_name == 'push'
-    
+    needs: 
+      - build
+      - check-nuget
+    if: github.event_name == 'push' && needs.check-nuget.outputs.create-package == 'true'
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
     env:
-      NuGetDirectory: "${{github.workspace}}/nuget"
-
+      NUGET_REPO: https://nuget.pkg.github.com/Natvs/index.json
+      NUGET_USERNAME: Natvs
+      NUGET_PATH: "${{github.workspace}}/nuget"
     steps:
       - uses: actions/checkout@v4
       - name: Setup .NET
@@ -56,17 +161,18 @@ jobs:
       - name: Authenticate GitHub package source
         run: |
           dotnet nuget add source \
-          https://nuget.pkg.github.com/Natvs/index.json \
+            ${{ env.NUGET_REPO }} \
             --name github \
-            --username Natvs \
-            --password ${{ secrets.PACKAGE_REPO_TOKEN }} \
+            --username ${{ env.NUGET_USERNAME }} \
+            --password ${{ github.token }} \
             --store-password-in-clear-text
       - name: Pack
-        run: dotnet pack ./Domain --configuration Release --output ${{env.NuGetDirectory}}
+        run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --output ${{ env.NUGET_PATH }} --verbosity quiet
       - name: Publish
         shell: pwsh
         run: |
-          Get-ChildItem -Path "${{env.NuGetDirectory}}" -Filter "*.nupkg" | ForEach-Object {
-              dotnet nuget push $_.FullName --source "github"
+          Get-ChildItem -Path "${{ env.NUGET_PATH }}" -Filter "*.nupkg" | ForEach-Object {
+              dotnet nuget push $_.FullName --source "github" --skip-duplicate
           }
-          
+
+    
