@@ -6,22 +6,35 @@ on:
     branches: [ "master" ]
 
 env:
-  PROJECT_PATH: "Nt.SyntaxAnalyser.Domain"
-  PROJECT_FILE: "Nt.SyntaxAnalyser.Domain.csproj"
-  SBOM_DIR: "Nt.SyntaxAnalyser.Domain/bom"                   
+  PROJECT_PATH: "Nt.SyntaxParser.Domain"
+  PROJECT_FILE: "Nt.SyntaxParser.Domain.csproj"
+  NUGET_REPO: https://nuget.pkg.github.com/Natvs/index.json
+  NUGET_USERNAME: Natvs
+  NUGET_PATH: "${{github.workspace}}/nuget"
+  SBOM_DIR: "Nt.SyntaxParser.Domain/bom"                   
   SBOM_ARTIFACT: sbom.json
   GH_TOKEN: ${{github.token}}
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      packages: read
     steps:
       - name: Checkout solution
         uses: actions/checkout@v7
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
+      - name: Authenticate package source
+        run: |
+          dotnet nuget add source \
+          ${{ env.NUGET_REPO }} \
+            --name github \
+            --username ${{ env.NUGET_USERNAME }} \
+            --password ${{ github.token }} \
+            --store-password-in-clear-text
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
@@ -148,17 +161,13 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       packages: write
-    env:
-      NUGET_REPO: https://nuget.pkg.github.com/Natvs/index.json
-      NUGET_USERNAME: Natvs
-      NUGET_PATH: "${{github.workspace}}/nuget"
     steps:
       - uses: actions/checkout@v4
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
-      - name: Authenticate GitHub package source
+      - name: Authenticate package source
         run: |
           dotnet nuget add source \
             ${{ env.NUGET_REPO }} \
