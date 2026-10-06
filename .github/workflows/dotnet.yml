@@ -44,9 +44,25 @@ jobs:
     
   generate-sbom:
     runs-on: ubuntu-latest
+    permissions:
+      packages: read
     steps:
       - name: Checkout solution
         uses: actions/checkout@v7
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+      - name: Authenticate package source
+        run: |
+          dotnet nuget add source \
+            "${{ env.NUGET_REPO }}" \
+            --name github \
+            --username "${{ env.NUGET_USERNAME }}" \
+            --password "${{ github.token }}" \
+            --store-password-in-clear-text
+      - name: Restore dependencies
+        run: dotnet restore "${{ env.PROJECT_PATH }}/${{ env.PROJECT_FILE }}"
       - name: Generate SBOM
         uses: CycloneDX/gh-dotnet-generate-sbom@v1.0.1
         with:
