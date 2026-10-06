@@ -6,12 +6,12 @@ on:
     branches: [ "master" ]
 
 env:
-  PROJECT_PATH: "Nt.SyntaxParser.Domain"
-  PROJECT_FILE: "Nt.SyntaxParser.Domain.csproj"
+  PROJECT_PATH: "Domain"
+  PROJECT_FILE: "Domain.csproj"
   NUGET_REPO: https://nuget.pkg.github.com/Natvs/index.json
   NUGET_USERNAME: Natvs
   NUGET_PATH: "${{github.workspace}}/nuget"
-  SBOM_DIR: "Nt.SyntaxParser.Domain/bom"                   
+  SBOM_DIR: "bom"                   
   SBOM_ARTIFACT: sbom.json
   GH_TOKEN: ${{github.token}}
 
