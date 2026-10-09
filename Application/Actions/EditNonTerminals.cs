@@ -1,16 +1,13 @@
 ﻿using Nt.Automaton.States;
 using Nt.Automaton.Transitions;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
     internal class EditNonTerminals(ApplicationContext context) : ProgramAction(context)
     {
-        public override State<string> GetState()
+        public override IState<string> GetState()
         {
-            var state = base.GetState();
+            var state = base.GetState().SetFinal().OnCondition(() => Context.Grammar == null);
             var addState = new AddNonTerminal(Context).GetState();
             var deleteState = new DeleteNonTerminal(Context).GetState();
 
@@ -26,7 +23,6 @@ namespace Nt.Applications.SyntaxParser.Actions
             if (Context.Grammar == null)
             {
                 Console.WriteLine("No current grammar. Please load or create a grammar first.");
-                Context.Automaton.Pop(true);
                 return;
             }
 

@@ -25,13 +25,34 @@ namespace Nt.Syntax.Builders
         }
 
         /// <summary>
+        /// Clears the current pattern of the regular expression.
+        /// </summary>
+        /// <returns>This instance of <see cref="RegexBuilder"/> for method chaining</returns>
+        public RegexBuilder Clear()
+        {
+            _regex.Clear();
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the pattern of the regular expression to the specified value.
+        /// </summary>
+        /// <param name="pattern">Pattern to set</param>
+        /// <returns>This instance of <see cref="RegexBuilder"/> for method chaining</returns>
+        public RegexBuilder SetPattern(string pattern)
+        {
+            _regex.SetPattern(pattern);
+            return this;
+        }
+
+        /// <summary>
         /// Add a pattern to the current pattern of the regular expression.
         /// </summary>
         /// <param name="pattern">Pattern to add</param>
         /// <returns>This instance of <see cref="RegexBuilder"/> for method chaining</returns>
         public RegexBuilder AddSymbols(string pattern)
         {
-            _regex.Pattern += pattern;
+            _regex.AddPattern(pattern);
             return this;
         }
 

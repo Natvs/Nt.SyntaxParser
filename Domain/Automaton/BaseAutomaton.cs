@@ -19,10 +19,7 @@ namespace Nt.Syntax.Automaton
         private HashSet<BranchStart> BranchStarts { get; set; } = [];
         private HashSet<BranchEnd> BranchEnds { get; set; } = [];
 
-        public BaseAutomaton()
-        {
-            
-        }
+        public BaseAutomaton() { }
 
         public void SetGrammar(Grammar grammar)
         {
@@ -37,11 +34,11 @@ namespace Nt.Syntax.Automaton
             if (Automaton == null) return;
             foreach (var branch in BranchStarts)
             {
-                Automaton.InitialState.AddTransition(new Transition(branch.Token, branch.Target));
+                Automaton.CurrentState.AddTransition(new Transition(branch.Token, branch.Target));
             }
             foreach (var branch in BranchEnds)
             {
-                branch.Origin.AddTransition(new Transition(branch.Token, Automaton.InitialState));
+                branch.Origin.AddTransition(new Transition(branch.Token, Automaton.CurrentState));
             }
         }
 

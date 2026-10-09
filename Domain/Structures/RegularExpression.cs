@@ -7,7 +7,25 @@ namespace Nt.Syntax.Structures
     {
         internal Grammar Grammar { get; } = grammar;
         public NonTerminal? Token { get; internal set; }
-        public string Pattern { get; internal set; } = "";
+        public string Pattern { get; private set; } = "";
+
+        /// <summary>
+        /// Clears the current pattern of the regular expression.
+        /// </summary>
+        internal void Clear()
+        {
+            Pattern = "";
+        }
+
+        internal void SetPattern(string pattern)
+        {
+            Pattern = pattern;
+        }
+
+        internal void AddPattern(string pattern)
+        {
+            Pattern += pattern;
+        }
 
         /// <summary>
         /// Gets a string representation of this regular expression

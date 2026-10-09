@@ -1,8 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-// See https://aka.ms/new-console-template for more information
-using Nt.Applications.SyntaxParser;
-using Nt.Parser;
-using Nt.Parser.Symbols;
+﻿using Nt.Applications.SyntaxParser;
 internal class Program
 {
     private static void Main(string[] args)
@@ -10,7 +6,8 @@ internal class Program
         var context = new ApplicationContext();
 
         // Iterate until the user escapes from the initial state
-        while (!context.Automaton.IsEmpty())
+        context.Automaton.CurrentState?.Activate();
+        while (!context.Automaton.IsEmpty)
         {
             var answer = Console.ReadLine();
             if (answer == null) continue;
@@ -18,37 +15,5 @@ internal class Program
         }
     }
 
-    private static void TryParsing()
-    {
-        bool continue_parsing = true;
-        while (continue_parsing)
-        {
-            string? text = null;
-            string input = "";
-            var parser = new SymbolsParser(new SymbolFactory(), [' ', '\0', '\n', '\t'], [":", ",", "=", "{", "}", ";", "-", ">", "+", "*"]);
-            Console.WriteLine("Enter text to parse (end to finish):");
-            while (text != "end")
-            {
-                text = Console.ReadLine();
-                if (text != "end") input += text + "\n";
-            }
-            try
-            {
-                ParserResult result = parser.Parse(input);
-                Console.WriteLine("\nParsed result:\n" + result.GetParsed().ToString());
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("\nError while parsing:\n" + ex.Message);
-            }
-
-            continue_parsing = false;
-            Console.WriteLine();
-            Console.WriteLine("Continue parsing new text?");
-            string? answer = Console.ReadLine();
-            if (answer == null) return;
-            if (answer.ToLower().Equals("y") || answer.ToLower().Equals("yes")) continue_parsing = true;
-        }
-    }
 }
 

@@ -5,7 +5,7 @@ namespace Nt.Applications.SyntaxParser.Actions
 {
     internal class Home(ApplicationContext context) : ProgramAction(context)
     {
-        public override State<string> GetState()
+        public override IState<string> GetState()
         {
             var creationState = new GrammarCreation(Context).GetState();
             var loaderState = new GrammarLoader(Context).GetState();

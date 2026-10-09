@@ -1,5 +1,6 @@
 ﻿using Nt.Syntax.Structures;
 using Nt.Syntax.Builders;
+using Nt.Automaton.States;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
@@ -8,11 +9,15 @@ namespace Nt.Applications.SyntaxParser.Actions
         private Rule Rule { get; set; } = rule;
 
 
+        public override IState<string> GetState()
+        {
+            return base.GetState().SetFinal();
+        }
+
         public override void Perform()
         {
             Console.WriteLine();
             Prompt();
-            Context.Automaton.Pop(true);
         }
 
         public bool Prompt()

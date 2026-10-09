@@ -8,9 +8,9 @@ namespace Nt.Applications.SyntaxParser.Actions
 {
     internal class GrammarEditor(ApplicationContext context) : ProgramAction(context)
     {
-        public override State<string> GetState()
+        public override IState<string> GetState()
         {
-            var state = base.GetState();
+            var state = base.GetState().SetFinal().OnCondition(() => Context.Grammar == null);
             var nonTerminalsState = new EditNonTerminals(Context).GetState();
             var termianlsState = new EditTerminals(Context).GetState();
             var axiomState = new AxiomSetter(Context).GetState();
@@ -33,7 +33,6 @@ namespace Nt.Applications.SyntaxParser.Actions
             {
                 Console.WriteLine("No current grammar. Please load or create a grammar first.");
                 Transition();
-                Context.Automaton.Pop(true);
                 return;
             }
 

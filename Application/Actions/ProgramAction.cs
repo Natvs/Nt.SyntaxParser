@@ -18,9 +18,9 @@ namespace Nt.Applications.SyntaxParser.Actions
             Console.WriteLine();
         }
 
-        public virtual State<string> GetState()
+        public virtual IState<string> GetState()
         {
-            return new State<string>(this);
+            return new State<string>().SetAction(this);
         }
 
         public abstract void Perform();

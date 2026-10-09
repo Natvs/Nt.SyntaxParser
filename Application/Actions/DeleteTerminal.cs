@@ -1,15 +1,19 @@
-﻿using Nt.Syntax.Builders;
+﻿using Nt.Automaton.States;
+using Nt.Syntax.Builders;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
     internal class DeleteTerminal(ApplicationContext context) : ProgramAction(context)
     {
+        public override IState<string> GetState()
+        {
+            return base.GetState().SetFinal();
+        }
         public override void Perform()
         {
             if (Context.Grammar == null)
             {
                 Console.WriteLine("No current grammar. Please load or create a grammar first.");
-                Context.Automaton.Pop(true);
                 return;
             }
             Console.WriteLine("Enter the name of the terminal to delete:");
@@ -17,18 +21,15 @@ namespace Nt.Applications.SyntaxParser.Actions
             if (name == null || name.Trim().Length == 0)
             {
                 Console.WriteLine("Invalid name for a terminal. Operation cancelled.");
-                Context.Automaton.Pop(true);
                 return;
             }
             if (!Context.Grammar.Terminals.Contains(name))
             {
                 Console.WriteLine($"Terminal '{name}' does not exist in the grammar.");
-                Context.Automaton.Pop(true);
                 return;
             }
             Context.Grammar.GetBuilder().RemoveTerminal(name);
             Console.WriteLine($"Terminal '{name}' deleted successfully.");
-            Context.Automaton.Pop(true);
         }
     }
 }

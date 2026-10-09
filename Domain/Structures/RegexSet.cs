@@ -25,13 +25,7 @@ namespace Nt.Syntax.Structures
 
         #endregion
 
-        #region Private
-
         private HashSet<RegularExpression> Regexs { get; } = [];
-
-        #endregion
-
-        #region Public
 
         /// <summary>
         /// Add the specified regular expression to the collection of rules.
@@ -84,7 +78,5 @@ namespace Nt.Syntax.Structures
         {
             return this.ToString(ExportationMode.Original);
         }
-
-        #endregion
     }
 }

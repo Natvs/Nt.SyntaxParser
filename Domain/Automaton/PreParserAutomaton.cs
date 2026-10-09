@@ -1,7 +1,4 @@
-﻿using Nt.Automaton.States;
-using Nt.Syntax.Actions;
-using Nt.Syntax.Exceptions;
-using Nt.Syntax.Structures;
+﻿using Nt.Syntax.Actions;
 using State = Nt.Automaton.States.State<string>;
 using StateAutomaton = Nt.Automaton.Automatons.StateAutomaton<string>;
 using Transition = Nt.Automaton.Transitions.Transition<string>;
@@ -14,24 +11,24 @@ namespace Nt.Syntax.Automaton
         // Generation
         protected override void Build()
         {
-            var initial = new State(); initial.SetDefault(initial);
+            var initial = new State(); initial.SetDefault(new Transition(initial));
             Context.Reset();
 
             Automaton = new StateAutomaton(initial);
 
-            State<string> addToPathState = new();
-            State<string> importState = new();
-            State<string> escapeState = new State().SetDefault(initial, new SetEscapeCharAction(Grammar));
+            var addToPathState = new State();
+            var importState = new State();
+            var escapeState = new State().SetDefault(new Transition(initial).SetAction(new SetEscapeCharAction(Grammar)));
 
             initial.AddTransition(new Transition("import", importState));
             initial.AddTransition(new Transition("IMPORT", importState));
-            importState.SetDefault(importState, new AppendToCurrentImportFileAction(Context));
-            importState.AddTransition(new Transition(";", initial, new ImportFileAction(Context)));
+            importState.SetDefault(new Transition(importState).SetAction(new AppendToCurrentImportFileAction(Context)));
+            importState.AddTransition(new Transition(";", initial).SetAction(new ImportFileAction(Context)));
 
             initial.AddTransition(new Transition("addtopath", addToPathState));
             initial.AddTransition(new Transition("ADDTOPATH", addToPathState));
-            addToPathState.SetDefault(addToPathState, new AppendToCurrentImportPathAction(Context));
-            addToPathState.AddTransition(new Transition(";", initial, new AddImportPathAction(Context)));
+            addToPathState.SetDefault(new Transition(addToPathState).SetAction(new AppendToCurrentImportPathAction(Context)));
+            addToPathState.AddTransition(new Transition(";", initial).SetAction(new AddImportPathAction(Context)));
 
             initial.AddTransition(new Transition("ESCAPE", escapeState));
             initial.AddTransition(new Transition("escape", escapeState));

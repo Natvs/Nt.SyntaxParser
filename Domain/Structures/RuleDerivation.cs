@@ -11,14 +11,7 @@ namespace Nt.Syntax.Structures
     /// <param name="nonterminals">Non terminal tokens of the rule</param>
     public class RuleDerivation : IReadOnlyList<GrammarToken>
     {
-        #region Private
-
         private List<GrammarToken> Tokens { get; } = [];
-
-        #endregion
-
-        #region Public
-
         public int Count => Tokens.Count;
 
         public GrammarToken this[int index] => Tokens[index];
@@ -51,6 +44,14 @@ namespace Nt.Syntax.Structures
         public GrammarToken Get(int index)
         {
             return Tokens[index];
+        }
+
+        /// <summary>
+        /// Clears all grammar tokens from the collection.
+        /// </summary>
+        internal void Clear()
+        {
+            Tokens.Clear();
         }
 
         /// <summary>
@@ -93,8 +94,6 @@ namespace Nt.Syntax.Structures
             }
             return sb.ToString();
         }
-
-        #endregion
 
     }
 }
