@@ -19,7 +19,7 @@ namespace Nt.Syntax.Structures
         /// <summary>
         /// List of tokens that represent derivation
         /// </summary>
-        public RuleDerivation Derivation { get; } = new();
+        public RuleDerivation Derivation { get; } = [];
 
         /// <summary>
         /// Gets a string representing this rule

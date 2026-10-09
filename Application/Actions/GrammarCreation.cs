@@ -5,6 +5,11 @@ namespace Nt.Applications.SyntaxParser.Actions
 {
     internal class GrammarCreation(ApplicationContext context) : ProgramAction(context)
     {
+        public override IState<string> GetState()
+        {
+            return base.GetState().SetFinal();
+        }
+
         public override void Perform()
         {
             Transition();
@@ -51,10 +56,6 @@ namespace Nt.Applications.SyntaxParser.Actions
             catch (Exception ex)
             {
                 Console.WriteLine("An error occurred while creating the grammar: " + ex.Message);
-            }
-            finally
-            {
-                Context.Automaton.Pop(true);
             }
         }
     }

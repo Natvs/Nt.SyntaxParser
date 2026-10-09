@@ -8,13 +8,13 @@ namespace Nt.Applications.SyntaxParser.Actions
     {
         private Rule Rule { get; set; } = rule;
 
-        public override State<string> GetState()
+        public override IState<string> GetState()
         {
             var axiomState = new SetRuleAxiom(Context, Rule).GetState();
             var derivationState = new SetRuleDerivation(Context, Rule).GetState();
             var deleteState = new DeleteRule(Context, Rule).GetState();
 
-            var state = new State<string>(this);
+            var state = new State<string>().SetAction(this);
             state.AddTransition(new Transition<string>("1", axiomState));
             state.AddTransition(new Transition<string>("2", derivationState));
             state.AddTransition(new Transition<string>("3", deleteState));

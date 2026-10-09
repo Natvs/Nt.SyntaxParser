@@ -1,9 +1,31 @@
-﻿using Nt.Syntax.Structures;
+﻿using Nt.Automaton.Events;
+using Nt.Automaton.States;
+using Nt.Automaton.Transitions;
+using Nt.Syntax.Structures;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
     internal class SelectRegex(ApplicationContext context) : ProgramAction(context)
     {
+        public override IState<string> GetState()
+        {
+            var state = base.GetState();
+            state.Reach += OnReached;
+            return state;
+        }
+
+        private void OnReached(object? sender, TransitionEventArgs<string> e)
+        {
+            if (Context.Grammar == null) return;
+
+            var state = e.Transition.Target;
+            for (int i = 0; i < Context.Grammar.RegularExpressions.Count; i++)
+            {
+                List<RegularExpression> regexs = [.. Context.Grammar.RegularExpressions];
+                var target = new EditRegex(Context, regexs[i]).GetState();
+                state.OverwriteTransition(new Transition<string>($"{i + 1}", target));
+            }
+        }
 
         public override void Perform()
         {
@@ -22,29 +44,6 @@ namespace Nt.Applications.SyntaxParser.Actions
                 Console.WriteLine($"{i + 1}. {regexs[i]}");
             }
             Console.WriteLine($"{regexs.Count + 1}. Cancel");
-            Console.WriteLine();
-
-            // Prompt the user to select a rule
-            string? answer = Console.ReadLine();
-            int ruleIndex;
-            if (answer == null || !int.TryParse(answer, out ruleIndex))
-            {
-                Console.WriteLine("Invalid selection. Please enter a valid number.");
-                return;
-            }
-
-            // Push a new state for editing the selected rule
-            if (ruleIndex > 0 && ruleIndex <= regexs.Count)
-            {
-                var state = new EditRegex(Context, regexs[ruleIndex - 1]).GetState();
-                Context.Automaton.Push(state, true);
-            }
-            else
-            {
-                Context.Automaton.Pop(true);
-                return;
-            }
-
         }
 
     }

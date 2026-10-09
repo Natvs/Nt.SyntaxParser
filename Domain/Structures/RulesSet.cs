@@ -24,13 +24,7 @@ namespace Nt.Syntax.Structures
 
         #endregion
 
-        #region Private
-
         private HashSet<Rule> Rules { get; } = [];
-
-        #endregion
-
-        #region Public
 
         /// <summary>
         /// Add the specified rule to the collection of rules.
@@ -84,6 +78,5 @@ namespace Nt.Syntax.Structures
             return this.ToString(ExportationMode.Original); 
         }
 
-        #endregion
     }
 }

@@ -1,11 +1,7 @@
 ﻿using System.Text;
-using Nt.Automaton.States;
 using Nt.Parser;
-using Nt.Syntax.Actions;
 
-using StateAutomaton = Nt.Automaton.Automatons.StateAutomaton<string>;
-using State = Nt.Automaton.States.State<string>;
-using Transition = Nt.Automaton.Transitions.Transition<string>;
+using IState = Nt.Automaton.States.IState<string>;
 using Nt.Syntax.Automaton;
 using Nt.Syntax.Structures;
 using Nt.Syntax.Exceptions;
@@ -20,262 +16,16 @@ namespace Nt.Syntax
         #region Private
 
         private Grammar Grammar { get; set; } = new();
-        private StateAutomaton? PreAutomaton { get; set; }
-        private StateAutomaton? Automaton { get; set; }
-        private AutomatonContext AutomatonContext { get; } = new AutomatonContext();
-        private System.Action? AutomatonEndAction { get; set; }
+        internal PreParserAutomaton PreAutomaton { get; } = new PreParserAutomaton();
+        internal ParserAutomaton Automaton { get; } = new ParserAutomaton();
         private List<string> ParserSymbols { get; } = [":", ",", "=", "{", "}", ";", "-", ">", "+", "*"];
-
-        private string PreParseString(string content, SymbolsParser parser)
-        {
-            ParserResult parsed = parser.Parse(content);
-            StringBuilder sb = new();
-
-            foreach (var token in parsed.GetParsed())
-            {
-                PreAutomaton?.Read(new AutomatonToken(token));
-                if (AutomatonContext.ImportedString != null)
-                {
-                    sb.Append(AutomatonContext.ImportedString);
-                    AutomatonContext.ImportedString = null;
-                }
-            }
-
-            var imported = false;
-            var contentReader = new StringReader(content);
-            string? line;
-            while ((line = contentReader.ReadLine()) != null)
-            {
-                if (line.StartsWith("import", StringComparison.CurrentCultureIgnoreCase)) { imported = true; continue; }
-                if (line.StartsWith("addtopath", StringComparison.CurrentCultureIgnoreCase)) continue;
-                if (line.StartsWith("escape", StringComparison.CurrentCultureIgnoreCase)) continue;
-                sb.AppendLine(line);
-            }
-
-            var new_content = sb.ToString();
-            if (imported)
-            {
-                return PreParseString(new_content, parser);
-            }
-            return new_content;
-        }
-
-        /// <summary>
-        /// Initializes the pre-automaton structure used for parsing pre-parsing instructions.
-        /// </summary>
-        /// <exception cref="EndOfStringException">The pre-automaton might end on a state different from the initial state</exception>
-        private void GeneratePreAutomaton()
-        {
-            var initial = new State(); initial.SetDefault(initial);
-            AutomatonContext.Reset();
-
-            PreAutomaton = new StateAutomaton(initial);
-            AutomatonEndAction = () =>
-            {
-                if (PreAutomaton.CurrentState != initial) throw new EndOfStringException();
-            };
-
-            State<string> addToPathState = new();
-            State<string> importState = new();
-            State<string> escapeState = new State().SetDefault(initial, new SetEscapeCharAction(Grammar));
-
-            initial.AddTransition(new Transition("import", importState));
-            initial.AddTransition(new Transition("IMPORT", importState));
-            importState.SetDefault(importState, new AppendToCurrentImportFileAction(AutomatonContext));
-            importState.AddTransition(new Transition(";", initial, new ImportFileAction(AutomatonContext)));
-
-            initial.AddTransition(new Transition("addtopath", addToPathState));
-            initial.AddTransition(new Transition("ADDTOPATH", addToPathState));
-            addToPathState.SetDefault(addToPathState, new AppendToCurrentImportPathAction(AutomatonContext));
-            addToPathState.AddTransition(new Transition(";", initial, new AddImportPathAction(AutomatonContext)));
-
-            initial.AddTransition(new Transition("ESCAPE", escapeState));
-            initial.AddTransition(new Transition("escape", escapeState));
-        }
-
-        /// <summary>
-        /// Initializes an automaton that can read a grammar file
-        /// </summary>
-        /// <exception cref="EndOfStringException">The automaton might end on a state different from the initial state</exception>
-        private void GenerateAutomaton()
-        {
-            AutomatonContext.Reset();
-
-            var errorAction = new ErrorAction();
-            var initial = new State(); initial.SetDefault(initial, errorAction);
-
-            Automaton = new StateAutomaton(initial);
-            AutomatonEndAction = () =>
-            {
-                if (Automaton.CurrentState != initial) throw new EndOfStringException();
-            };
-
-            // Old style
-            GenerateTerminalsStatesOldStyle(initial, errorAction);
-            GenerateNonTerminalStatesOldStyle(initial, errorAction);
-            GenerateAxiomStates(initial, errorAction);
-            GenerateNewRuleStatesOldStyle(initial, errorAction);
-            GenerateRegExStatesOldStyle(initial, errorAction);
-
-            // New style
-            GenerateTerminalsStatesNewStyle(initial, errorAction);
-            GenerateNonTerminalsStatesNewStyle(initial, errorAction);
-            GenerateNewRuleStatesNewStyle(initial, errorAction);
-            GenerateRegExStatesNewStyle(initial, errorAction);
-        }
-
-        private void GenerateTerminalsStatesOldStyle(State initial, ErrorAction errorAction)
-        {
-            // Old style:
-            // T = { a, b, c }
-            State terminalState = new State().SetDefault(initial, errorAction);
-            State affectationState = new State().SetDefault(initial, errorAction);
-            State newState = new();
-
-            initial.AddTransition(new Transition("T", terminalState));
-            terminalState.AddTransition(new Transition("=", affectationState));
-            affectationState.AddTransition(new Transition("{", newState));
-            newState.SetDefault(newState, new AppendToCurrentTerminalAction(AutomatonContext));
-            newState.AddTransition(new Transition(",", newState, new AddTerminalAction(Grammar, AutomatonContext)));
-            newState.AddTransition(new Transition("}", initial, new AddTerminalAction(Grammar, AutomatonContext)));
-        }
-
-        private void GenerateTerminalsStatesNewStyle(State initial, ErrorAction errorAction)
-        {
-            // New style:
-            // Terminals: a, b, c;
-            State terminalState = new State().SetDefault(initial, errorAction);
-            State newState = new();
-
-            initial.AddTransition(new Transition("TERMINALS", terminalState));
-            initial.AddTransition(new Transition("terminals", terminalState));
-            initial.AddTransition(new Transition("Terminals", terminalState));
-            terminalState.AddTransition(new Transition(":", newState));
-            newState.SetDefault(newState, new AppendToCurrentTerminalAction(AutomatonContext));
-            newState.AddTransition(new Transition(",", newState, new AddTerminalAction(Grammar, AutomatonContext)));
-            newState.AddTransition(new Transition(";", initial, new AddTerminalAction(Grammar, AutomatonContext)));
-        }
-
-        private void GenerateNonTerminalStatesOldStyle(State initial, ErrorAction errorAction)
-        {
-            State nonTerminalState = new State().SetDefault(initial, errorAction);
-            State affectationState = new State().SetDefault(initial, errorAction);
-            State newState = new();
-
-            initial.AddTransition(new Transition("N", nonTerminalState));
-            nonTerminalState.AddTransition(new Transition("=", affectationState));
-            affectationState.AddTransition(new Transition("{", newState));
-            newState.SetDefault(newState, new AppendToCurrentNonTerminalAction(AutomatonContext));
-            newState.AddTransition(new Transition(",", newState, new AddNonTerminalAction(Grammar, AutomatonContext)));
-            newState.AddTransition(new Transition("}", initial, new AddNonTerminalAction(Grammar, AutomatonContext)));
-        }
-
-        private void GenerateNonTerminalsStatesNewStyle(State initial, ErrorAction errorAction)
-        {
-            // New style:
-            // Terminals: a, b, c;
-            State nonTerminalsState = new State().SetDefault(initial, errorAction);
-            State nonTerminalsState2 = new State().SetDefault(initial, errorAction);
-            State newState = new();
-
-            initial.AddTransition(new Transition("NON", nonTerminalsState));
-            initial.AddTransition(new Transition("non", nonTerminalsState));
-            initial.AddTransition(new Transition("Non", nonTerminalsState));
-            nonTerminalsState.AddTransition(new Transition("TERMINALS", nonTerminalsState2));
-            nonTerminalsState.AddTransition(new Transition("terminals", nonTerminalsState2));
-            nonTerminalsState.AddTransition(new Transition("Terminals", nonTerminalsState2));
-            nonTerminalsState2.AddTransition(new Transition(":", newState));
-            newState.SetDefault(newState, new AppendToCurrentNonTerminalAction(AutomatonContext));
-            newState.AddTransition(new Transition(",", newState, new AddNonTerminalAction(Grammar, AutomatonContext)));
-            newState.AddTransition(new Transition(";", initial, new AddNonTerminalAction(Grammar, AutomatonContext)));
-        }
-
-        private void GenerateAxiomStates(State initial, ErrorAction errorAction)
-        {
-            State axiomState = new State().SetDefault(initial, errorAction);
-            State affectationState = new State().SetDefault(initial, new SetAxiomAction(Grammar));
-
-            initial.AddTransition(new Transition("S", axiomState));
-            axiomState.AddTransition(new Transition("=", affectationState));
-
-        }
-
-        private void GenerateNewRuleStatesOldStyle(State initial, ErrorAction errorAction)
-        {
-            State newRuleState = new State().SetDefault(initial, errorAction);
-            State arrowState = new State().SetDefault(initial, errorAction);
-            State symbolState = new State().SetDefault(arrowState, new AddNewRuleAction(Grammar, AutomatonContext));
-            State derivationState = new();
-
-            initial.AddTransition(new Transition("R", newRuleState));
-            newRuleState.AddTransition(new Transition(":", symbolState));
-            arrowState.AddTransition(new Transition("-", arrowState));
-            arrowState.AddTransition(new Transition(">", derivationState));
-            derivationState.SetDefault(derivationState, new AddRuleDerivationAction(Grammar, AutomatonContext));
-            derivationState.AddTransition(new Transition(";", initial));
-            derivationState.AddTransition(new Transition("|", derivationState, new AddSameRuleAction(Grammar, AutomatonContext)));
-        }
-
-        private void GenerateNewRuleStatesNewStyle(State initial, ErrorAction errorAction)
-        {
-            // New style:
-            // Rules: A -> a B | b, B -> c;
-            State newRuleState = new State().SetDefault(initial, errorAction);
-            State arrowState = new State().SetDefault(initial, errorAction);
-            State symbolState = new State().SetDefault(arrowState, new AddNewRuleAction(Grammar, AutomatonContext));
-            State derivationState = new();
-
-            initial.AddTransition(new Transition("RULES", newRuleState));
-            initial.AddTransition(new Transition("Rules", newRuleState));
-            initial.AddTransition(new Transition("rules", newRuleState));
-            newRuleState.AddTransition(new Transition(":", symbolState));
-            arrowState.AddTransition(new Transition("-", arrowState));
-            arrowState.AddTransition(new Transition(">", derivationState));
-            derivationState.SetDefault(derivationState, new AddRuleDerivationAction(Grammar, AutomatonContext));
-            derivationState.AddTransition(new Transition(",", symbolState));
-            derivationState.AddTransition(new Transition(";", initial));
-            derivationState.AddTransition(new Transition("|", derivationState, new AddSameRuleAction(Grammar, AutomatonContext)));
-        }
-
-        private void GenerateRegExStatesOldStyle(State initial, ErrorAction errorAction)
-        {
-            State newRegExState = new State().SetDefault(initial, errorAction);
-            State equalState = new State().SetDefault(initial, errorAction);
-            State symbolState = new State().SetDefault(equalState, new AddNewRegExAction(Grammar, AutomatonContext));
-            var readState = new State(); readState.SetDefault(readState, new AddRegExSymbolsAction(Grammar, AutomatonContext));
-
-            initial.AddTransition(new Transition("E", newRegExState));
-            newRegExState.AddTransition(new Transition(":", symbolState));
-            equalState.AddTransition(new Transition("=", readState));
-            readState.AddTransition(new Transition(";", initial));
-        }
-
-        private void GenerateRegExStatesNewStyle(State initial, ErrorAction errorAction)
-        {
-            State newRegExState = new State().SetDefault(initial, errorAction);
-            State newRegExState2 = new State().SetDefault(initial, errorAction);
-            State equalState = new State().SetDefault(initial, errorAction);
-            State symbolState = new State().SetDefault(equalState, new AddNewRegExAction(Grammar, AutomatonContext));
-            var readState = new State(); readState.SetDefault(readState, new AddRegExSymbolsAction(Grammar, AutomatonContext));
-
-            initial.AddTransition(new Transition("REGULAR", newRegExState));
-            initial.AddTransition(new Transition("Regular", newRegExState));
-            initial.AddTransition(new Transition("regular", newRegExState));
-            newRegExState.AddTransition(new Transition("EXPRESSIONS", newRegExState2));
-            newRegExState.AddTransition(new Transition("Expressions", newRegExState2));
-            newRegExState.AddTransition(new Transition("expressions", newRegExState2));
-            newRegExState2.AddTransition(new Transition(":", symbolState));
-            equalState.AddTransition(new Transition("=", readState));
-            readState.AddTransition(new Transition(",", symbolState));
-            readState.AddTransition(new Transition(";", initial));
-        }
 
         #endregion
 
         #region Public
 
         /// <summary>
-        /// Applies the pre-parser on a given grammar string
+        /// Apply the pre-parser on a given grammar string
         /// </summary>
         /// <param name="content">String to pre-parse</param>
         /// <returns>A pre-parsed string of the grammar</returns>
@@ -283,11 +33,42 @@ namespace Nt.Syntax
         {
             try
             {
-                GeneratePreAutomaton();
+                PreAutomaton.SetGrammar(Grammar);
 
                 var configuration = SyntaxParserConfig.GetInstance();
-                Nt.Parser.SymbolsParser parser = new(configuration.SymbolFactory, [' ', '\0', '\n', '\t'], ["import", "IMPORT", "addtopath", "ADDTOPATH", "escape", "ESCAPE", ";"]);
-                return PreParseString(content, parser);
+                var parser = new SymbolsParser(configuration.SymbolFactory, [' ', '\0', '\n', '\t'], ["import", "IMPORT", "addtopath", "ADDTOPATH", "escape", "ESCAPE", ";"]);
+                var parsed = parser.Parse(content);
+
+                var sb = new StringBuilder();
+                foreach (var token in parsed.GetParsed())
+                {
+                    PreAutomaton.Read(new AutomatonToken(token));
+
+                    var importedString = PreAutomaton.GetImportedString();
+                    if (importedString != null)
+                    {
+                        sb.Append(importedString);
+                        PreAutomaton.ResetImportedString();
+                    }
+                }
+
+                var imported = false;
+                var contentReader = new StringReader(content);
+                string? line;
+                while ((line = contentReader.ReadLine()) != null)
+                {
+                    if (line.StartsWith("import", StringComparison.CurrentCultureIgnoreCase)) { imported = true; continue; }
+                    if (line.StartsWith("addtopath", StringComparison.CurrentCultureIgnoreCase)) continue;
+                    if (line.StartsWith("escape", StringComparison.CurrentCultureIgnoreCase)) continue;
+                    sb.AppendLine(line);
+                }
+
+                var new_content = sb.ToString();
+                if (imported)
+                {
+                    return PreParseString(new_content);
+                }
+                return new_content;
             }
             catch (InternalException)
             {
@@ -300,7 +81,7 @@ namespace Nt.Syntax
         }
 
         /// <summary>
-        /// Reads a string and generates a grammar structure from it. Also applies pre-parsing on it.
+        /// Read a string and generate a grammar structure from it. Also applies pre-parsing on it.
         /// </summary>
         /// <param name="content">String to read</param>
         /// <returns>Grammar data structure from the given string</returns>
@@ -308,19 +89,20 @@ namespace Nt.Syntax
         {
             try
             {
-                Grammar = new();
+                Grammar = new Grammar();
+                Automaton.SetGrammar(Grammar);
+
                 content = PreParseString(content);
-                GenerateAutomaton();
 
                 var configuration = SyntaxParserConfig.GetInstance();
-                SymbolsParser parser = new(configuration.SymbolFactory, [' ', '\0', '\n', '\t'], ParserSymbols);
-                ParserResult parsed = parser.Parse(content);
+                var parser = new SymbolsParser(configuration.SymbolFactory, [' ', '\0', '\n', '\t'], ParserSymbols);
+                var parsed = parser.Parse(content);
 
                 foreach (var token in parsed.GetParsed())
                 {
-                    Automaton?.Read(new AutomatonToken(token));
+                    Automaton.Read(new AutomatonToken(token));
                 }
-                AutomatonEndAction?.Invoke();
+                Automaton.Stop();
 
                 return Grammar;
             }
@@ -335,7 +117,7 @@ namespace Nt.Syntax
         }
 
         /// <summary>
-        /// Reads a file and generates a grammar structure from it. Also applies pre-parsing on it.
+        /// Read a file and generate a grammar structure from it. Also applies pre-parsing on it.
         /// </summary>
         /// <param name="path">Path to the file</param>
         /// <returns>Grammar structure from content of the given file</returns>

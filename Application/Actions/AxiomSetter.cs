@@ -1,23 +1,26 @@
-﻿using Nt.Syntax.Structures;
+﻿using Nt.Automaton.States;
 using Nt.Syntax.Builders;
+using Nt.Syntax.Structures;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
     internal class AxiomSetter(ApplicationContext context) : ProgramAction(context)
     {
+        public override IState<string> GetState()
+        {
+            return base.GetState().SetFinal();
+        }
         public override void Perform()
         {
             Transition();
             if (Context.Grammar == null)
             {
                 Console.WriteLine("No current grammar. Please load or create a grammar first.");
-                Context.Automaton.Pop(true);
                 return;
             }
             if (Context.Grammar.NonTerminals.Count == 0)
             {
                 Console.WriteLine("There are no non terminals in the grammar. Please add some non terminals first.");
-                Context.Automaton.Pop(true);
                 return;
             }
 
@@ -35,19 +38,16 @@ namespace Nt.Applications.SyntaxParser.Actions
             if (name == null || name.Trim().Length == 0)
             {
                 Console.WriteLine("Invalid name for an axiom. Operation cancelled.");
-                Context.Automaton.Pop(true);
                 return;
             }
             try
             {
                 var symbol = Context.Grammar.NonTerminals.Get(name);
                 Context.Grammar.GetBuilder().SetAxiom(new NonTerminal(symbol, -1));
-                Context.Automaton.Pop(true);
             }
             catch (KeyNotFoundException) 
             {
                 Console.WriteLine($"There are no non terminal '{name}' in the grammar.");
-                Context.Automaton.Pop(true);
             }
         }
     }
