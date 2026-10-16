@@ -1,5 +1,14 @@
 # Branching
 
+- [When to use branching](#when-to-use-branching)
+- [Example of a use case](#example-of-a-use-case)
+- [Create a new branch](#create-a-new-branch)
+  - [1. Import the necessary namespaces](#1-import-the-necessary-namespaces)
+  - [2. Define the states and transitions](#2-define-the-states-and-transitions)
+  - [3. Link the first and final states to the parser](#3-link-the-first-and-final-states-to-the-parser)
+  - [4. Add actions to the states and transitions for the parser to interpret the new syntax](#4-add-actions-to-the-states-and-transitions-for-the-parser-to-interpret-the-new-syntax)
+- [Use the automaton context](#use-the-automaton-context)
+
 ## When to use branching
 
 A grammar file must contain all data to construct a grammar as described in the [Grammar](Grammar.md) section.
@@ -8,10 +17,10 @@ Without `branching`, this would require creating an other file referencing some 
 But the referencement can be hard to describe, and bound to errors whenever a file is edited.  `Branching` provides a clearer and more compact solution to that problem.
 
 So `branching` is used when:
-- You want to associate a value or some additional information to a rule or regular expression
-- You want to declare them in the same file to keep things simple and avoid other files referencing the grammar file
+- You want to associate a value or some additional information to a terminal, non-terminal, rule or regular expression
+- You need to define some additional parameters for your program that the syntax parser don't already handle
 - You want to make it more than just a grammar file, but also a configuration file for your program
-- Other scenarios where you want to define some custom syntax in the grammar file, and have it parsed by the grammar parser.
+- Other scenarios where you want to define some custom syntax in the grammar file, and have it parsed by the grammar parsed.
 
 ## Example of a use case
 For example, you can define a rule, and then define some value associated to that rule without having to define it in a new file.
@@ -51,7 +60,9 @@ using Nt.Automaton.Transitions;
 
 ### 2. Define the states and transitions
 
-When defining the transitions, don't mind the first and last transitions (here `VAL` and `;`) as they will be declared in a different way later.
+Define the states and transitions that will represent the syntax to be parsed.
+
+> When defining the transitions, don't mind the first and last transitions (here `VAL` and `;`) as they will be declared in a different way later.
 
 ```csharp
 // Define the states needed
@@ -69,6 +80,8 @@ equalState.SetDefault(valueTransition);
 
 ### 3. Link the first and final states to the parser
 
+The automaton is still local and not linked to the parser. To link it, we need to tell the parser when to enter the branch and when to exit it.
+
 ```csharp
 var parser = new SyntaxParser();
 
@@ -79,7 +92,9 @@ parser.StartBranch("VAL", keywordState);
 parser.EndBranch(valueState, ";")
 ```
 
-### 4. Add actions to the states and transitions for the parser to interpret the new syntax
+### 4. Add actions to the states and transitions
+
+Now that the syntax can be recognized by the parser, we need to tell the parser how to interpret it. This is done by adding actions to the states and transitions.
 
 ```csharp
 // Add an action to a transition
@@ -110,6 +125,8 @@ The two methods `AddAction` both have a first argument `context`. This context p
 |--------|-------------|
 | GetPath() | Return all the imported paths declared by the `ADDTOPATH` statement in the grammar. |
 | ImportedString | Represent the last string that has been imported by an `IMPORT` statement. |
+| Terminal | Represent the last terminal parsed. |
+| NonTerminal | Represent the last non-terminal parsed. |
 | Rule | Represent the last rule that has been parsed. |
 | Regex | Represent the last regular expression that has been parsed. |
 

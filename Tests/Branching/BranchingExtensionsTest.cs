@@ -7,6 +7,7 @@ namespace Nt.Tests.Syntax.Branching
 {
     public class BranchingExtensionsTest
     {
+        // Chech structure of a branch
 
         [Fact]
         public void SyntaxParser_SimpleBranching_ShouldBeValid()
@@ -66,6 +67,11 @@ namespace Nt.Tests.Syntax.Branching
             parser.ParseString("start3 end start1 end start2 end");
         }
 
+
+
+
+        // Check actions on a branch
+
         [Fact]
         public void SyntaxParser_BranchingWithStateAction_ShouldTriggerAction()
         {
@@ -103,6 +109,47 @@ namespace Nt.Tests.Syntax.Branching
             Assert.Equal("token", read);
         }
 
+
+
+
+        // Check context retrieval on a state
+
+        [Fact]
+        public void SyntaxParser_BranchingWithStateAction_ShouldRetrieveLastTerminal()
+        {
+            var parser = new SyntaxParser();
+            var read = "";
+
+            var state = new State().SetAction(parser, (context) =>
+            {
+                read = context.Terminal;
+            });
+
+            parser.StartBranch("start", state);
+            parser.EndBranch(state, "end");
+            parser.ParseString("T = {a} start end");
+
+            Assert.Equal("a", read);
+        }
+
+        [Fact]
+        public void SyntaxParser_BranchingWithStateAction_ShouldRetrieveLastNonTerminal()
+        {
+            var parser = new SyntaxParser();
+            var read = "";
+
+            var state = new State().SetAction(parser, (context) =>
+            {
+                read = context.NonTerminal;
+            });
+
+            parser.StartBranch("start", state);
+            parser.EndBranch(state, "end");
+            parser.ParseString("N = {A} start end");
+
+            Assert.Equal("A", read);
+        }
+
         [Fact]
         public void SyntaxParser_BranchingWithStateAction_ShouldRetrieveLastRule()
         {
@@ -135,6 +182,45 @@ namespace Nt.Tests.Syntax.Branching
             parser.ParseFile("../../../Resources/Branching/branching_state_regex.txt");
 
             Assert.Equal("A = abc", read);
+        }
+
+
+
+
+        // Check context retrieval on a transition
+
+        [Fact]
+        public void SyntaxParser_BranchingWithTransitionAction_ShouldRetrieveLastTerminal()
+        {
+            var parser = new SyntaxParser();
+            var read = "";
+            var state = new State();
+            var state2 = new State();
+            state.AddTransition(new Transition("token", state2).SetAction(parser, (context, token) =>
+            {
+                read = context.Terminal;
+            }));
+            parser.StartBranch("start", state);
+            parser.EndBranch(state2, "end");
+            parser.ParseString("T = {a} start token end");
+            Assert.Equal("a", read);
+        }
+
+        [Fact]
+        public void SyntaxParser_BranchingWithTransitionAction_ShouldRetrieveLastNonTerminal()
+        {
+            var parser = new SyntaxParser();
+            var read = "";
+            var state = new State();
+            var state2 = new State();
+            state.AddTransition(new Transition("token", state2).SetAction(parser, (context, token) =>
+            {
+                read = context.NonTerminal;
+            }));
+            parser.StartBranch("start", state);
+            parser.EndBranch(state2, "end");
+            parser.ParseString("N = {A} start token end");
+            Assert.Equal("A", read);
         }
 
         [Fact]

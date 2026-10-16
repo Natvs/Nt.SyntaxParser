@@ -13,16 +13,13 @@ namespace Nt.Syntax
     public class SyntaxParser
     {
 
-        #region Private
 
         private Grammar Grammar { get; set; } = new();
         internal PreParserAutomaton PreAutomaton { get; } = new PreParserAutomaton();
         internal ParserAutomaton Automaton { get; } = new ParserAutomaton();
         private List<string> ParserSymbols { get; } = [":", ",", "=", "{", "}", ";", "-", ">", "+", "*"];
 
-        #endregion
 
-        #region Public
 
         /// <summary>
         /// Apply the pre-parser on a given grammar string
@@ -133,7 +130,7 @@ namespace Nt.Syntax
             }
         }
 
-        #endregion
+
 
     }
 }
