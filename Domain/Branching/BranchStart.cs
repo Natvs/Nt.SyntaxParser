@@ -1,7 +1,4 @@
 ﻿using Nt.Automaton.States;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Nt.Syntax.Branching
 {

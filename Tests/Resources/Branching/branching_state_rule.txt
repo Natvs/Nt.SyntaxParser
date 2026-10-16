@@ -1,0 +1,5 @@
+N = {A}
+T = {a, b, c}
+
+R: A -> a b c;
+start end

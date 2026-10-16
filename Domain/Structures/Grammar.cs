@@ -17,8 +17,6 @@ namespace Nt.Syntax.Structures
             NonTerminals = new GrammarSymbolsSet(configuration.SymbolFactory);
         }
 
-        #region Internal
-
         /// <summary>
         /// Removes escape characters from the specified string, returning a new string with escape sequences processed.
         /// </summary>
@@ -64,8 +62,6 @@ namespace Nt.Syntax.Structures
             }
             throw new UnknownSymbolException(new_content, token.Line);
         }
-
-        #endregion
 
         #region Public
 

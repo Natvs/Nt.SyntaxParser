@@ -106,10 +106,7 @@ namespace Nt.Syntax
 
                 return Grammar;
             }
-            catch (InternalException)
-            {
-                throw;
-            }
+            catch (InternalException) { throw;  }
             catch
             {
                 throw new Exception("An error occurred while trying to parse the string.");
@@ -128,10 +125,8 @@ namespace Nt.Syntax
                 string content = File.ReadAllText(path);
                 return ParseString(content);
             }
-            catch (InternalException)
-            {
-                throw;
-            }
+            catch (InternalException) { throw; }
+            catch (FileNotFoundException) { throw; }
             catch
             {
                 throw new Exception($"An error occurred while trying to parse the file at {path}.");
