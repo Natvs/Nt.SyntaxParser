@@ -11,7 +11,7 @@ The exportation methods are:
 
 
 |Method|Parameters|Return type|Comment|
-|-----------------|-----------|-------|
+|------|----------|-----------|-------|
 |`ToString(mode)`|`mode` is one value of `ExportationMode`|string|More details below|
 |`ToString()`||string|Same as above, but `mode` is always `ExportationMode.Original`. This method is accessible without importing `Nt.Syntax.Exportation`|
 

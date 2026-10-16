@@ -5,9 +5,9 @@ namespace Nt.Applications.SyntaxParser.Actions
 {
     internal class EditTerminals(ApplicationContext context) : ProgramAction(context)
     {
-        public override State<string> GetState()
+        public override IState<string> GetState()
         {
-            var state = base.GetState();
+            var state = base.GetState().SetFinal().OnCondition(() => Context.Grammar == null);
             var addState = new AddTerminal(Context).GetState();
             var deleteState = new DeleteTerminal(Context).GetState();
             state.AddTransition(new Transition<string>("1", addState));
@@ -20,7 +20,6 @@ namespace Nt.Applications.SyntaxParser.Actions
             if (Context.Grammar == null)
             {
                 Console.WriteLine("No current grammar. Please load or create a grammar first.");
-                Context.Automaton.Pop(true);
                 return;
             }
             Console.WriteLine("Current terminals:");

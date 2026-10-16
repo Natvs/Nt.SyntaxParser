@@ -17,7 +17,7 @@ namespace Nt.Tests.Syntax.Actions
             var symbols = new SymbolsList(SymbolFactory, ["A"]);
             var context = new AutomatonContext();
 
-            var readAction = new AppendToCurrentNonTerminalAction(context);
+            var readAction = new AppendToNonTerminalAction(context);
             var writeAction = new AddNonTerminalAction(grammar, context);
 
             readAction.Perform(new AutomatonToken(symbols.Get(0), 0));
@@ -34,7 +34,7 @@ namespace Nt.Tests.Syntax.Actions
             var symbols = new SymbolsList(SymbolFactory, ["A", "B"]);
             var context = new AutomatonContext();
 
-            var readAction = new AppendToCurrentNonTerminalAction(context);
+            var readAction = new AppendToNonTerminalAction(context);
             var writeAction = new AddNonTerminalAction(grammar, context);
 
             readAction.Perform(new AutomatonToken(symbols.Get(0), 0));
@@ -52,7 +52,7 @@ namespace Nt.Tests.Syntax.Actions
             var symbols = new SymbolsList(SymbolFactory, ["'", "A"]);
             var context = new AutomatonContext();
 
-            var readAction = new AppendToCurrentNonTerminalAction(context);
+            var readAction = new AppendToNonTerminalAction(context);
             var writeAction = new AddNonTerminalAction(grammar, context);
 
             readAction.Perform(new AutomatonToken(symbols.Get(0), 0));
@@ -70,7 +70,7 @@ namespace Nt.Tests.Syntax.Actions
             var symbols = new SymbolsList(SymbolFactory, ["A", "'", "B"]);
             var context = new AutomatonContext();
 
-            var readAction = new AppendToCurrentNonTerminalAction(context);
+            var readAction = new AppendToNonTerminalAction(context);
             var writeAction = new AddNonTerminalAction(grammar, context);
 
             readAction.Perform(new AutomatonToken(symbols.Get(0), 0));

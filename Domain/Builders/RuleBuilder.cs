@@ -25,6 +25,16 @@ namespace Nt.Syntax.Builders
         }
 
         /// <summary>
+        /// Clears the current derivation sequence of the rule.
+        /// </summary>
+        /// <returns>The current instance of <see cref="RuleBuilder"/> for method chaining.</returns>
+        public RuleBuilder Clear()
+        {
+            _rule.Derivation.Clear();
+            return this;
+        }
+
+        /// <summary>
         /// Add a <see cref="GrammarToken"/> to the rule's derivation sequence.
         /// </summary>
         /// <param name="token">Grammar token to add. Can be either a terminal or non-terminal symbol.</param>

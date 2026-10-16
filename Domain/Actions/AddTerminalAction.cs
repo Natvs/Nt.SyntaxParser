@@ -22,15 +22,15 @@ namespace Nt.Syntax.Actions
         {
             try
             {
-                if (!context.CurrentTerminal.Equals(""))
+                if (!context.Terminal.Equals(""))
                 { 
-                    grammar.GetBuilder().AddTerminal(grammar.RemoveEscapeCharacter(context.CurrentTerminal)); 
+                    grammar.GetBuilder().AddTerminal(grammar.RemoveEscapeCharacter(context.Terminal)); 
                 }
             }
             catch (RegisteredNonTerminalException) { }
             catch (RegisteredTerminalException) { }
 
-            context.CurrentTerminal = "";
+            context.AddingToTerminal = false;
         }
     }
 }

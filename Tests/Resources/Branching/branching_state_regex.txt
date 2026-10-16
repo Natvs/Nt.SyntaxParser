@@ -1,0 +1,4 @@
+N = {A}
+
+E: A = abc;
+start end

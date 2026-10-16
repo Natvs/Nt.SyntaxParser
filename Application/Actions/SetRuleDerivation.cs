@@ -1,5 +1,6 @@
 ﻿using Nt.Syntax.Structures;
 using Nt.Syntax.Builders;
+using Nt.Automaton.States;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
@@ -7,11 +8,15 @@ namespace Nt.Applications.SyntaxParser.Actions
     {
         private Rule Rule { get; set; } = rule;
 
+        public override IState<string> GetState()
+        {
+            return base.GetState().SetFinal();
+        }
+
         public override void Perform()
         {
             Console.WriteLine();
             Prompt();
-            Context.Automaton.Pop(true);
         }
 
         public bool Prompt()
@@ -30,16 +35,11 @@ namespace Nt.Applications.SyntaxParser.Actions
             }
 
             var tokens = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            var builder = Rule.GetBuilder().Clear();
             foreach (var token in tokens)
             {
-                if (Context.Grammar.Terminals.Contains(token))
-                {
-                    Rule.GetBuilder().Add(new Terminal(Context.Grammar.Terminals.Get(token), -1));
-                }
-                else if (Context.Grammar.NonTerminals.Contains(token))
-                {
-                    Rule.GetBuilder().Add(new NonTerminal(Context.Grammar.NonTerminals.Get(token), -1));
-                }
+                if (Context.Grammar.Terminals.Contains(token)) builder.Add(new Terminal(Context.Grammar.Terminals.Get(token), -1));
+                else if (Context.Grammar.NonTerminals.Contains(token)) builder.Add(new NonTerminal(Context.Grammar.NonTerminals.Get(token), -1));
                 else
                 {
                     Console.WriteLine($"Symbol '{token}' is not a symbol of the current grammar. Please try again.");

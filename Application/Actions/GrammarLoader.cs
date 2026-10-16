@@ -1,4 +1,4 @@
-﻿using Nt.Syntax.Exportation;
+﻿using Nt.Automaton.States;
 using Nt.Syntax.Structures;
 
 namespace Nt.Applications.SyntaxParser.Actions
@@ -7,6 +7,11 @@ namespace Nt.Applications.SyntaxParser.Actions
     internal class GrammarLoader(ApplicationContext context) : ProgramAction(context)
     {
         private static List<string> paths = [".", "..", "../../../Resources"];
+
+        public override IState<string> GetState()
+        {
+            return base.GetState().SetFinal();
+        }
 
         public override void Perform()
         {
@@ -27,10 +32,6 @@ namespace Nt.Applications.SyntaxParser.Actions
             catch (Exception ex)
             {
                 Console.WriteLine($"\nError while loading/parsing grammar: { ex.Message }\nDirecting back to home\n");
-            }
-            finally
-            {
-                Context.Automaton.Pop(true);
             }
         }
 

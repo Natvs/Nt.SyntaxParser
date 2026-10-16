@@ -4,7 +4,7 @@ using Nt.Syntax.Automaton;
 
 namespace Nt.Syntax.Actions
 {
-    public class AppendToCurrentNonTerminalAction(AutomatonContext context) : ITokenAction<string>
+    public class AppendToNonTerminalAction(AutomatonContext context) : ITokenAction<string>
     {
         /// <summary>
         /// Appends a parsed token to the current non terminal being built
@@ -14,7 +14,12 @@ namespace Nt.Syntax.Actions
         {
             if (word is AutomatonToken token)
             {
-                context.CurrentNonTerminal += token.Symbol.Name;
+                if (!context.AddingToNonTerminal)
+                {
+                    context.NonTerminal = "";
+                    context.AddingToNonTerminal = true;
+                }
+                context.NonTerminal += token.Symbol.Name;
             }
         }
     }

@@ -1,12 +1,31 @@
-﻿using Nt.Syntax.Structures;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Nt.Automaton.Events;
+using Nt.Automaton.States;
+using Nt.Automaton.Transitions;
+using Nt.Syntax.Structures;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
     internal partial class SelectRule(ApplicationContext context) : ProgramAction(context)
     {
+        public override IState<string> GetState()
+        {
+            var state = base.GetState();
+            state.Reach += OnReached;
+            return state;
+        }
+
+        private void OnReached(object? sender, TransitionEventArgs<string> e)
+        {
+            if (Context.Grammar == null) return;
+
+            var state = e.Transition.Target;
+            for (int i = 0; i < Context.Grammar.Rules.Count; i++)
+            {
+                List<Rule> rules = [.. Context.Grammar.Rules];
+                var target = new EditRule(Context, rules[i]).GetState();
+                state.OverwriteTransition(new Transition<string>($"{i+1}", target));
+            }
+        }
 
         public override void Perform()
         {
@@ -25,29 +44,6 @@ namespace Nt.Applications.SyntaxParser.Actions
                 Console.WriteLine($"{i + 1}. {rules[i]}");
             }
             Console.WriteLine($"{rules.Count + 1}. Cancel");
-            Console.WriteLine();
-
-            // Prompt the user to select a rule
-            string? answer = Console.ReadLine();
-            int ruleIndex;
-            if (answer == null || !int.TryParse(answer, out ruleIndex))
-            {
-                Console.WriteLine("Invalid selection. Please enter a valid number.");
-                return;
-            }
-
-            // Push a new state for editing the selected rule
-            if (ruleIndex > 0 && ruleIndex <= rules.Count)
-            {
-                var state = new EditRule(Context, rules[ruleIndex - 1]).GetState();
-                Context.Automaton.Push(state, true);
-            }
-            else
-            {
-                Context.Automaton.Pop(true);
-                return;
-            }
-
         }
     }
 }

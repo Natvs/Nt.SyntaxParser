@@ -1,18 +1,40 @@
 # SyntaxParser
 
 - [Introduction](#introduction)
-- [Grammar structure](#grammar-structure)
-- [Grammar file](#grammar-file)
+- [Prerequisites](#prerequisites)
+	- [Install the Nt.SyntaxParser package](#install-the-ntsyntaxparser-package)
+	- [Define the grammar file](#define-the-grammar-file)
 - [Using the syntax parser](#using-the-syntax-parser)
-- [Export the grammar](#export-the-grammar)
+- [Additional features of the parser](#additional-features-of-the-parser)
+	- [Branching](#branching)
+	- [Export the grammar](#export-the-grammar)
 - [Exceptions](#exceptions)
 
 ## Introduction
 This project takes a grammar file as input and parses into a grammar structure.
 It aims to be used when creating new software languages.
 
-## Grammar structure
-The grammar structure contains the following elements:
+## Prerequisites
+
+### Install the Nt.SyntaxParser package
+
+The package is currently only available on Natvs's private repository. Ask for a key to access it and then authenticate the new source:
+
+```powerShell
+dotnet nuget add source https://nuget.pkg.github.com/Natvs/index.json -u Natvs -p <YOUR_KEY>
+```
+
+ and once authenticated:
+
+ ```powerShell
+ dotnet add package Nt.SyntaxParser
+ ```
+
+### Define the grammar file
+
+**Grammar structure**
+
+A grammar contains the following elements:
 - A set of terminal symbols (constant strings)
 - A set of non-terminal symbols (symbols to derive)
 - A set of derivation rules (rules to derive non-terminals into sequences of terminals and non-terminals)
@@ -21,9 +43,7 @@ The grammar structure contains the following elements:
 
 > A rule is composed of a symbol (or token) and a derivation. The derivation is a sequence of terminals and non-terminals that the symbol can be derived into.
 
-## Grammar file
 The syntax parser uses a grammar file to create a grammar structure.
-
 A grammar file is a text file that describes the grammar of a language. It contains the list of symbols used in the grammar and the rules. The syntax of the grammar file is described in the [grammar file syntax documentation](Doc/Grammar.md).
 
 ## Using the syntax parser
@@ -54,8 +74,24 @@ Also parsing a grammar always applies the pre-parser on it, it's also possible t
 > In this case, the custom symbol must extend the `ISymbol` interface and you have to provide a custom symbol factory implementing the `ISymbolFactory`.
 > You can then set this factory as default factory for parsing with `SyntaxParserConfig.GetInstance().SetSymbolFactory(new_factory)`.
 
+## Additional features of the parser
 
-## Export the grammar
+### Branching
+
+The syntax parser supports parsing additional features written in the grammar file. 
+
+For example, it is possible to define priority values associated to terminals.
+
+```csharp
+T = {A}
+PRIORITY = 2
+```
+
+The parser will read it, and interpret it as long as you provide it with the logic. Then, you can add some logic to your code to handle the priority.
+
+Branching is described in the [branching documentation](Doc/Branching.md) which contains more information about how to use it and how to implement your own branching logic.
+
+### Export the grammar
 The grammar is meant to get different transformation in your code. After that, you may need to get the grammar displayed or written back in a file.
 This is why this project supports exporting grammars.
 
@@ -66,7 +102,7 @@ Grammar file:
 TERMINALS: a, b;
 NON TERMINALS: S, D;
 AXIOM: S
-RULES: S -> D, D -> a;
+RULES: S -> D, D -> a b;
 ```
 
 The grammar after exportation:
@@ -87,6 +123,8 @@ Rules:
 ```
 
 There are different modes of exporting a grammar, please read the [exportation documentation](Doc/Exportation.md) which describes how to export a grammar and contains more informations about methods of exporting it.
+
+
 
 ## Exceptions
 This project contains several custom exceptions to handle errors that may occur during the parsing of grammar files or input strings. See a list of exceptions [here](Doc/Exceptions.md).

@@ -12,10 +12,10 @@ namespace Nt.Applications.SyntaxParser
     {
         public ApplicationContext()
         {
-            Automaton.Push(new Home(this).GetState(), true);
+            Automaton.Push(new Home(this).GetState());
         }
 
-        public StackAutomaton<string> Automaton { get; set; } = new StackAutomaton<string>().SetAutoPerformAction();
+        public StackAutomaton<string> Automaton { get; set; } = new StackAutomaton<string>();
 
         public Grammar? Grammar { get; set; } = null;
     }
