@@ -29,13 +29,14 @@ namespace Nt.Syntax.Automaton
             // Old style
             GenerateTerminalsStatesOldStyle(initial, errorAction);
             GenerateNonTerminalStatesOldStyle(initial, errorAction);
-            GenerateAxiomStates(initial, errorAction);
+            GenerateAxiomStatesOldStyle(initial, errorAction);
             GenerateNewRuleStatesOldStyle(initial, errorAction);
             GenerateRegExStatesOldStyle(initial, errorAction);
 
             // New style
             GenerateTerminalsStatesNewStyle(initial, errorAction);
             GenerateNonTerminalsStatesNewStyle(initial, errorAction);
+            GenerateAxiomStatesNewStyle(initial, errorAction);
             GenerateNewRuleStatesNewStyle(initial, errorAction);
             GenerateRegExStatesNewStyle(initial, errorAction);
         }
@@ -100,8 +101,7 @@ namespace Nt.Syntax.Automaton
             readState.AddTransition(new Transition(";", initial));
         }
 
-
-        private void GenerateAxiomStates(State initial, ErrorAction errorAction)
+        private void GenerateAxiomStatesOldStyle(State initial, ErrorAction errorAction)
         {
             var axiomState = new State().SetDefault(new Transition(initial).SetAction(errorAction));
             var affectationState = new State().SetDefault(new Transition(initial).SetAction(new SetAxiomAction(Grammar)));
@@ -188,6 +188,16 @@ namespace Nt.Syntax.Automaton
             equalState.AddTransition(new Transition("=", readState));
             readState.AddTransition(new Transition(",", symbolState));
             readState.AddTransition(new Transition(";", initial));
+        }
+
+        private void GenerateAxiomStatesNewStyle(State initial, ErrorAction errorAction)
+        {
+            var axiomState = new State().SetDefault(new Transition(initial).SetAction(errorAction));
+            var affectationState = new State().SetDefault(new Transition(initial).SetAction(new SetAxiomAction(Grammar)));
+            initial.AddTransition(new Transition("AXIOM", axiomState));
+            initial.AddTransition(new Transition("Axiom", axiomState));
+            initial.AddTransition(new Transition("axiom", axiomState));
+            axiomState.AddTransition(new Transition(":", affectationState));
         }
 
         // Internal methods

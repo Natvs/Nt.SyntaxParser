@@ -198,7 +198,7 @@ namespace Nt.Tests.Syntax
         #region Axiom
 
         [Fact]
-        public void SyntaxParser_AxiomTest1()
+        public void SyntaxParser_OldStyleAxiom_ShouldBeValid()
         {
             var parser = new Nt.Syntax.SyntaxParser();
             var grammar = parser.ParseString("N={A}\nS=A");
@@ -211,11 +211,30 @@ namespace Nt.Tests.Syntax
         }
 
         [Fact]
-        public void SyntaxParser_AxiomTest2()
+        public void SyntaxParser_OldStyleAxiomTest_ShouldThrowException()
         {
             var parser = new Nt.Syntax.SyntaxParser();
 
             Assert.Throws<UnregisteredNonTerminalException>(() => parser.ParseString("S=A"));
+        }
+
+        [Fact]
+        public void SyntaxParser_NewStyleAxiom_ShouldBeValid()
+        {
+            var parser = new Nt.Syntax.SyntaxParser();
+            var grammar = parser.ParseString("Non Terminals: A;\nAXIOM: A");
+            AssertTokens(grammar.Terminals, []);
+            AssertTokens(grammar.NonTerminals, ["A"]);
+            AssertAxiom(grammar, "A");
+            AssertRules(grammar, []);
+            AssertRegex(grammar, []);
+        }
+
+        [Fact]
+        public void SyntaxParser_NewStyleAxiomTest_ShouldThrowException()
+        {
+            var parser = new Nt.Syntax.SyntaxParser();
+            Assert.Throws<UnregisteredNonTerminalException>(() => parser.ParseString("AXIOM: A"));
         }
 
         #endregion
