@@ -262,7 +262,7 @@ jobs:
         id: login
         uses: NuGet/login@v1
         with:
-          user: Natvs
+          user: ${{env.NUGET_USERNAME}}
       - name: Publish on NuGet.org
         run: |
           Get-ChildItem -Path "${{ env.NUGET_PATH }}" -Filter "*.nupkg" | ForEach-Object {
