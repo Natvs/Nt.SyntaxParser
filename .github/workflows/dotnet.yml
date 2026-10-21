@@ -267,9 +267,7 @@ jobs:
         shell: pwsh
         run: |
           Get-ChildItem -Path "${{ env.NUGET_PATH }}" -Filter "*.nupkg" | ForEach-Object {
-            dotnet nuget push $_.FullName
-              --api-key "${{ steps.login.outputs.NUGET_API_KEY }}"
-              --source https://www.nuget.org/api/v2/package
+            dotnet nuget push $_.FullName --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://www.nuget.org/api/v2/package
           }
 
 
