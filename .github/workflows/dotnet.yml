@@ -6,13 +6,19 @@ on:
     branches: [ "master" ]
 
 env:
+  # Project settings
   PROJECT_PATH: "Domain"
   PROJECT_FILE: "Domain.csproj"
-  NUGET_REPO: https://nuget.pkg.github.com/Natvs/index.json
-  NUGET_USERNAME: Natvs
+  LOCAL_NUGET_REPO: https://nuget.pkg.github.com/Natvs/index.json
+  LOCAL_NUGET_USERNAME: Natvs
+  NUGET_USERNAME: Natversus      
+
+  # Artifacts paths
   NUGET_PATH: "${{github.workspace}}/nuget"
-  SBOM_DIR: "bom"                   
-  SBOM_ARTIFACT: sbom.json
+  SBOM_PATH: "${{github.workspace}}/bom"
+
+  # API
+  API_PACKAGE_PATH: /users/natvs/packages/nuget/Nt.SyntaxParser/versions            
   GH_TOKEN: ${{github.token}}
 
 jobs:
@@ -30,9 +36,9 @@ jobs:
       - name: Authenticate package source
         run: |
           dotnet nuget add source \
-          ${{ env.NUGET_REPO }} \
+          ${{ env.LOCAL_NUGET_REPO }} \
             --name github \
-            --username ${{ env.NUGET_USERNAME }} \
+            --username ${{ env.LOCAL_NUGET_USERNAME }} \
             --password ${{ github.token }} \
             --store-password-in-clear-text
       - name: Restore dependencies
@@ -56,9 +62,9 @@ jobs:
       - name: Authenticate package source
         run: |
           dotnet nuget add source \
-            "${{ env.NUGET_REPO }}" \
+            "${{ env.LOCAL_NUGET_REPO }}" \
             --name github \
-            --username "${{ env.NUGET_USERNAME }}" \
+            --username "${{ env.LOCAL_NUGET_USERNAME }}" \
             --password "${{ github.token }}" \
             --store-password-in-clear-text
       - name: Restore dependencies
@@ -67,13 +73,13 @@ jobs:
         uses: CycloneDX/gh-dotnet-generate-sbom@v1.0.1
         with:
           path: ${{env.PROJECT_PATH}}/${{env.PROJECT_FILE}}
-          out: ${{env.SBOM_DIR}}
+          out: ${{env.SBOM_PATH}}
           json: true
       - name: Upload artifact
         uses: actions/upload-artifact@v7.0.1
         with:
-          name: ${{env.SBOM_ARTIFACT}}
-          path: ${{env.SBOM_DIR}}
+          name: sbom
+          path: ${{env.SBOM_PATH}}
 
   check-release:
     runs-on: ubuntu-latest
@@ -124,7 +130,7 @@ jobs:
         id: check
         shell: pwsh
         run: |
-          $obj = gh api "/users/natvs/packages/nuget/Nt.Automaton/versions" | ConvertFrom-Json
+          $obj = gh api ${{env.API_PACKAGE_PATH}} | ConvertFrom-Json
           $version = "${{steps.version.outputs.version}}"
           if ($obj.name | Select-String $version) {
             echo "create=false" >> "$env:GITHUB_OUTPUT"
@@ -156,48 +162,112 @@ jobs:
       - name: Download SBOM
         uses: actions/download-artifact@v8
         with:
-          name: ${{env.SBOM_ARTIFACT}}
-          path: ${{env.SBOM_DIR}}
+          name: sbom
+          path: ${{env.SBOM_PATH}}
       - name: Create release
         run: |
           gh release create \
             ${{env.tag}} \
-            "${{env.SBOM_DIR}}/bom.json#${{env.SBOM_ARTIFACT}}" \
+            "${{env.SBOM_PATH}}/bom.json#sbom.json" \
             --title ${{env.title}}
       - name: Upload release notes
         shell: pwsh
         run: |
             Get-Content ${{env.release-file}} | gh release edit ${{env.tag}} --notes-file -
 
-  publish-nuget:
+  pack:
     needs: 
       - build
       - check-nuget
     if: github.event_name == 'push' && needs.check-nuget.outputs.create-package == 'true'
     runs-on: ubuntu-latest
     permissions:
-      packages: write
+      packages: read
     steps:
       - uses: actions/checkout@v4
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
-      - name: Authenticate package source
+      - name: Authenticate local package source
         run: |
           dotnet nuget add source \
-            ${{ env.NUGET_REPO }} \
+            ${{ env.LOCAL_NUGET_REPO }} \
             --name github \
-            --username ${{ env.NUGET_USERNAME }} \
+            --username ${{ env.LOCAL_NUGET_USERNAME }} \
             --password ${{ github.token }} \
             --store-password-in-clear-text
       - name: Pack
         run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --output ${{ env.NUGET_PATH }} --verbosity quiet
-      - name: Publish
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          path: ${{env.NUGET_PATH}}
+          name: nuget
+
+  publish-local-nuget:
+    needs: 
+      - pack
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    steps:
+      - name: Checkout solution
+        uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Download package
+        uses: actions/download-artifact@v8
+        with:
+          path: ${{env.NUGET_PATH}}
+          name: nuget
+      - name: Authenticate local package source
+        run: |
+          dotnet nuget add source \
+            ${{ env.LOCAL_NUGET_REPO }} \
+            --name github \
+            --username ${{ env.LOCAL_NUGET_USERNAME }} \
+            --password ${{ github.token }} \
+            --store-password-in-clear-text
+      - name: Publish on local NuGet repository
         shell: pwsh
         run: |
           Get-ChildItem -Path "${{ env.NUGET_PATH }}" -Filter "*.nupkg" | ForEach-Object {
               dotnet nuget push $_.FullName --source "github" --skip-duplicate
           }
+
+
+  publish-nuget:
+    needs: 
+      - pack
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout solution
+        uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Download Nuget
+        uses: actions/download-artifact@v8
+        with:
+          path: ${{env.NUGET_PATH}}
+          name: nuget
+      - name: Authenticate to NuGet.org
+        id: login
+        uses: NuGet/login@v1
+        with:
+          user: Natvs
+      - name: Publish on NuGet.org
+        run: |
+          Get-ChildItem -Path "${{ env.NUGET_PATH }}" -Filter "*.nupkg" | ForEach-Object {
+            dotnet nuget push $_.FullName
+              --api-key "${{ steps.login.outputs.NUGET_API_KEY }}"
+              --source https://www.nuget.org/api/v2/package
+          }
+
+
 
     

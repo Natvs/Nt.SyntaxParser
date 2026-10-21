@@ -3,7 +3,7 @@
 - [Introduction](#introduction)
 - [Prerequisites](#prerequisites)
 	- [Install the Nt.SyntaxParser package](#install-the-ntsyntaxparser-package)
-	- [Define the grammar file](#define-the-grammar-file)
+	- [Define the grammar syntax](#define-the-grammar-syntax)
 - [Using the syntax parser](#using-the-syntax-parser)
 - [Additional features of the parser](#additional-features-of-the-parser)
 	- [Branching](#branching)
@@ -18,19 +18,18 @@ It aims to be used when creating new software languages.
 
 ### Install the Nt.SyntaxParser package
 
-The package is currently only available on Natvs's private repository. Ask for a key to access it and then authenticate the new source:
-
-```powerShell
-dotnet nuget add source https://nuget.pkg.github.com/Natvs/index.json -u Natvs -p <YOUR_KEY>
-```
-
- and once authenticated:
+Install the NuGet package `Nt.SyntaxParser` in your project from Nuget.org:
 
  ```powerShell
- dotnet add package Nt.SyntaxParser
+ dotnet add package Nt.SyntaxParser --version 1.2.1
  ```
 
-### Define the grammar file
+or add the following line to your project file:
+```xml
+<PackageReference Include="Nt.SyntaxParser" Version="1.2.1" />
+```
+
+### Define the grammar syntax
 
 **Grammar structure**
 
