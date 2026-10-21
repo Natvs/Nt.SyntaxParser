@@ -11,12 +11,15 @@ env:
   PROJECT_FILE: "Domain.csproj"
   LOCAL_NUGET_REPO: https://nuget.pkg.github.com/Natvs/index.json
   LOCAL_NUGET_USERNAME: Natvs
-  NUGET_USERNAME: Natversus                  
-  GH_TOKEN: ${{github.token}}
+  NUGET_USERNAME: Natversus      
 
   # Artifacts paths
   NUGET_PATH: "${{github.workspace}}/nuget"
   SBOM_PATH: "${{github.workspace}}/bom"
+
+  # API
+  API_PACKAGE_PATH: /users/natvs/packages/nuget/Nt.SyntaxParser/versions            
+  GH_TOKEN: ${{github.token}}
 
 jobs:
   build:
@@ -127,7 +130,7 @@ jobs:
         id: check
         shell: pwsh
         run: |
-          $obj = gh api "/users/natvs/packages/nuget/Nt.Automaton/versions" | ConvertFrom-Json
+          $obj = gh api ${{env.API_PACKAGE_PATH}} | ConvertFrom-Json
           $version = "${{steps.version.outputs.version}}"
           if ($obj.name | Select-String $version) {
             echo "create=false" >> "$env:GITHUB_OUTPUT"
