@@ -33,7 +33,7 @@ jobs:
       - name: Authenticate package source
         run: |
           dotnet nuget add source \
-          ${{ env.NUGET_REPO }} \
+          ${{ env.LOCAL_NUGET_REPO }} \
             --name github \
             --username ${{ env.LOCAL_NUGET_USERNAME }} \
             --password ${{ github.token }} \
@@ -59,7 +59,7 @@ jobs:
       - name: Authenticate package source
         run: |
           dotnet nuget add source \
-            "${{ env.NUGET_REPO }}" \
+            "${{ env.LOCAL_NUGET_REPO }}" \
             --name github \
             --username "${{ env.LOCAL_NUGET_USERNAME }}" \
             --password "${{ github.token }}" \
