@@ -264,6 +264,7 @@ jobs:
         with:
           user: ${{env.NUGET_USERNAME}}
       - name: Publish on NuGet.org
+        shell: pwsh
         run: |
           Get-ChildItem -Path "${{ env.NUGET_PATH }}" -Filter "*.nupkg" | ForEach-Object {
             dotnet nuget push $_.FullName
