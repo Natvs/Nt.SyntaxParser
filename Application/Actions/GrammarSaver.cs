@@ -41,7 +41,7 @@ namespace Nt.Applications.SyntaxParser.Actions
                 }
             }
             
-            File.WriteAllText("grammars/" + fileName, Context.Grammar.Save());
+            File.WriteAllText("grammars/" + fileName, Context.Grammar.Save(ExportationMode.Original));
             Console.WriteLine("Grammar saved successfully!");
         }
     } 

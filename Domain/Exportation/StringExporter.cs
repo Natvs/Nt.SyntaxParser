@@ -20,9 +20,23 @@ namespace Nt.Syntax.Exportation
         public static string ToString(IEnumerable<Rule> rules)
         {
             var sb = new StringBuilder();
+
+            var symbol = "";
             foreach (var rule in rules)
             {
-                sb.AppendLine($"- {rule}");
+                if (symbol == "")
+                {
+                    sb.Append("- ").Append(rule);
+                }
+                if (symbol == rule.Token?.Name)
+                {
+                    sb.Append(" | ").Append(rule.Derivation);
+                }
+                else
+                {
+                    sb.AppendLine().Append("- ").Append(rule);
+                    symbol = rule.Token?.Name;
+                }
             }
             return sb.ToString();
         }
