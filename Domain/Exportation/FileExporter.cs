@@ -77,6 +77,7 @@ namespace Nt.Syntax.Exportation
                         }
                         else
                         {
+                            symbol = rule.Token?.Symbol.Name;
                             sb.AppendLine(",").Append("    ").Append(rule);
                         }
                     }
@@ -101,6 +102,7 @@ namespace Nt.Syntax.Exportation
                         }
                         else
                         {
+                            symbol = rule.Token?.Symbol.Name;
                             sb.AppendLine(";").Append("R: ").Append(rule);
                         }
                     }
@@ -127,7 +129,7 @@ namespace Nt.Syntax.Exportation
                             first = false;
                             sb.Append("     ").Append(regex);
                             continue;
-                        }
+                        }                    
                         sb.AppendLine(",").Append("    ").Append(regex);
                     }
                     sb.AppendLine(";");
@@ -147,7 +149,7 @@ namespace Nt.Syntax.Exportation
             var sb = new StringBuilder();
             sb.AppendLine(Save(terminals, GrammarTokenType.Terminal, style));
             sb.AppendLine(Save(nonterminals, GrammarTokenType.NonTerminal, style));
-            if (axiom != null) sb.AppendLine($"Axiom: {axiom}");
+            if (axiom != null) sb.Append("S = ").Append(axiom).AppendLine().AppendLine();
             if (rules.Any()) sb.AppendLine(Save(rules, style));
             if (regexes.Any()) sb.AppendLine(Save(regexes, style));
             return sb.ToString();

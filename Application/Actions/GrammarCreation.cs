@@ -30,27 +30,9 @@ namespace Nt.Applications.SyntaxParser.Actions
                 // Creates a new grammar from the user's input
                 Context.Grammar = generator.ParseString(input);
                 Console.WriteLine();
-                Console.WriteLine("Grammar successfully created. Do you want to save it?");
-
-                // Saves the grammar
-                string? answer = Console.ReadLine();
-                if (answer != null && (answer.ToLower().Equals("y") || answer.ToLower().Equals("yes")))
-                {
-                    Console.WriteLine("Enter file path to save the grammar:");
-                    string? filePath = Console.ReadLine();
-                    if (filePath != null)
-                    {
-                        File.WriteAllText(filePath, input);
-                        Console.WriteLine("Grammar saved successfully.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Invalid file path. Grammar not saved.");
-                    }
-                }
+                Console.WriteLine("Grammar successfully created.");
 
                 // Displays the parsed grammar
-                Transition();
                 Console.WriteLine("Created grammar:\n" + Context.Grammar.ToString());
             }
             catch (Exception ex)
