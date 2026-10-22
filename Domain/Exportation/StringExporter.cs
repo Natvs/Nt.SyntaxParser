@@ -41,7 +41,7 @@ namespace Nt.Syntax.Exportation
         {
             var sb = new StringBuilder();
             sb.AppendLine($"Terminals:\n{ToString(terminals)}");
-            sb.AppendLine($"Nonterminals:\n{ToString(nonterminals)}");
+            sb.AppendLine($"Non terminals:\n{ToString(nonterminals)}");
             if (axiom != null) sb.AppendLine($"Axiom: {axiom}");
             if (rules.Any()) sb.AppendLine($"Rules:\n{ToString(rules)}");
             if (regexes.Any()) sb.AppendLine($"Regular Expressions:\n{ToString(regexes)}");
@@ -49,4 +49,6 @@ namespace Nt.Syntax.Exportation
         }
 
     }
+
+
 }
