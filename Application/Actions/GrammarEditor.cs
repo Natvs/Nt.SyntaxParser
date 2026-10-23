@@ -37,7 +37,7 @@ namespace Nt.Applications.SyntaxParser.Actions
             }
 
             Console.WriteLine("Current grammar:");
-            Console.WriteLine(Context.Grammar.ToString());
+            PrintGrammar();
 
             Console.WriteLine("1. Edit list of non terminals");
             Console.WriteLine("2. Edit list of terminals");

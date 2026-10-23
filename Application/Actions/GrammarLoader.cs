@@ -3,10 +3,11 @@ using Nt.Syntax.Structures;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
+    using Nt.Syntax.Exportation;
 
     internal class GrammarLoader(ApplicationContext context) : ProgramAction(context)
     {
-        private static List<string> paths = [".", "..", "../../../Resources"];
+        private static List<string> paths = ["grammars", "../../../Resources"];
 
         public override IState<string> GetState()
         {
@@ -63,7 +64,7 @@ namespace Nt.Applications.SyntaxParser.Actions
             if (answer > 0 && answer <= files.Count())
             {
                 // If a file was selected, load the grammar from it
-                string filePath = files.ElementAt(new Index(answer - 1));
+                string filePath = files.ElementAt(answer - 1);
                 Context.Grammar = LoadFromPath(filePath);
             }
             else
@@ -71,6 +72,11 @@ namespace Nt.Applications.SyntaxParser.Actions
                 // If the "Select an other path" option was selected, request a path and load the grammar from it
                 Context.Grammar = LoadFromPath();
             }
+
+            // Display loaded grammar
+            Console.WriteLine();
+            Console.WriteLine("Loaded grammar:");
+            PrintGrammar();
         }
 
         /// <summary>
@@ -79,17 +85,13 @@ namespace Nt.Applications.SyntaxParser.Actions
         /// <remarks>The method reads the entire contents of the file at the specified path and parses it as a grammar.</remarks>
         /// <param name="filePath">The path to the file containing the grammar definition to load. Cannot be null or empty.</param>
         /// <returns>A Grammar object representing the parsed grammar from the specified file.</returns>
-        private static Grammar LoadFromPath(string filePath)
+        private Grammar LoadFromPath(string filePath)
         {
             var generator = new Syntax.SyntaxParser();
 
             // Generate grammar from file content
             string fileContent = File.ReadAllText(filePath);
             var grammar = generator.ParseString(fileContent);
-
-            // Display loaded grammar
-            Console.WriteLine();
-            Console.WriteLine("Loaded grammar:\n" + grammar.ToString());
 
             return grammar;
         }
@@ -100,7 +102,7 @@ namespace Nt.Applications.SyntaxParser.Actions
         /// <remarks>The method reads input from the console to obtain the file path.</remarks>
         /// <returns>A <see cref="Grammar"/> Grammar loaded from the file at the specified path.</returns>
         /// <exception cref="FileNotFoundException">Thrown if the file specified by the user does not exist.</exception>
-        private static Grammar LoadFromPath()
+        private Grammar LoadFromPath()
         {
             // Request file path
             Console.WriteLine("Enter the full path to the grammar file:");

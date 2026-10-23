@@ -20,6 +20,10 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>parser ; grammar ; syntax</PackageTags>
     <PackageReleaseNotes>Add the `branching` feature</PackageReleaseNotes>
+
+	<AnalysisLevel>latest</AnalysisLevel>
+	<AnalysisMode>Recommended</AnalysisMode>
+	<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
@@ -46,8 +50,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Nt.Automaton" Version="1.2.3" />
-    <PackageReference Include="Nt.Parser" Version="1.0.3" />
+	  <PackageReference Include="Nt.Parser" Version="1.0.4.2" />
+	  <PackageReference Include="Nt.Automaton" Version="1.2.4.1" />
   </ItemGroup>
 
 </Project>
