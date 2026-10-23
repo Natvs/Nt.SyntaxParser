@@ -10,13 +10,12 @@ namespace Nt.Syntax.Actions
         /// <summary>
         /// Appends a parsed token to the current import file being built 
         /// </summary>
-        /// <param name="word"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        public void Perform(IAutomatonToken<string> word)
+        /// <param name="token">The token read</param>
+        public void Perform(IAutomatonToken<string> token)
         {
-            if (word is AutomatonToken token)
+            if (token is AutomatonToken automatonToken)
             {
-                context.CurrentImportFile += token.Symbol.Name;
+                context.CurrentImportFile += automatonToken.Symbol.Name;
             }
         }
     }

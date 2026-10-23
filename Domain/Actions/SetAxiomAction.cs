@@ -17,14 +17,14 @@ namespace Nt.Syntax.Actions
         /// <summary>
         /// Sets a parsed token as new axiom of the grammar. Axiom should be a valid non terminal.
         /// </summary>
-        /// <param name="word">Parsed token to add as new terminal</param>
-        public void Perform(IAutomatonToken<string> word)
+        /// <param name="token">Parsed token to add as new terminal</param>
+        public void Perform(IAutomatonToken<string> token)
         {
             try
             {
-                if (word is AutomatonToken token)
+                if (token is AutomatonToken automatonToken)
                 {
-                    var new_token = grammar.ParseToGrammarToken(token);
+                    var new_token = grammar.ParseToGrammarToken(automatonToken);
                     if (new_token is NonTerminal nt)
                     {
                         grammar.GetBuilder().SetAxiom(nt);

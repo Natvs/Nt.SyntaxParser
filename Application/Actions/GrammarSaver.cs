@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Nt.Automaton.States;
+﻿using Nt.Automaton.States;
 using Nt.Syntax.Exportation;
-using Nt.Syntax.Structures;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
@@ -40,8 +36,8 @@ namespace Nt.Applications.SyntaxParser.Actions
                     return;
                 }
             }
-            
-            File.WriteAllText("grammars/" + fileName, Context.Grammar.Save(ExportationMode.Original));
+
+            Save(Context.Grammar, fileName);
             Console.WriteLine("Grammar saved successfully!");
         }
     } 

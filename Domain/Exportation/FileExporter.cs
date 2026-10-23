@@ -5,7 +5,7 @@ using System.Text;
 namespace Nt.Syntax.Exportation
 {
 
-    internal class FileExporter
+    internal sealed class FileExporter
     {
         public static string Save(IEnumerable<ISymbol> symbols, GrammarTokenType types, FileStyle style = FileStyle.Default)
         {

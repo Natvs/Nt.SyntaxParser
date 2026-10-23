@@ -63,10 +63,10 @@ namespace Nt.Syntax.Structures
         /// </summary>
         /// <param name="index">Index of the regular expression</param>
         /// <returns>The regular expression at the specified index</returns>
-        /// <exception cref="IndexOutOfRangeException">Thrown if the index is out of range</exception>
+        /// <exception cref="InternalException">Thrown if the index is out of range</exception>
         public RegularExpression Get(int index)
         {
-            if (index < 0 || index >= Regexs.Count) throw new IndexOutOfRangeException($"Index {index} is out of range for collection of regular expressions with count {Regexs.Count}");
+            if (index < 0 || index >= Regexs.Count) throw new InternalException($"Index {index} is out of range for collection of regular expressions with count {Regexs.Count}");
             return Regexs.ElementAt(index);
         }
 

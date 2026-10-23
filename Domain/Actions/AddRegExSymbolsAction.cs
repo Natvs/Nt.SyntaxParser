@@ -9,14 +9,14 @@ namespace Nt.Syntax.Actions
 {
     public class AddRegExSymbolsAction(Grammar grammar, AutomatonContext context) : ITokenAction<string>
     {
-        public void Perform(IAutomatonToken<string> word)
+        public void Perform(IAutomatonToken<string> token)
         {
             if (context.Regex == null) throw new NullRegexException("Attempting to add symbols to a non existent regular expression");
 
-            if (word is AutomatonToken token)
+            if (token is AutomatonToken automatonToken)
             {
                 // Handles escape characters
-                var new_token = grammar.RemoveEscapeCharacter(token.Symbol.Name);
+                var new_token = grammar.RemoveEscapeCharacter(automatonToken.Symbol.Name);
 
                 // Adds the symbols to the regex
                 context.Regex.GetBuilder().AddSymbols(new_token);

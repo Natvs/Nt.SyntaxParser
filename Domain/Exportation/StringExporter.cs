@@ -12,7 +12,7 @@ namespace Nt.Syntax.Exportation
             var sb = new StringBuilder();
             foreach(var symbol in symbols)
             {
-                sb.AppendLine($"- {symbol}");
+                sb.Append("- ").Append(symbol).AppendLine();
             }
             return sb.ToString();
         }
@@ -27,7 +27,10 @@ namespace Nt.Syntax.Exportation
                 if (symbol == "")
                 {
                     sb.Append("- ").Append(rule);
+                    symbol = rule.Token?.Name;
+                    continue;
                 }
+
                 if (symbol == rule.Token?.Name)
                 {
                     sb.Append(" | ").Append(rule.Derivation);
@@ -46,7 +49,7 @@ namespace Nt.Syntax.Exportation
             var sb = new StringBuilder();
             foreach (var regex in regexes)
             {
-                sb.AppendLine($"- {regex}");
+                sb.AppendLine($"- ").Append(regex).AppendLine();
             }
             return sb.ToString();
         }
@@ -54,11 +57,11 @@ namespace Nt.Syntax.Exportation
         public static string ToString(IEnumerable<ISymbol> terminals, IEnumerable<ISymbol> nonterminals, NonTerminal? axiom, IEnumerable<Rule> rules, IEnumerable<RegularExpression> regexes)
         {
             var sb = new StringBuilder();
-            sb.AppendLine($"Terminals:\n{ToString(terminals)}");
-            sb.AppendLine($"Non terminals:\n{ToString(nonterminals)}");
-            if (axiom != null) sb.AppendLine($"Axiom: {axiom}");
-            if (rules.Any()) sb.AppendLine($"Rules:\n{ToString(rules)}");
-            if (regexes.Any()) sb.AppendLine($"Regular Expressions:\n{ToString(regexes)}");
+            sb.AppendLine("Terminals:").Append(ToString(terminals)).AppendLine();
+            sb.AppendLine("Non terminals:").Append(ToString(nonterminals)).AppendLine();
+            if (axiom != null) sb.Append("Axiom: ").Append(axiom).AppendLine();
+            if (rules.Any()) sb.AppendLine("Rules:").Append(ToString(rules)).AppendLine();
+            if (regexes.Any()) sb.Append("Regular expressions:").Append(ToString(regexes)).AppendLine();
             return sb.ToString();
         }
 

@@ -12,16 +12,21 @@ namespace Nt.Syntax.Actions
     /// <param name="context">Context of the automaton</param>
     public class AppendToTerminalAction(AutomatonContext context) : ITokenAction<string>
     {
-        public void Perform(IAutomatonToken<string> word)
+
+        /// <summary>
+        /// Add to the terminal being currently parsed
+        /// </summary>
+        /// <param name="token">The token read</param>
+        public void Perform(IAutomatonToken<string> token)
         {
-            if (word is AutomatonToken token)
+            if (token is AutomatonToken automatonToken)
             {
                 if (!context.AddingToTerminal)
                 {
                     context.Terminal = "";
                     context.AddingToTerminal = true;
                 }
-                context.Terminal += token.Symbol.Name;
+                context.Terminal += automatonToken.Symbol.Name;
             }
         }
     }

@@ -19,11 +19,12 @@ namespace Nt.Applications.SyntaxParser.Actions
             if (Context.Grammar == null) return;
 
             var state = e.Transition.Target;
+            state.ClearTransitions();
             for (int i = 0; i < Context.Grammar.Rules.Count; i++)
             {
                 List<Rule> rules = [.. Context.Grammar.Rules];
                 var target = new EditRule(Context, rules[i]).GetState();
-                state.OverwriteTransition(new Transition<string>($"{i+1}", target));
+                state.AddTransition(new Transition<string>($"{i+1}", target));
             }
         }
 

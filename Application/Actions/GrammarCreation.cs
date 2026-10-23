@@ -33,7 +33,8 @@ namespace Nt.Applications.SyntaxParser.Actions
                 Console.WriteLine("Grammar successfully created.");
 
                 // Displays the parsed grammar
-                Console.WriteLine("Created grammar:\n" + Context.Grammar.ToString());
+                Console.WriteLine("Created grammar:");
+                PrintGrammar();
             }
             catch (Exception ex)
             {
