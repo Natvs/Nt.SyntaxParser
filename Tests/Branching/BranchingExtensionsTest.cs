@@ -1,5 +1,6 @@
 ﻿using Nt.Syntax;
 using Nt.Syntax.Branching;
+using Nt.Syntax.Exceptions;
 using State = Nt.Automaton.States.State<string>;
 using Transition = Nt.Automaton.Transitions.Transition<string>;
 
@@ -29,7 +30,7 @@ namespace Nt.Tests.Syntax.Branching
             parser.StartBranch("start", initialState);
             parser.EndBranch(initialState, "end");
 
-            Assert.Throws<Exception>(() => parser.ParseString("start invalid end"));
+            Assert.Throws<InternalException>(() => parser.ParseString("start invalid end"));
         }
 
         [Fact]
