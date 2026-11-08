@@ -4,6 +4,7 @@ using Nt.Syntax.Structures;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Linq;
 
 namespace Nt.Syntax.Builders
 {
@@ -24,9 +25,9 @@ namespace Nt.Syntax.Builders
         /// <exception cref="RegisteredNonTerminalException">Thrown if the symbol is already registered as a non-terminal.</exception>
         public GrammarBuilder AddTerminal(string name)
         {
-            if (_grammar.Terminals.Contains(name)) throw new RegisteredTerminalException(name);
-            if (_grammar.NonTerminals.Contains(name)) throw new RegisteredNonTerminalException(name);
-            _grammar.Terminals.Add(name);
+            if (_grammar.Terminals.Contains((t) => t.Symbol.Name == name)) throw new RegisteredTerminalException(name);
+            if (_grammar.NonTerminals.Contains((t) => t.Symbol.Name == name)) throw new RegisteredNonTerminalException(name);
+            _grammar.Terminals.Add(new Terminal(new Symbol(name), -1));
             return this;
         }
 
@@ -39,9 +40,9 @@ namespace Nt.Syntax.Builders
         /// <exception cref="RegisteredTerminalException">Thrown if the symbol is already registered as a terminal.</exception>
         public GrammarBuilder AddNonTerminal(string name)
         {
-            if (_grammar.NonTerminals.Contains(name)) throw new RegisteredNonTerminalException(name);
-            if (_grammar.Terminals.Contains(name)) throw new RegisteredTerminalException(name);
-            _grammar.NonTerminals.Add(name);
+            if (_grammar.NonTerminals.Contains((t) => t.Symbol.Name == name)) throw new RegisteredNonTerminalException(name);
+            if (_grammar.Terminals.Contains((t) => t.Symbol.Name == name)) throw new RegisteredTerminalException(name);
+            _grammar.NonTerminals.Add(new NonTerminal(new Symbol(name), -1));
             return this;
         }
 
@@ -54,7 +55,9 @@ namespace Nt.Syntax.Builders
         {
             foreach (var name in names)
             {
-                _grammar.Terminals.Add(name);
+                if (_grammar.NonTerminals.Contains((t) => t.Symbol.Name == name)) throw new RegisteredNonTerminalException(name);
+                if (_grammar.Terminals.Contains((t) => t.Symbol.Name == name)) throw new RegisteredTerminalException(name);
+                _grammar.Terminals.Add(new Terminal(new Symbol(name), -1));
             }
             return this;
         }
@@ -68,7 +71,7 @@ namespace Nt.Syntax.Builders
         {
             foreach (var name in names)
             {
-                _grammar.NonTerminals.Add(name);
+                _grammar.NonTerminals.Add(new NonTerminal(new Symbol(name), -1));
             }
             return this;
         }
@@ -81,8 +84,8 @@ namespace Nt.Syntax.Builders
         /// <exception cref="UnregisteredTerminalException">Thrown if the specified terminal name is not registered in the grammar.</exception>
         public GrammarBuilder RemoveTerminal(string name)
         {
-            if (!_grammar.Terminals.Contains(name)) throw new UnregisteredTerminalException(name, -1);
-            _grammar.Terminals.Remove(name);
+            if (!_grammar.Terminals.Contains((t) => t.Symbol.Name == name)) throw new UnregisteredTerminalException(name, -1);
+            _grammar.Terminals.Remove((t) => t.Symbol.Name == name);
             return this;
         }
 
@@ -94,8 +97,8 @@ namespace Nt.Syntax.Builders
         /// <exception cref="UnregisteredNonTerminalException">Thrown if the specifed non-terminal name is not registered in the grammar.</exception>
         public GrammarBuilder RemoveNonTerminal(string name)
         {
-            if (!_grammar.NonTerminals.Contains(name)) throw new UnregisteredNonTerminalException(name, -1);
-            _grammar.NonTerminals.Remove(name);
+            if (!_grammar.NonTerminals.Contains((t) => t.Symbol.Name == name)) throw new UnregisteredNonTerminalException(name, -1);
+            _grammar.NonTerminals.Remove((t) => t.Symbol.Name == name);
             return this;
         }
 
@@ -107,17 +110,11 @@ namespace Nt.Syntax.Builders
         /// <exception cref="UnregisteredNonTerminalException">Thrown if the specified non-terminal name is not registered in the grammar.</exception>
         public GrammarBuilder SetAxiom(string name)
         {
-            try
+            if (_grammar.NonTerminals.TryGet((t) => t.Symbol.Name == name, out var nonterminal))
             {
-                var symbol = _grammar.NonTerminals.Get(name);
-                if (!_grammar.NonTerminals.Contains(symbol.Name)) throw new UnregisteredNonTerminalException(name, -1);
-                _grammar.Axiom = new NonTerminal(symbol, -1);
+                _grammar.Axiom = new NonTerminal(nonterminal.Symbol, -1);
             }
-            catch (KeyNotFoundException)
-            {
-                throw new UnregisteredNonTerminalException(name, -1);
-            }
-            return this;
+            throw new UnregisteredNonTerminalException(name, -1);
         }
 
         /// <summary>
@@ -128,16 +125,11 @@ namespace Nt.Syntax.Builders
         /// <exception cref="UnregisteredNonTerminalException">Thrown if <paramref name="symbol"/> is not a non-terminal symbol in the grammar.</exception>
         public GrammarBuilder SetAxiom(Symbol symbol)
         {
-            try
+            if (_grammar.NonTerminals.TryGet((t) => t.Symbol.Name == symbol.Name, out var nonterminal))
             {
-                if (!_grammar.NonTerminals.Contains(symbol.Name)) throw new UnregisteredNonTerminalException(symbol.Name, -1);
-                _grammar.Axiom = new NonTerminal(symbol, -1);
+                _grammar.Axiom = new NonTerminal(nonterminal.Symbol, -1);
             }
-            catch (KeyNotFoundException)
-            {
-                throw new UnregisteredNonTerminalException(symbol.Name, -1);
-            }
-            return this;
+            throw new UnregisteredNonTerminalException(symbol.Name, -1);
         }
 
         /// <summary>
@@ -148,16 +140,12 @@ namespace Nt.Syntax.Builders
         /// <exception cref="UnregisteredNonTerminalException">Thrown if <paramref name="token"/> is not a non-terminal symbol in the grammar.</exception>
         public GrammarBuilder SetAxiom(NonTerminal token)
         {
-            try
+            if (_grammar.NonTerminals.TryGet((t) => t.Symbol.Name == token.Symbol.Name, out var nonterminal))
             {
-                if (!_grammar.NonTerminals.Contains(token.Name)) throw new UnregisteredNonTerminalException(token.Name, token.Line);
-                _grammar.Axiom = token;
+                _grammar.Axiom = new NonTerminal(nonterminal.Symbol, -1);
+                return this;
             }
-            catch (KeyNotFoundException)
-            {
-                throw new UnregisteredNonTerminalException(token.Name, token.Line);
-            }
-            return this;
+            throw new UnregisteredNonTerminalException(token.Symbol.Name, -1);          
         }
 
         /// <summary>

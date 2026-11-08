@@ -26,7 +26,7 @@ namespace Nt.Applications.SyntaxParser.Actions
                 Console.WriteLine("Invalid name for a non terminal. Operation cancelled.");
                 return;
             }
-            if (Context.Grammar.Terminals.Contains(name))
+            if (Context.Grammar.Terminals.Contains((t) => t.Name == name))
             {
                 Console.WriteLine($"A non terminal '{name}' already exists in the grammar.");
                 return;

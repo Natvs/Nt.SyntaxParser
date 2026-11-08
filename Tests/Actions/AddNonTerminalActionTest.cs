@@ -23,7 +23,7 @@ namespace Nt.Tests.Syntax.Actions
             readAction.Perform(new AutomatonToken(symbols.Get(0), 0));
             writeAction.Perform(new AutomatonToken(symbols.Get(0), 0));
 
-            Assert.Single(grammar.NonTerminals.GetSymbols());
+            Assert.Single(grammar.NonTerminals);
             Assert.Equal("A", grammar.NonTerminals.Get(0).Name);
         }
 
@@ -41,7 +41,7 @@ namespace Nt.Tests.Syntax.Actions
             readAction.Perform(new AutomatonToken(symbols.Get(1), 0));
             writeAction.Perform(new AutomatonToken(symbols.Get(0), 0));
 
-            Assert.Single(grammar.NonTerminals.GetSymbols());
+            Assert.Single(grammar.NonTerminals);
             Assert.Equal("AB", grammar.NonTerminals.Get(0).Name);
         }
 
@@ -59,7 +59,7 @@ namespace Nt.Tests.Syntax.Actions
             readAction.Perform(new AutomatonToken(symbols.Get(1), 0));
             writeAction.Perform(new AutomatonToken(symbols.Get(0), 0));
 
-            Assert.Single(grammar.NonTerminals.GetSymbols());
+            Assert.Single(grammar.NonTerminals);
             Assert.Equal("A", grammar.NonTerminals.Get(0).Name);
         }
 
@@ -78,7 +78,7 @@ namespace Nt.Tests.Syntax.Actions
             readAction.Perform(new AutomatonToken(symbols.Get(2), 0));
             writeAction.Perform(new AutomatonToken(symbols.Get(0), 0));
 
-            Assert.Single(grammar.NonTerminals.GetSymbols());
+            Assert.Single(grammar.NonTerminals);
             Assert.Equal("AB", grammar.NonTerminals.Get(0).Name);
         }
     }

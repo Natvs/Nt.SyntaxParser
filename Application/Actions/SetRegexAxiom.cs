@@ -1,6 +1,7 @@
-﻿using Nt.Syntax.Structures;
+﻿using Nt.Automaton.States;
 using Nt.Syntax.Builders;
-using Nt.Automaton.States;
+using Nt.Syntax.Structures;
+using System.Xml.Linq;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
@@ -37,8 +38,10 @@ namespace Nt.Applications.SyntaxParser.Actions
 
             try
             {
-                var symbol = Context.Grammar.NonTerminals.Get(input);
-                Regex.GetBuilder().SetToken(new NonTerminal(symbol, -1));
+                if (Context.Grammar.NonTerminals.TryGet((t) => t.Name == input, out var nt))
+                {
+                    Regex.GetBuilder().SetToken(new NonTerminal(nt.Symbol, -1));
+                }
             }
             catch (KeyNotFoundException)
             {

@@ -123,7 +123,7 @@ namespace Nt.Tests.Syntax.Branching
 
             var state = new State().SetAction(parser, (context) =>
             {
-                read = context.Terminal;
+                read = context.Terminal?.Symbol.Name;
             });
 
             parser.StartBranch("start", state);
@@ -141,7 +141,7 @@ namespace Nt.Tests.Syntax.Branching
 
             var state = new State().SetAction(parser, (context) =>
             {
-                read = context.NonTerminal;
+                read = context.NonTerminal?.Symbol.Name;
             });
 
             parser.StartBranch("start", state);
@@ -199,7 +199,7 @@ namespace Nt.Tests.Syntax.Branching
             var state2 = new State();
             state.AddTransition(new Transition("token", state2).SetAction(parser, (context, token) =>
             {
-                read = context.Terminal;
+                read = context.Terminal?.Symbol.Name;
             }));
             parser.StartBranch("start", state);
             parser.EndBranch(state2, "end");
@@ -216,7 +216,7 @@ namespace Nt.Tests.Syntax.Branching
             var state2 = new State();
             state.AddTransition(new Transition("token", state2).SetAction(parser, (context, token) =>
             {
-                read = context.NonTerminal;
+                read = context.NonTerminal?.Symbol.Name;
             }));
             parser.StartBranch("start", state);
             parser.EndBranch(state2, "end");

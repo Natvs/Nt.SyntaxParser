@@ -14,8 +14,6 @@ namespace Nt.Syntax.Structures
         public Grammar()
         {
             var configuration = SyntaxParserConfig.GetInstance();
-            Terminals = new GrammarSymbolsSet(configuration.SymbolFactory);
-            NonTerminals = new GrammarSymbolsSet(configuration.SymbolFactory);
         }
 
         /// <summary>
@@ -41,8 +39,7 @@ namespace Nt.Syntax.Structures
         }
 
         /// <summary>
-        /// Converts a parsed token to the corresponding grammar token, identifying it as either a terminal or
-        /// nonterminal symbol.
+        /// Converts a parsed token to the corresponding grammar token, identifying it as either a terminal or nonterminal symbol.
         /// </summary>
         /// <param name="token">The parsed token to convert. Must contain a valid symbol name.</param>
         /// <returns>A <see cref="GrammarToken"/> representing the terminal or nonterminal symbol corresponding to the parsed token.</returns>
@@ -53,13 +50,13 @@ namespace Nt.Syntax.Structures
             string new_content = RemoveEscapeCharacter(token.Symbol.Name);
 
             // Check if terminal or non terminal
-            if (Terminals.Contains(new_content))
+            if (Terminals.TryGet((t) => t.Name == new_content, out var terminal))
             {
-                return new Terminal(Terminals.Get(new_content), token.Line);
+                return new Terminal(terminal.Symbol, token.Line);
             }
-            else if (NonTerminals.Contains(new_content))
+            else if (NonTerminals.TryGet((t) => t.Name == new_content, out var nonterminal))
             {
-                return new NonTerminal(NonTerminals.Get(new_content), token.Line);
+                return new NonTerminal(nonterminal.Symbol, token.Line);
             }
             throw new UnknownSymbolException(new_content, token.Line);
         }
@@ -67,8 +64,8 @@ namespace Nt.Syntax.Structures
         #region Public
 
         public char EscapeCharacter { get; private set; } = '\'';
-        public GrammarSymbolsSet Terminals { get; }
-        public GrammarSymbolsSet NonTerminals { get; }
+        public ElementsSet<Terminal> Terminals { get; } = [];
+        public ElementsSet<NonTerminal> NonTerminals { get; } = [];
         public NonTerminal? Axiom { get; internal set; } = null;
         public ElementsSet<Rule> Rules { get; } = [];
         public ElementsSet<RegularExpression> RegularExpressions { get; } = [];

@@ -4,6 +4,7 @@ using Nt.Syntax.Automaton;
 using Nt.Syntax.Exceptions;
 using Nt.Syntax.Structures;
 using Nt.Syntax.Builders;
+using Nt.Parser.Symbols;
 
 namespace Nt.Syntax.Actions
 {
@@ -22,10 +23,16 @@ namespace Nt.Syntax.Actions
         {
             try
             {
-                if (!context.NonTerminal.Equals("", StringComparison.Ordinal))
+                NonTerminal nonterminal;
+
+                if (context.NonTerminal == null)
                 {
-                    grammar.GetBuilder().AddNonTerminal(grammar.RemoveEscapeCharacter(context.NonTerminal));
+                    nonterminal = new NonTerminal(new Symbol(""), -1);
+                    context.NonTerminal = nonterminal;
                 }
+                else nonterminal = context.NonTerminal;
+
+                grammar.GetBuilder().AddNonTerminal(grammar.RemoveEscapeCharacter(context.NonTerminal.Symbol.Name));
             }
             catch (RegisteredNonTerminalException) { } // Ignore those 2 exceptions for now
             catch (RegisteredTerminalException) { } // Maybe someone should remove them later

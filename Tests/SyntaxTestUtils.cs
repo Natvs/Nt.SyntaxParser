@@ -16,12 +16,20 @@ namespace Nt.Tests.Syntax
         }
 
         #region Grammar checking
-        internal static void AssertTokens(GrammarSymbolsSet symbols, List<string> reference)
+        internal static void AssertTokens(ElementsSet<Terminal> tokens, List<string> reference)
         {
-            Assert.Equal(reference.Count, symbols.Count);
-            for (int i = 0; i < symbols.Count; i++)
+            Assert.Equal(reference.Count, tokens.Count);
+            for (int i = 0; i < tokens.Count; i++)
             {
-                Assert.Equal(reference[i], symbols.Get(i).Name);
+                Assert.Equal(reference[i], tokens.Get(i).Name);
+            }
+        }
+        internal static void AssertTokens(ElementsSet<NonTerminal> tokens, List<string> reference)
+        {
+            Assert.Equal(reference.Count, tokens.Count);
+            for (int i = 0; i < tokens.Count; i++)
+            {
+                Assert.Equal(reference[i], tokens.Get(i).Name);
             }
         }
 
@@ -56,7 +64,7 @@ namespace Nt.Tests.Syntax
                 Assert.Null(grammar.Axiom);
                 return;
             }
-            Assert.True(grammar.NonTerminals.Contains(axiom));
+            Assert.True(grammar.NonTerminals.Contains((t) => t.Name == axiom));
             Assert.NotNull(grammar.Axiom);
             Assert.Equal(axiom, grammar.Axiom.Name);
         }

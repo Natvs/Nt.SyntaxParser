@@ -136,7 +136,7 @@ namespace Nt.Tests.Syntax.Branching
 
             rule.CreateData(new TestData("test"));
             grammar.GetBuilder().AddNonTerminal("A");
-            rule.GetBuilder().SetToken(new NonTerminal(grammar.NonTerminals.Get("A"), 0));
+            rule.GetBuilder().SetToken(new NonTerminal(grammar.NonTerminals.Get((t) => t.Symbol.Name == "A").Symbol, 0));
 
             var data = rule.GetData<TestData>();
             Assert.Equal("test", data.Message);
@@ -150,7 +150,7 @@ namespace Nt.Tests.Syntax.Branching
 
             regex.CreateData(new TestData("test"));
             grammar.GetBuilder().AddNonTerminal("A");
-            regex.GetBuilder().SetToken(new NonTerminal(grammar.NonTerminals.Get("A"), 0));
+            regex.GetBuilder().SetToken(new NonTerminal(grammar.NonTerminals.Get((t) => t.Symbol.Name == "A").Symbol, 0));
 
             var data = regex.GetData<TestData>();
             Assert.Equal("test", data.Message);

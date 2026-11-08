@@ -19,7 +19,7 @@ namespace Nt.Syntax.Builders
         /// <exception cref="UnregisteredNonTerminalException">Thrown if the <paramref name="nt"/> is not registered in the grammar.</exception>
         public RegexBuilder SetToken(NonTerminal nt)
         {
-            if (!_regex.Grammar.NonTerminals.Contains(nt.Name)) throw new UnregisteredNonTerminalException(nt.Name, nt.Line);
+            if (!_regex.Grammar.NonTerminals.Contains((t) => t.Name == nt.Name)) throw new UnregisteredNonTerminalException(nt.Name, nt.Line);
             _regex.Token = nt;
             return this;
         }

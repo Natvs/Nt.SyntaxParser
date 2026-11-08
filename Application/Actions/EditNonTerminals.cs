@@ -27,7 +27,7 @@ namespace Nt.Applications.SyntaxParser.Actions
             }
 
             Console.WriteLine("Current non terminals:");
-            foreach (var non_terminal in Context.Grammar.NonTerminals.GetSymbols())
+            foreach (var non_terminal in Context.Grammar.NonTerminals)
             {
                 Console.WriteLine(non_terminal);
             }

@@ -1,6 +1,7 @@
 ﻿using Nt.Automaton.Actions;
 using Nt.Automaton.Tokens;
 using Nt.Parser.Structures;
+using Nt.Parser.Symbols;
 using Nt.Syntax.Automaton;
 using Nt.Syntax.Builders;
 using Nt.Syntax.Exceptions;
@@ -22,10 +23,15 @@ namespace Nt.Syntax.Actions
         {
             try
             {
-                if (!context.Terminal.Equals("", StringComparison.Ordinal))
-                { 
-                    grammar.GetBuilder().AddTerminal(grammar.RemoveEscapeCharacter(context.Terminal)); 
+                Terminal terminal;
+
+                if (context.Terminal == null)
+                {
+                    terminal = new Terminal(new Symbol(""), -1);
+                    context.Terminal = terminal;
                 }
+                else terminal = context.Terminal;
+                grammar.GetBuilder().AddTerminal(grammar.RemoveEscapeCharacter(context.Terminal.Symbol.Name)); 
             }
             catch (RegisteredNonTerminalException) { }
             catch (RegisteredTerminalException) { }

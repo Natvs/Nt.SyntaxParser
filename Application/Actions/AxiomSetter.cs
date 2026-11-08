@@ -25,7 +25,7 @@ namespace Nt.Applications.SyntaxParser.Actions
             }
 
             Console.WriteLine("Current non terminals:");
-            foreach (var non_terminal in Context.Grammar.NonTerminals.GetSymbols())
+            foreach (var non_terminal in Context.Grammar.NonTerminals)
             {
                 Console.WriteLine(non_terminal);
             }
@@ -42,8 +42,8 @@ namespace Nt.Applications.SyntaxParser.Actions
             }
             try
             {
-                var symbol = Context.Grammar.NonTerminals.Get(name);
-                Context.Grammar.GetBuilder().SetAxiom(new NonTerminal(symbol, -1));
+                var nt = Context.Grammar.NonTerminals.Get((t) => t.Name == name);
+                Context.Grammar.GetBuilder().SetAxiom(new NonTerminal(nt.Symbol, -1));
             }
             catch (KeyNotFoundException) 
             {

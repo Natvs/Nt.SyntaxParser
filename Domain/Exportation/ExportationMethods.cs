@@ -6,7 +6,7 @@ namespace Nt.Syntax.Exportation
 {
     public static class ExportationMethods
     {
-        public static List<ISymbol> Reorder(List<ISymbol> symbols, ExportationMode mode)
+        public static List<GrammarToken> Reorder(List<GrammarToken> symbols, ExportationMode mode)
         {
             switch (mode)
             {
@@ -15,8 +15,8 @@ namespace Nt.Syntax.Exportation
                 case ExportationMode.Alphabetical:
                     return [.. symbols.OrderBy(symbol => symbol.Name)];
                 case ExportationMode.Grouped:
-                    var queue = new List<ISymbol>(symbols);
-                    var ordered_symbols = new List<ISymbol>();
+                    var queue = new List<GrammarToken>(symbols);
+                    var ordered_symbols = new List<GrammarToken>();
                     while (queue.Count > 0)
                     {
                         var current_symbol = queue[0];

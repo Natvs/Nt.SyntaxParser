@@ -38,8 +38,14 @@ namespace Nt.Applications.SyntaxParser.Actions
             var builder = Rule.GetBuilder().Clear();
             foreach (var token in tokens)
             {
-                if (Context.Grammar.Terminals.Contains(token)) builder.Add(new Terminal(Context.Grammar.Terminals.Get(token), -1));
-                else if (Context.Grammar.NonTerminals.Contains(token)) builder.Add(new NonTerminal(Context.Grammar.NonTerminals.Get(token), -1));
+                if (Context.Grammar.Terminals.TryGet((t) => t.Symbol.Name == token, out var t))
+                {
+                    builder.Add(t);
+                }
+                else if (Context.Grammar.NonTerminals.TryGet((t) => t.Symbol.Name == token, out var nt))
+                {
+                    builder.Add(nt);
+                }
                 else
                 {
                     Console.WriteLine($"Symbol '{token}' is not a symbol of the current grammar. Please try again.");
