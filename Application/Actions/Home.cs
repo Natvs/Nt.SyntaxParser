@@ -10,11 +10,13 @@ namespace Nt.Applications.SyntaxParser.Actions
             var creationState = new GrammarCreation(Context).GetState();
             var loaderState = new GrammarLoader(Context).GetState();
             var editState = new GrammarEditor(Context).GetState();
+            var saveState = new GrammarSaver(Context).GetState();
 
             var newState = base.GetState();
             newState.AddTransition(new Transition<string>("1", creationState));
             newState.AddTransition(new Transition<string>("2", loaderState));
             newState.AddTransition(new Transition<string>("3", editState));
+            newState.AddTransition(new Transition<string>("4", saveState));
 
             return newState;
         }
@@ -27,7 +29,8 @@ namespace Nt.Applications.SyntaxParser.Actions
             Console.WriteLine("1. Write new grammar");
             Console.WriteLine("2. Load existing grammar");
             Console.WriteLine("3. Edit current grammar");
-            Console.WriteLine("4. Exit");
+            Console.WriteLine("4. Save grammar to file");
+            Console.WriteLine("5. Exit");
         }
     }
 

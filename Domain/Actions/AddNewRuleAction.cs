@@ -11,13 +11,13 @@ namespace Nt.Syntax.Actions
         /// <summary>
         /// Adds the symbol of a rule
         /// </summary>
-        /// <param name="word"></param>
-        public void Perform(IAutomatonToken<string> word)
+        /// <param name="token">The token read</param>
+        public void Perform(IAutomatonToken<string> token)
         {
-            if (word is AutomatonToken token)
+            if (token is AutomatonToken automatonToken)
             {
                 context.Rule = new Rule(grammar);
-                context.Rule.GetBuilder().SetToken(new NonTerminal(token.Symbol, token.Line));
+                context.Rule.GetBuilder().SetToken(new NonTerminal(automatonToken.Symbol, automatonToken.Line));
                 grammar.Rules.Add(context.Rule);
             }
         }

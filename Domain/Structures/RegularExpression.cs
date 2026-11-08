@@ -38,7 +38,7 @@ namespace Nt.Syntax.Structures
             if (Token != null) sb.Append(Token.Symbol.Name);
             else sb.Append("<<undefined>>");
 
-            sb.Append(" = ").Append(Pattern.Equals("") ? "<<empty>>" : Pattern);
+            sb.Append(" = ").Append(Pattern.Equals("", StringComparison.Ordinal) ? "<<empty>>" : Pattern);
             return sb.ToString();
         }
     }

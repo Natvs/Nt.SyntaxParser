@@ -1,15 +1,20 @@
-# Branching
+# Save grammar to files
+This update introduces a new method for exporting grammars.
 
-The update 1.3.0 introduces a new `branching` feature. This new feature allows to add and interpret custom syntax in the grammar file and enhanced grammar.
+While the previous one is about exporting it to readable texts by the users, this one is about exporting it to files syntax so that it can be later parsed back to a grammar.
 
-This feature is useful if:
-- You want to add additional parameters in the grammar file destined to your program
-- You want to specify additional parameters to terminals, non terminals, rules or regex
-- You want to write your own modules with your own syntax for your project in the grammar file
-- Other scenarios where you want to extend the grammar file with your own syntax
+For that, import the `Nt.Syntax.Exportation` namespace and then use the `Save` extended method on the grammar object.
 
-To view the full documentation of the `branching` feature, please refer to the [documentation](Doc/branching.md).
+```csharp
+using Nt.Syntax.Exportation;
 
-# Fix
+var grammar_string = grammar.Save(ExportationMode.Initial);
+```
 
-Although the documentation precised how to write the axiom of a grammar file with the new syntax, the syntax was not yet implemented. This updates fixes it.
+# Exportation enhancement
+Now when exporting a grammar, the subsequent rules are grouped with ` | ` for better readability.
+
+As a consequence, when exporting with the `ExportationMode.Grouped` or `ExportationMode.Alphabetical` modes, all the rules with a common symbol will be grouped together.
+
+# Security integration
+The project integrates code security check at build time using the default Dotnet tools.

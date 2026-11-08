@@ -1,0 +1,10 @@
+﻿[*.cs]
+
+# CA2200: Lever à nouveau une exception pour conserver les détails de la pile
+dotnet_diagnostic.CA2200.severity = silent
+
+# CA1805: Ne pas initialiser les variables avec des valeurs par défaut
+dotnet_diagnostic.CA1805.severity = silent
+
+# CA1852
+dotnet_diagnostic.CA1852.severity = silent

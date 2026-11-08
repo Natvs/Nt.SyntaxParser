@@ -9,11 +9,11 @@ namespace Nt.Syntax.Actions
     public class ErrorAction() : ITokenAction<string>
     {
 
-        public void Perform(IAutomatonToken<string> word)
+        public void Perform(IAutomatonToken<string> token)
         {
-            if (word is AutomatonToken token)
+            if (token is AutomatonToken automatonToken)
             {
-                throw new SyntaxError(token.Symbol.Name, token.Line);
+                throw new SyntaxError(automatonToken.Symbol.Name, automatonToken.Line);
             }
         }
 

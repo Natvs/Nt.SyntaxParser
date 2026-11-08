@@ -8,15 +8,15 @@ namespace Nt.Syntax.Actions
 {
     public class SetEscapeCharAction(Grammar grammar) : ITokenAction<string>
     {
-        public void Perform(IAutomatonToken<string> word)
+        public void Perform(IAutomatonToken<string> token)
         {
-            if (word is AutomatonToken token)
+            if (token is AutomatonToken automatonToken)
             {
-                if (token.Symbol.Name.Length != 1)
+                if (automatonToken.Symbol.Name.Length != 1)
                 {
-                    throw new InvalidEscapeCharSymbolException(token.Symbol.Name, token.Line);
+                    throw new InvalidEscapeCharSymbolException(automatonToken.Symbol.Name, automatonToken.Line);
                 }
-                grammar.SetEscapeChar(token.Symbol.Name.ToCharArray()[0]);
+                grammar.SetEscapeChar(automatonToken.Symbol.Name.ToCharArray()[0]);
             }
         }
     }

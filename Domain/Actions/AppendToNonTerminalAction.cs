@@ -9,17 +9,17 @@ namespace Nt.Syntax.Actions
         /// <summary>
         /// Appends a parsed token to the current non terminal being built
         /// </summary>
-        /// <param name="word">Parsed token to append</param>
-        public void Perform(IAutomatonToken<string> word)
+        /// <param name="token">Parsed token to append</param>
+        public void Perform(IAutomatonToken<string> token)
         {
-            if (word is AutomatonToken token)
+            if (token is AutomatonToken automatonToken)
             {
                 if (!context.AddingToNonTerminal)
                 {
                     context.NonTerminal = "";
                     context.AddingToNonTerminal = true;
                 }
-                context.NonTerminal += token.Symbol.Name;
+                context.NonTerminal += automatonToken.Symbol.Name;
             }
         }
     }

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Nt.Applications.SyntaxParser;
-using Nt.Automaton.Actions;
+﻿using Nt.Automaton.Actions;
 using Nt.Automaton.States;
+using Nt.Syntax.Structures;
+using Nt.Syntax.Exportation;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
@@ -16,6 +14,23 @@ namespace Nt.Applications.SyntaxParser.Actions
             Console.WriteLine();
             Console.WriteLine("- - - - - - - - - -");
             Console.WriteLine();
+        }
+
+        protected void PrintGrammar()
+        {
+            if (Context.Grammar == null)
+            {
+                Console.WriteLine("No grammar loaded.");
+                return;
+            }
+            Console.WriteLine();
+            Console.WriteLine(Context.Grammar?.ToString(ExportationMode.Grouped));
+            Console.WriteLine();
+        }
+
+        protected static void Save(Grammar grammar, string path)
+        {
+            File.WriteAllText("grammars/" + path, grammar.Save(ExportationMode.Original));
         }
 
         public virtual IState<string> GetState()

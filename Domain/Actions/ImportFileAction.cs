@@ -12,7 +12,7 @@ namespace Nt.Syntax.Actions
     /// </summary>
     public class ImportFileAction(AutomatonContext context) : ITokenAction<string>
     {
-        public void Perform(IAutomatonToken<string> word)
+        public void Perform(IAutomatonToken<string> token)
         {
             var sb = new StringBuilder();
 

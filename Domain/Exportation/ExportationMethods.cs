@@ -1,5 +1,6 @@
 ﻿using Nt.Parser.Symbols;
 using Nt.Syntax.Structures;
+using System.Globalization;
 
 namespace Nt.Syntax.Exportation
 {
@@ -19,7 +20,7 @@ namespace Nt.Syntax.Exportation
                     while (queue.Count > 0)
                     {
                         var current_symbol = queue[0];
-                        var similar_symbols = queue.Where(symbol => symbol.Name.StartsWith(current_symbol.Name)).ToList();
+                        var similar_symbols = queue.Where(symbol => symbol.Name.StartsWith(current_symbol.Name, StringComparison.Ordinal)).ToList();
                         foreach (var symbol in similar_symbols)
                         {
                             ordered_symbols.Add(symbol);
@@ -62,7 +63,7 @@ namespace Nt.Syntax.Exportation
                         ordered_rules.Add(current_rule);
                         queue.RemoveAt(0);
                         if (current_rule.Token == null) continue;
-                        var similar_rules = queue.Where(rule => rule.Token != null && rule.Token.Name.StartsWith(current_rule.Token.Name)).ToList();
+                        var similar_rules = queue.Where(rule => rule.Token != null && rule.Token.Name.StartsWith(current_rule.Token.Name, StringComparison.Ordinal)).ToList();
                         foreach (var rule in similar_rules)
                         {
                             ordered_rules.Add(rule);
@@ -107,7 +108,7 @@ namespace Nt.Syntax.Exportation
                         queue.RemoveAt(0);
 
                         if (current_regex.Token == null) continue;
-                        var similar_regexes = queue.Where(regex => regex.Token != null && regex.Token.Name.StartsWith(current_regex.Token.Name)).ToList();
+                        var similar_regexes = queue.Where(regex => regex.Token != null && regex.Token.Name.StartsWith(current_regex.Token.Name, StringComparison.Ordinal)).ToList();
                         foreach (var regex in similar_regexes)
                         {
                             ordered_regexes.Add(regex);

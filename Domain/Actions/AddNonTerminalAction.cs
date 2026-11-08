@@ -17,12 +17,12 @@ namespace Nt.Syntax.Actions
         /// <summary>
         /// Adds a parsed token as new non terminal of the grammar
         /// </summary>
-        /// <param name="word">Parsed token to add as new non terminal</param>
-        public void Perform(IAutomatonToken<string> word)
+        /// <param name="token">Parsed token to add as new non terminal</param>
+        public void Perform(IAutomatonToken<string> token)
         {
             try
             {
-                if (!context.NonTerminal.Equals(""))
+                if (!context.NonTerminal.Equals("", StringComparison.Ordinal))
                 {
                     grammar.GetBuilder().AddNonTerminal(grammar.RemoveEscapeCharacter(context.NonTerminal));
                 }

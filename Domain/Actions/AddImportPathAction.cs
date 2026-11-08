@@ -9,8 +9,8 @@ namespace Nt.Syntax.Actions
         /// <summary>
         /// Add the token read to the import path.
         /// </summary>
-        /// <param name="word">The token that is read</param>
-        public void Perform(IAutomatonToken<string> word)
+        /// <param name="token">The token that is read</param>
+        public void Perform(IAutomatonToken<string> token)
         {
             context.ImportPath.AddPath(context.CurrentImportPath);
             context.CurrentImportPath = "";

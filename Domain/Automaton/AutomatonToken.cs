@@ -1,6 +1,6 @@
-﻿using Nt.Parser.Structures;
-using Nt.Automaton.Tokens;
+﻿using Nt.Automaton.Tokens;
 using Nt.Parser.Symbols;
+using Nt.Parser.Structures;
 
 namespace Nt.Syntax.Automaton
 {
