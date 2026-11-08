@@ -33,7 +33,7 @@ namespace Nt.Syntax.Exportation
         /// <param name="nonterminals">An ordered collection of nonterminal symbols that determines the output order of the rules.</param>
         /// <param name="mode">The exportation mode that specifies formatting or filtering options for the output.</param>
         /// <returns>A string representation of the grammar rules, formatted according to the specified nonterminals and exportation mode.</returns>
-        public static string ToString(this RulesSet rules, ExportationMode mode)
+        public static string ToString(this ElementsSet<Rule> rules, ExportationMode mode)
         {
             var ordered_rules = Reorder(rules.ToList(), mode);
             return StringExporter.ToString(ordered_rules);
@@ -46,7 +46,7 @@ namespace Nt.Syntax.Exportation
         /// <param name="nonterminals">An ordered collection of nonterminal symbols that determines the output order of the regular expressions.</param>
         /// <param name="mode">The exportation mode that specifies formatting or output rules for the conversion.</param>
         /// <returns>A string representation of the regular expressions, formatted according to the specified nonterminals and exportation mode.</returns>
-        public static string ToString(this RegexSet regexes, ExportationMode mode)
+        public static string ToString(this ElementsSet<RegularExpression> regexes, ExportationMode mode)
         {
             var ordered_regexes = Reorder(regexes.ToList(), mode);
             return StringExporter.ToString(ordered_regexes);

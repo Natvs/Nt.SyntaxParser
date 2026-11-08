@@ -1,6 +1,7 @@
 ﻿using Nt.Parser.Structures;
 using Nt.Syntax.Exceptions;
 using Nt.Syntax.Exportation;
+using System.Text.RegularExpressions;
 
 namespace Nt.Syntax.Structures
 {
@@ -69,8 +70,8 @@ namespace Nt.Syntax.Structures
         public GrammarSymbolsSet Terminals { get; }
         public GrammarSymbolsSet NonTerminals { get; }
         public NonTerminal? Axiom { get; internal set; } = null;
-        public RulesSet Rules { get; } = [];
-        public RegexSet RegularExpressions { get; } = [];
+        public ElementsSet<Rule> Rules { get; } = [];
+        public ElementsSet<RegularExpression> RegularExpressions { get; } = [];
 
         /// <summary>
         /// Sets the character used to escape special characters in parsing or formatting operations.
