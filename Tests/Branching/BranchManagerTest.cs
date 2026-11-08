@@ -6,7 +6,7 @@ using Transition = Nt.Automaton.Transitions.Transition<string>;
 
 namespace Nt.Tests.Syntax.Branching
 {
-    public class BranchingExtensionsTest
+    public class BranchManagerTest
     {
         // Chech structure of a branch
 
