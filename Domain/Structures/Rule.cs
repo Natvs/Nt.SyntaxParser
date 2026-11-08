@@ -1,5 +1,4 @@
-﻿using Nt.Syntax.Exceptions;
-using System.Text;
+﻿using System.Text;
 
 namespace Nt.Syntax.Structures
 {
