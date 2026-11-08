@@ -1,4 +1,5 @@
-﻿using Nt.Syntax.Structures;
+﻿using Nt.Syntax.Branching.Exceptions;
+using Nt.Syntax.Structures;
 
 namespace Nt.Syntax.Branching
 {
@@ -93,7 +94,8 @@ namespace Nt.Syntax.Branching
         /// </summary>
         /// <typeparam name="T">Type of the data to get</typeparam>
         /// <param name="rule">Rule associated to the data</param>
-        /// <returns></returns>
+        /// <returns>The data associated to the rule</returns>
+        /// <exception cref="UninitializedDataException">Thrown if the data is not initialized and no factory is available</exception>
         public static T GetData<T>(this Rule rule) where T : IData
         {
             return GetData<T>(rule, RuleDataFactory);
@@ -104,7 +106,8 @@ namespace Nt.Syntax.Branching
         /// </summary>
         /// <typeparam name="T">Type of the data to get</typeparam>
         /// <param name="rule">Regular expression associated to the data</param>
-        /// <returns></returns>
+        /// <returns>The data associated to the regular expression</returns>
+        /// <exception cref="UninitializedDataException">Thrown if the data is not initialized and no factory is available</exception>
         public static T GetData<T>(this RegularExpression regex) where T : IData
         {
             return GetData<T>(regex, RegexDataFactory);
@@ -115,7 +118,8 @@ namespace Nt.Syntax.Branching
         /// </summary>
         /// <typeparam name="T">Type of the data to get</typeparam>
         /// <param name="rule">Terminal associated to the data</param>
-        /// <returns></returns>
+        /// <returns>The data associated to the terminal</returns>
+        /// <exception cref="UninitializedDataException">Thrown if the data is not initialized and no factory is available</exception>
         public static T GetData<T>(this Terminal token) where T : IData
         {
             return GetData<T>(token, TerminalDataFactory);
@@ -126,7 +130,8 @@ namespace Nt.Syntax.Branching
         /// </summary>
         /// <typeparam name="T">Type of the data to get</typeparam>
         /// <param name="rule">Non terminal associated to the data</param>
-        /// <returns></returns>
+        /// <returns>The data associated to the non terminal</returns>
+        /// <exception cref="UninitializedDataException">Thrown if the data is not initialized and no factory is available</exception>
         public static T GetData<T>(this NonTerminal token) where T : IData
         {
             return GetData<T>(token, NonTerminalDataFactory);
@@ -147,7 +152,7 @@ namespace Nt.Syntax.Branching
             // Check the type of the data
             if (data is not T typedData)
             {
-                throw new TypeLoadException($"Data associated with rule {obj} is not of type {typeof(T).Name}");
+                throw new UninitializedDataException(obj, typeof(T));
             }
             
             return typedData;

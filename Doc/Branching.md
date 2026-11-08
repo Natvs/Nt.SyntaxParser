@@ -20,7 +20,7 @@ So `branching` is used when:
 - You want to associate a value or some additional information to a terminal, non-terminal, rule or regular expression
 - You need to define some additional parameters for your program that the syntax parser don't already handle
 - You want to make it more than just a grammar file, but also a configuration file for your program
-- Other scenarios where you want to define some custom syntax in the grammar file, and have it parsed by the grammar parsed.
+- Other scenarios where you want to define some custom syntax in the grammar file, and have it parsed by the parser.
 
 ## Example of a use case
 For example, you can define a rule, and then define some value associated to that rule without having to define it in a new file.
@@ -40,7 +40,7 @@ However, the following line `VAL = 1;` used to define a value associated to the 
 ## Create a new branch
 
 To allow the parser to read the new syntax, you need to define a branching mechanism that can recognize and process the custom syntax.
-This works with defining `states` and `transitions` between those states, where the transitions define how to switch between states based on the token being parser.
+This works with defining `states` and `transitions` between those states, where the transitions define how to switch between states based on the token being parsed.
 
 In the following, we will add the line `VAL = 1;` to the grammar parser.
 
@@ -113,21 +113,87 @@ valueState.AddAction(
 )
 ```
 
-
-
-### Use the automaton context
+## Use the automaton context
 
 The two methods `AddAction` both have a first argument `context`. This context provides information about the current state of the parsing processus, that can be used to retrieve information.
-
-
 
 | Method or field | Description |
 |--------|-------------|
 | GetPath() | Return all the imported paths declared by the `ADDTOPATH` statement in the grammar. |
-| ImportedString | Represent the last string that has been imported by an `IMPORT` statement. |
+| ImportedString | Represent the last string that had been imported by an `IMPORT` statement. |
 | Terminal | Represent the last terminal parsed. |
 | NonTerminal | Represent the last non-terminal parsed. |
-| Rule | Represent the last rule that has been parsed. |
-| Regex | Represent the last regular expression that has been parsed. |
+| Rule | Represent the last rule that had been parsed. |
+| Regex | Represent the last regular expression that had been parsed. |
 
+## Custom data storage
+
+One main aspect of the branching feature is about defining custom data for elements like terminals, non-terminals, rules or regular expressions.
+This new data has to be stored somewhere. There are two ways of storing this data
+
+- Either externally in a structure you define and with a link to an element of the grammar. This requires you to handle everything, from storage to linking.
+- Either internally in the element of the grammar itself, in a predefined structure for that effect. This method allows you to avoid complexity of storage and linking. That is what this section is about.
+
+To store internally, follow the following steps:
+
+### 1. Define the structure of the data
+
+The data is a class that implements the interface `IData`.
+
+```csharp
+public class MyData : IData
+{
+	// Define your custom data here
+}
+```
+
+### 2. Store the data in the element of the grammar
+
+Use the action of a transition or a state to store the data the parser reads from your custom syntax.
+
+```csharp
+// This action edits the data of the last terminal read by the parser
+valueTransition.AddAction(
+	(context, token) => 
+	{
+		var data = new MyData();
+		data.MyValue = token.Value;
+		context.Terminal.CreateData(data);
+	}
+)
+
+// This action edits the data of the last rule read by the parser
+valueState.AddAction(
+	(context) => {
+		var data = new MyData();
+		data.MyBool = true;
+		context.Rule.CreateData(data);
+	}
+)
+```
+
+### Access the data later
+
+To access the data later, you can use the `GetData<T>` method on the element that has the data.
+
+Here are some examples of accessing data:
+
+```csharp
+
+var parser = new SyntaxParser();
+var grammar = parser.ParseFile("path/to/a/grammar/file.txt");
+
+foreach (var rule in grammar.Rules)
+{
+	// Access the data of the rule
+	var data = rule.GetData<MyData>();
+	Console.WriteLine($"The value associated to the rule is: {data.MyBool}");
+}
+
+// Access the data of the last rule read by the parser
+var ruleData = context.Rule.GetData<MyData>();
+Console.WriteLine($"The value of the rule is: {ruleData.MyBool}");
+```
+
+Be aware that if the data is not initialized, the method `GetData<T>` will throw an exception.
 

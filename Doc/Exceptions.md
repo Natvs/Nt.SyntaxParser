@@ -4,14 +4,14 @@ This project contains several custom exceptions to handle errors that may occur 
 ## Exceptions from text parser
 See [the parser projet official documentation](https://github.com/Natvs/Nt.Parser) on Github for a list of exceptions from the text parser.
 
-## Grammar pre-parsing exceptions
+## Exception from the pre-parser
 |**Exception**|**Description**|
 |---|---|
 |`ImportFileNotFoundException`| The file you are trying to import was not found. |
 |`InvalidEscapeCharSymbolException`| When redefining the syntax escape character, the new symbol should neither be empty nor be longer than one character|
 
 
-## Exceptions from grammar parser
+## Exceptions from the parser
 
 |**Exception**|**Description**|
 |---|---|
@@ -20,6 +20,7 @@ See [the parser projet official documentation](https://github.com/Natvs/Nt.Parse
 |`UnregisteredNonTerminalException`| Use of a non-terminal that has not been previously declared. |
 |`SyntaxError`| Your grammar file or string contains a syntax error. More informations are given in the error message. |
 |`UnknownSymbolException`| A rule derivation contains a symbol that was not previously declared as terminal or non-terminal. |
+|`UninitializedDataException`| A custom data type has not been initialized for a specific element. |
 
 ## Unlisted exceptions
 Other exceptions may occur. If that happens, please [open an issue](https://github.com/Natvs/Nt.Parser/issues) on Github.
