@@ -24,7 +24,7 @@ namespace Nt.Syntax.Actions
             {
                 if (!context.AddingToTerminal)
                 {
-                    context.Terminal = new Structures.Terminal(new Symbol(""), -1);
+                    context.Terminal = new Structures.Terminal(new Symbol(""), automatonToken.Line);
                     context.AddingToTerminal = true;
                 }
                 context.Terminal?.Symbol = new Symbol(context.Terminal.Symbol.Name + automatonToken.Symbol.Name);

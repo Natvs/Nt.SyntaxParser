@@ -2,7 +2,7 @@
 {
     internal class DataStorage()
     {
-        private static DataStorage _instance = new();
+        private static DataStorage? _instance;
         private Dictionary<int, IData> ObjData { get; } = [];
         
         public static DataStorage GetInstance()

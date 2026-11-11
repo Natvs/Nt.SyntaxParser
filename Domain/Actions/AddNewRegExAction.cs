@@ -1,8 +1,9 @@
 ﻿using Nt.Automaton.Actions;
 using Nt.Automaton.Tokens;
 using Nt.Syntax.Automaton;
-using Nt.Syntax.Structures;
 using Nt.Syntax.Builders;
+using Nt.Syntax.Exceptions;
+using Nt.Syntax.Structures;
 
 namespace Nt.Syntax.Actions
 {
@@ -13,8 +14,24 @@ namespace Nt.Syntax.Actions
             if (token is AutomatonToken automatonToken) 
             {
                 context.Regex = new RegularExpression(grammar);
-                context.Regex.GetBuilder().SetToken(new NonTerminal(automatonToken.Symbol, automatonToken.Line));
-                grammar.RegularExpressions.Add(context.Regex);               
+
+                try
+                {
+                    var axiom = grammar.ParseToGrammarToken(automatonToken);
+                    if (axiom is NonTerminal nonterminal)
+                    {
+                        context.Regex.GetBuilder().SetToken(nonterminal);
+                        grammar.RegularExpressions.Add(context.Regex);
+                    }
+                    else
+                    {
+                        throw new AxiomException(automatonToken.Symbol.Name, automatonToken.Line);
+                    }
+                }
+                catch (UnknownSymbolException)
+                {
+                    throw new UnregisteredNonTerminalException(automatonToken.Symbol.Name, automatonToken.Line);
+                }              
             }
         }
     }

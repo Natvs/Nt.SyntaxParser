@@ -1,4 +1,5 @@
 ﻿using Nt.Parser.Structures;
+using Nt.Syntax.Branching;
 using Nt.Syntax.Exceptions;
 using Nt.Syntax.Exportation;
 using System.Text.RegularExpressions;
@@ -52,11 +53,27 @@ namespace Nt.Syntax.Structures
             // Check if terminal or non terminal
             if (Terminals.TryGet((t) => t.Name == new_content, out var terminal))
             {
-                return new Terminal(terminal.Symbol, token.Line);
+                var new_terminal = new Terminal(terminal.Symbol, token.Line);
+
+                // Ensures data is transferred
+                if (terminal.TryGetData<IData>(out var data))
+                {
+                    new_terminal.CreateData(data);
+                }
+
+                return new_terminal;
             }
             else if (NonTerminals.TryGet((t) => t.Name == new_content, out var nonterminal))
             {
-                return new NonTerminal(nonterminal.Symbol, token.Line);
+                var new_nonterminal = new NonTerminal(nonterminal.Symbol, token.Line);
+
+                // Ensures data is transferred
+                if (nonterminal.TryGetData<IData>(out var data))
+                {
+                    new_nonterminal.CreateData(data);
+                }
+
+                return new_nonterminal;
             }
             throw new UnknownSymbolException(new_content, token.Line);
         }

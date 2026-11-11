@@ -1,5 +1,6 @@
 ﻿using Nt.Syntax.Branching.Exceptions;
 using Nt.Syntax.Structures;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Nt.Syntax.Branching
 {
@@ -80,7 +81,7 @@ namespace Nt.Syntax.Branching
         {
             CreateData((object)token, data);
         }
-
+        
         private static void CreateData(object obj, IData data)
         {
             var storage = DataStorage.GetInstance();
@@ -137,26 +138,84 @@ namespace Nt.Syntax.Branching
             return GetData<T>(token, NonTerminalDataFactory);
         }
 
-        private static T GetData<T>(object obj, IDataFactory? factory = null) where T : IData
+        /// <summary>
+        /// Get the data associated to this rule
+        /// </summary>
+        /// <typeparam name="T">Type of the data to get</typeparam>
+        /// <param name="rule">Rule associated to the data</param>
+        /// <param name="data">Data associated to the rule, if the method returns true</param>
+        /// <returns>True if the date exists, otherwise false</returns>
+        public static bool TryGetData<T>(this Rule rule, [NotNullWhen(true)] out T? data) where T : IData
+        {
+            return TryGetData(rule, RuleDataFactory, out data);
+        }
+
+        /// <summary>
+        /// Get the data associated to this regular expression
+        /// </summary>
+        /// <typeparam name="T">Type of the data to get</typeparam>
+        /// <param name="regex">Regular expression associated to the data</param>
+        /// <param name="data">Data associated to the regular expression, if the method returns true</param>
+        /// <returns>True if the date exists, otherwise false</returns>
+        public static bool TryGetData<T>(this RegularExpression regex, [NotNullWhen(true)] out T? data) where T : IData
+        {
+            return TryGetData(regex, RegexDataFactory, out data);
+        }
+        
+        /// <summary>
+        /// Get the data associated to this terminal token
+        /// </summary>
+        /// <typeparam name="T">Type of the data to get</typeparam>
+        /// <param name="token">Terminal token associated to the data</param>
+        /// <param name="data">Data associated to the terminal token, if the method returns true</param>
+        /// <returns>True if the date exists, otherwise false</returns>
+        public static bool TryGetData<T>(this Terminal token, [NotNullWhen(true)] out T? data) where T : IData
+        {
+            return TryGetData(token, TerminalDataFactory, out data);
+        }
+
+        /// <summary>
+        /// Get the data associated to this non terminal token
+        /// </summary>
+        /// <typeparam name="T">Type of the data to get</typeparam>
+        /// <param name="token">Non terminal token associated to the data</param>
+        /// <param name="data">Data associated to the non terminal token, if the method returns true</param>
+        /// <returns>True if the date exists, otherwise false</returns>
+        public static bool TryGetData<T>(this NonTerminal token, [NotNullWhen(true)] out T? data) where T : IData
+        {
+            return TryGetData(token, NonTerminalDataFactory, out data);
+        }
+
+        private static T GetData<T>(object obj, IDataFactory? factory) where T : IData
+        {
+            if (TryGetData<T>(obj, factory, out var data))
+            {
+                return data;
+            }
+            throw new UninitializedDataException(obj, typeof(T));
+        }
+        private static bool TryGetData<T>(object obj, IDataFactory? factory, [NotNullWhen(true)] out T? data) where T : IData
         {
             var storage = DataStorage.GetInstance();
-            var data = storage.GetData(obj);
+            var stored = storage.GetData(obj);
 
             // Create the data if null and a factory is provided
-            if (data == null && factory != null) {
-                data = factory.Create();
-                storage.AddData(obj, data);
-                return (T)data;
+            if (stored == null && factory != null)
+            {
+                stored = factory.Create();
+                storage.AddData(obj, stored);
+                data = (T)stored;
+                return true;
             }
 
             // Check the type of the data
-            if (data is not T typedData)
+            if (stored is T typedData)
             {
-                throw new UninitializedDataException(obj, typeof(T));
+                data = typedData;
+                return true;
             }
-            
-            return typedData;
+            data = default;
+            return false;
         }
-
     }
 }

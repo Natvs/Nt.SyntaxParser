@@ -29,8 +29,10 @@ namespace Nt.Syntax.Actions
                     {
                         throw new SyntaxError(token.Value, automatonToken.Line);
                     }
+
                     var name = grammar.RemoveEscapeCharacter(context.NonTerminal.Symbol.Name);
-                    grammar.GetBuilder().AddNonTerminal(name, automatonToken.Line);
+                    context.NonTerminal.Symbol = new Symbol(name);
+                    grammar.NonTerminals.Add(context.NonTerminal);
                 }
             }
             catch (RegisteredNonTerminalException) { } // Ignore those 2 exceptions for now

@@ -30,8 +30,10 @@ namespace Nt.Syntax.Actions
                     {
                         throw new SyntaxError(token.Value, automatonToken.Line);
                     }
+                    
                     var name = grammar.RemoveEscapeCharacter(context.Terminal.Symbol.Name);
-                    grammar.GetBuilder().AddTerminal(name, automatonToken.Line);
+                    context.Terminal.Symbol = new Symbol(name);
+                    grammar.Terminals.Add(context.Terminal);
                 }
             }
             catch (RegisteredNonTerminalException) { }

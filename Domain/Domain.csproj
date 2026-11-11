@@ -51,7 +51,7 @@
 
   <ItemGroup>
 	  <PackageReference Include="Nt.Parser" Version="1.0.4.2" />
-	  <PackageReference Include="Nt.Automaton" Version="1.2.4.1" />
+	  <PackageReference Include="Nt.Automaton" Version="1.3.0" />
   </ItemGroup>
 
 </Project>
