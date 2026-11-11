@@ -1,4 +1,5 @@
 ﻿using Nt.Automaton.Actions;
+using Nt.Automaton.Automatons;
 using Nt.Automaton.Tokens;
 using Nt.Parser.Structures;
 using Nt.Parser.Symbols;
@@ -23,15 +24,15 @@ namespace Nt.Syntax.Actions
         {
             try
             {
-                Terminal terminal;
-
-                if (context.Terminal == null)
+                if (token is AutomatonToken automatonToken)
                 {
-                    terminal = new Terminal(new Symbol(""), -1);
-                    context.Terminal = terminal;
+                    if (context.Terminal == null)
+                    {
+                        throw new SyntaxError(token.Value, automatonToken.Line);
+                    }
+                    var name = grammar.RemoveEscapeCharacter(context.Terminal.Symbol.Name);
+                    grammar.GetBuilder().AddTerminal(name, automatonToken.Line);
                 }
-                else terminal = context.Terminal;
-                grammar.GetBuilder().AddTerminal(grammar.RemoveEscapeCharacter(context.Terminal.Symbol.Name)); 
             }
             catch (RegisteredNonTerminalException) { }
             catch (RegisteredTerminalException) { }

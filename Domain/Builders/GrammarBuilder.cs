@@ -20,14 +20,15 @@ namespace Nt.Syntax.Builders
         /// Add a terminal symbol to the grammar.
         /// </summary>
         /// <param name="name">Name of the terminal to add</param>
+        /// <param name="line">The line number of the symbol in the source code. Defaults to -1.</param>
         /// <returns>The current instance of <see cref="GrammarBuilder"/> for method chaining.</returns>
         /// <exception cref="RegisteredTerminalException">Thrown if the symbol is already registered as a terminal.</exception>
         /// <exception cref="RegisteredNonTerminalException">Thrown if the symbol is already registered as a non-terminal.</exception>
-        public GrammarBuilder AddTerminal(string name)
+        public GrammarBuilder AddTerminal(string name, int line = -1)
         {
             if (_grammar.Terminals.Contains((t) => t.Symbol.Name == name)) throw new RegisteredTerminalException(name);
             if (_grammar.NonTerminals.Contains((t) => t.Symbol.Name == name)) throw new RegisteredNonTerminalException(name);
-            _grammar.Terminals.Add(new Terminal(new Symbol(name), -1));
+            _grammar.Terminals.Add(new Terminal(new Symbol(name), line));
             return this;
         }
 
@@ -35,14 +36,15 @@ namespace Nt.Syntax.Builders
         /// Add a non terminal symbol to the grammar.
         /// </summary>
         /// <param name="name">Name of the non-terminal to add</param>
+        /// <param name="line">The line number of the symbol in the source code. Defaults to -1.</param>
         /// <returns>The current instance of <see cref="GrammarBuilder"/> for method chaining.</returns>
         /// <exception cref="RegisteredNonTerminalException">Thrown if the symbol is already registered as a non-terminal.</exception>
         /// <exception cref="RegisteredTerminalException">Thrown if the symbol is already registered as a terminal.</exception>
-        public GrammarBuilder AddNonTerminal(string name)
+        public GrammarBuilder AddNonTerminal(string name, int line = -1)
         {
             if (_grammar.NonTerminals.Contains((t) => t.Symbol.Name == name)) throw new RegisteredNonTerminalException(name);
             if (_grammar.Terminals.Contains((t) => t.Symbol.Name == name)) throw new RegisteredTerminalException(name);
-            _grammar.NonTerminals.Add(new NonTerminal(new Symbol(name), -1));
+            _grammar.NonTerminals.Add(new NonTerminal(new Symbol(name), line));
             return this;
         }
 
@@ -121,15 +123,16 @@ namespace Nt.Syntax.Builders
         /// Sets the axiom (start symbol) of the grammar to the specified non-terminal symbol.
         /// </summary>
         /// <param name="symbol">The symbol to set as the axiom. Must be a non-terminal symbol defined in the grammar.</param>
+        /// <param name="line">The line number of the symbol in the source code. Defaults to -1.</param>
         /// <returns>The current instance of <see cref="GrammarBuilder"/> to allow method chaining.</returns>
         /// <exception cref="UnregisteredNonTerminalException">Thrown if <paramref name="symbol"/> is not a non-terminal symbol in the grammar.</exception>
-        public GrammarBuilder SetAxiom(Symbol symbol)
+        public GrammarBuilder SetAxiom(Symbol symbol, int line = -1)
         {
             if (_grammar.NonTerminals.TryGet((t) => t.Symbol.Name == symbol.Name, out var nonterminal))
             {
-                _grammar.Axiom = new NonTerminal(nonterminal.Symbol, -1);
+                _grammar.Axiom = new NonTerminal(nonterminal.Symbol, line);
             }
-            throw new UnregisteredNonTerminalException(symbol.Name, -1);
+            throw new UnregisteredNonTerminalException(symbol.Name, line);
         }
 
         /// <summary>
@@ -142,10 +145,10 @@ namespace Nt.Syntax.Builders
         {
             if (_grammar.NonTerminals.TryGet((t) => t.Symbol.Name == token.Symbol.Name, out var nonterminal))
             {
-                _grammar.Axiom = new NonTerminal(nonterminal.Symbol, -1);
+                _grammar.Axiom = new NonTerminal(nonterminal.Symbol, token.Line);
                 return this;
             }
-            throw new UnregisteredNonTerminalException(token.Symbol.Name, -1);          
+            throw new UnregisteredNonTerminalException(token.Symbol.Name, token.Line);          
         }
 
         /// <summary>

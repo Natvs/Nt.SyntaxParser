@@ -17,7 +17,7 @@ namespace Nt.Syntax.Actions
             {
                 if (!context.AddingToNonTerminal)
                 {
-                    context.NonTerminal = new Structures.NonTerminal(new Symbol(""), -1);
+                    context.NonTerminal = new Structures.NonTerminal(new Symbol(""), automatonToken.Line);
                     context.AddingToNonTerminal = true;
                 }
                 context.NonTerminal?.Symbol = new Symbol(context.NonTerminal.Symbol.Name + automatonToken.Symbol.Name);

@@ -34,7 +34,6 @@ namespace Nt.Tests.Syntax
             AssertRegex(grammar, []);
         }
 
-
         [Fact]
         public void SyntaxParser_NewStyleSingleNonTerminal_ValidResult()
         {
@@ -637,6 +636,78 @@ namespace Nt.Tests.Syntax
             AssertAxiom(grammar, "A");
             AssertRules(grammar, [("A", ["a"]), ("B", ["b"]), ("A", ["B"])]);
             AssertRegex(grammar, []);
+        }
+
+        #endregion
+
+        #region Lines
+
+        [Fact]
+        public void SyntaxParser_ParseTerminals_ReturnCorrectLine()
+        {
+            var parser = new Nt.Syntax.SyntaxParser();
+
+            var grammar = parser.ParseString("\nT={a}");
+
+            Assert.Equal(2, grammar.Terminals.Get(0).Line);
+        }
+
+        [Fact]
+        public void SyntaxParser_ParseNonTerminals_ReturnCorrectLine()
+        {
+            var parser = new Nt.Syntax.SyntaxParser();
+
+            var grammar = parser.ParseString("\nN={A}");
+
+            Assert.Equal(2, grammar.NonTerminals.Get(0).Line);
+        }
+
+        [Fact]
+        public void SyntaxParser_ParseAxiom_ReturnCorrectLine()
+        {
+            var parser = new Nt.Syntax.SyntaxParser();
+            var grammar = parser.ParseString("\nN={A}\nS=A");
+            Assert.Equal(3, grammar.Axiom?.Line);
+        }
+
+        [Fact]
+        public void SyntaxParser_ParseRuleAxiom_ReturnCorrectLine()
+        {
+            var parser = new Nt.Syntax.SyntaxParser();
+            var grammar = parser.ParseString("\nN={A}\nT={a}\nR:A -> a;");
+
+            Assert.Equal(4, grammar.Rules.Get(0).Token?.Line);
+        }
+
+        [Fact]
+        public void SyntaxParser_ParseRuleDerivation_ReturnCorrectLine()
+        {
+            var parser = new Nt.Syntax.SyntaxParser();
+            var grammar = parser.ParseString("\nN={A}\nT={a}\nR:A -> a;");
+            Assert.Equal(4, grammar.Rules.Get(0).Derivation.Get(0).Line);
+        }
+
+        [Fact]
+        public void SyntaxParser_ParseRegexAxiom_ReturnCorrectLine()
+        {
+            var parser = new Nt.Syntax.SyntaxParser();
+            var grammar = parser.ParseString("\nN={A}\nE:A = \"[a-zA-Z_]*\";");
+            Assert.Equal(3, grammar.RegularExpressions.Get(0).Token?.Line);
+        }
+
+        [Fact]
+        public void SyntaxParser_ParseSyntaxError_ReturnCorrectLine()
+        {
+            var parser = new Nt.Syntax.SyntaxParser();
+            try
+            {
+                var grammar = parser.ParseString("\nUNKNOWN");
+
+            }
+            catch (SyntaxError ex)
+            {
+                Assert.Equal(2, ex.Line);
+            }
         }
 
         #endregion

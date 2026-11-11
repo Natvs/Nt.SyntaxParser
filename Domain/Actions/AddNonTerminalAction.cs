@@ -23,16 +23,15 @@ namespace Nt.Syntax.Actions
         {
             try
             {
-                NonTerminal nonterminal;
-
-                if (context.NonTerminal == null)
+                if (token is AutomatonToken automatonToken)
                 {
-                    nonterminal = new NonTerminal(new Symbol(""), -1);
-                    context.NonTerminal = nonterminal;
+                    if (context.NonTerminal == null)
+                    {
+                        throw new SyntaxError(token.Value, automatonToken.Line);
+                    }
+                    var name = grammar.RemoveEscapeCharacter(context.NonTerminal.Symbol.Name);
+                    grammar.GetBuilder().AddNonTerminal(name, automatonToken.Line);
                 }
-                else nonterminal = context.NonTerminal;
-
-                grammar.GetBuilder().AddNonTerminal(grammar.RemoveEscapeCharacter(context.NonTerminal.Symbol.Name));
             }
             catch (RegisteredNonTerminalException) { } // Ignore those 2 exceptions for now
             catch (RegisteredTerminalException) { } // Maybe someone should remove them later
