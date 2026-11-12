@@ -8,7 +8,7 @@ namespace Nt.Syntax.Structures
         Terminal
     }
     
-    public class GrammarToken(GrammarTokenType type, ISymbol symbol, int line)
+    public abstract class GrammarToken(GrammarTokenType type, ISymbol symbol, int line)
     {
         public GrammarTokenType Type { get; } = type;
         public ISymbol Symbol { get; internal set; } = symbol;
@@ -19,5 +19,6 @@ namespace Nt.Syntax.Structures
 
         public override string ToString() => Symbol.Name;
 
+        public abstract GrammarToken Clone(int line);
     }
 }

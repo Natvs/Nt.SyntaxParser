@@ -53,27 +53,11 @@ namespace Nt.Syntax.Structures
             // Check if terminal or non terminal
             if (Terminals.TryGet((t) => t.Name == new_content, out var terminal))
             {
-                var new_terminal = new Terminal(terminal.Symbol, token.Line);
-
-                // Ensures data is transferred
-                if (terminal.TryGetData<IData>(out var data))
-                {
-                    new_terminal.CreateData(data);
-                }
-
-                return new_terminal;
+                return terminal.Clone(token.Line);
             }
             else if (NonTerminals.TryGet((t) => t.Name == new_content, out var nonterminal))
             {
-                var new_nonterminal = new NonTerminal(nonterminal.Symbol, token.Line);
-
-                // Ensures data is transferred
-                if (nonterminal.TryGetData<IData>(out var data))
-                {
-                    new_nonterminal.CreateData(data);
-                }
-
-                return new_nonterminal;
+                return nonterminal.Clone(token.Line);
             }
             throw new UnknownSymbolException(new_content, token.Line);
         }
