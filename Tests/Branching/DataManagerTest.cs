@@ -6,14 +6,15 @@ using Nt.Parser.Symbols;
 using Nt.Syntax;
 using Nt.Syntax.Automaton;
 using Nt.Syntax.Branching;
+using Nt.Syntax.Branching.Exceptions;
 using Nt.Syntax.Builders;
 using Nt.Syntax.Structures;
 
 namespace Nt.Tests.Syntax.Branching
 {
-    internal class TestDataFactory : IDataFactory
+    internal class TestDataFactory : IDataFactory<TestData>
     {
-        public IData Create()
+        public TestData Create()
         {
             return new TestData("test");
         }
@@ -29,6 +30,8 @@ namespace Nt.Tests.Syntax.Branching
 
         public string Message { get; } = "";
     }
+
+    internal class IncorrectData : IData { }
 
     public class DataManagerTest
     {
@@ -81,7 +84,6 @@ namespace Nt.Tests.Syntax.Branching
             Assert.IsType<TestData>(data);
         }
 
-        
         // Persistence of the data content
 
         [Fact]
@@ -130,7 +132,6 @@ namespace Nt.Tests.Syntax.Branching
             Assert.Equal("test", data.Message);
         }
 
-
         // Persistence of the data after modifications
 
         [Fact]
@@ -162,50 +163,127 @@ namespace Nt.Tests.Syntax.Branching
         }
 
 
-        // Creation of the data with a factory
+        // Unitialised or incorrect data
 
         [Fact]
-        public void DataManager_GetRuleData_ShouldCreateDataWithFactory()
+        public void DataManager_GetRuleData_ShouldThrowIfDataIsNotInitialized()
+        {
+            var grammar = new Grammar();
+
+            var rule = new Rule(grammar);
+
+            Assert.Throws<UninitializedDataException>(rule.GetData<TestData>);
+        }
+
+        [Fact]
+        public void DataManager_GetRuleData_ShouldThrowIfDataIsOfIncorrectType()
         {
             var grammar = new Grammar();
             var rule = new Rule(grammar);
 
-            DataManager.SetRuleFactory(new TestDataFactory());
-            var data = rule.GetData<TestData>();
+            rule.CreateData(new IncorrectData());
 
-            Assert.Equal("test", data.Message);
+            Assert.Throws<IncorrectDataTypeException>(rule.GetData<TestData>);
         }
 
         [Fact]
-        public void DataManager_GetRegexData_ShouldCreateDataWithFactory()
+        public void DataManager_GetRegexData_ShouldThrowIfDataIsNotInitialized()
+        {
+            var grammar = new Grammar();
+
+            var regex = new RegularExpression(grammar);
+
+            Assert.Throws<UninitializedDataException>(regex.GetData<TestData>);
+        }
+
+        [Fact]
+        public void DataManager_GetRegexData_ShouldThrowIfDataIsOfIncorrectType()
         {
             var grammar = new Grammar();
             var regex = new RegularExpression(grammar);
 
-            DataManager.SetRegularExpressionFactory(new TestDataFactory());
-            var data = regex.GetData<TestData>();
+            regex.CreateData(new IncorrectData());
 
-            Assert.Equal("test", data.Message);
+            Assert.Throws<IncorrectDataTypeException>(regex.GetData<TestData>);
         }
 
         [Fact]
-        public void DataManager_GetTerminalData_ShouldCreateDataWithFactory()
+        public void DataManager_GetTerminalData_ShouldThrowIfDataIsNotInitialized()
         {
             var terminal = new Terminal(new Symbol("test"), 0);
 
-            DataManager.SetTerminalFactory(new TestDataFactory());
-            var data = terminal.GetData<TestData>();
+            Assert.Throws<UninitializedDataException>(terminal.GetData<TestData>);
+        }
+
+        [Fact]
+        public void DataManager_GetTerminalData_ShouldThrowIfDataIsOfIncorrectType()
+        {
+            var terminal = new Terminal(new Symbol("test"), 0);
+
+            terminal.CreateData(new IncorrectData());
+
+            Assert.Throws<IncorrectDataTypeException>(terminal.GetData<TestData>);
+        }
+
+        [Fact]
+        public void DataManager_GetNonTerminalData_ShouldThrowIfDataIsNotInitialized()
+        {
+            var nonterminal = new NonTerminal(new Symbol("test"), 0);
+
+            Assert.Throws<UninitializedDataException>(nonterminal.GetData<TestData>);
+        }
+
+        [Fact]
+        public void DataManager_GetNonTerminalData_ShouldThrowIfDataIsOfIncorrectType()
+        {
+            var nonterminal = new NonTerminal(new Symbol("test"), 0);
+
+            nonterminal.CreateData(new IncorrectData());
+
+            Assert.Throws<IncorrectDataTypeException>(nonterminal.GetData<TestData>);
+        }
+
+
+        // Creation of the data with a factory
+
+        [Fact]
+        public void DataManager_GetOrCreateRuleData_ShouldCreateDataWithFactory()
+        {
+            var grammar = new Grammar();
+            var rule = new Rule(grammar);
+
+            var data = rule.GetOrCreateData(new TestDataFactory());
 
             Assert.Equal("test", data.Message);
         }
 
         [Fact]
-        public void DataManager_GetNonTerminalData_ShouldCreateDataWithFactory()
+        public void DataManager_GetOrCreateRegexData_ShouldCreateDataWithFactory()
+        {
+            var grammar = new Grammar();
+            var regex = new RegularExpression(grammar);
+
+            var data = regex.GetOrCreateData(new TestDataFactory());
+
+            Assert.Equal("test", data.Message);
+        }
+
+        [Fact]
+        public void DataManager_GetOrCreateTerminalData_ShouldCreateDataWithFactory()
+        {
+            var terminal = new Terminal(new Symbol("test"), 0);
+
+            var data = terminal.GetOrCreateData(new TestDataFactory());
+
+            Assert.Equal("test", data.Message);
+        }
+
+        [Fact]
+        public void DataManager_GetOrCreateNonTerminalData_ShouldCreateDataWithFactory()
         {
             var nonterminal = new NonTerminal(new Symbol("test"), 0);
 
-            DataManager.SetNonTerminalFactory(new TestDataFactory());
-            var data = nonterminal.GetData<TestData>();
+            var data = nonterminal.GetOrCreateData(new TestDataFactory());
 
             Assert.Equal("test", data.Message);
         }

@@ -12,6 +12,9 @@ namespace Nt.Syntax.Structures
     public class RuleDerivation : IReadOnlyList<GrammarToken>
     {
         private List<GrammarToken> Tokens { get; } = [];
+
+        #region Interface implementation
+
         public int Count => Tokens.Count;
 
         public GrammarToken this[int index] => Tokens[index];
@@ -26,6 +29,8 @@ namespace Nt.Syntax.Structures
         {
             return GetEnumerator();
         }
+
+        #endregion
 
         /// <summary>
         /// Returns a list of all grammar tokens in the current collection.

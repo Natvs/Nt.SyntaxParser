@@ -8,13 +8,15 @@ using System.Text.RegularExpressions;
 
 namespace Nt.Syntax.Structures
 {
-    public class ElementsSet<T>() : IEnumerable<T> where T: class
+    public class ElementsSet<T>() : IReadOnlyList<T> where T: class
     {
-        #region Implementation of IEnumerable
-
         private HashSet<T> Elements { get; } = [];
 
+        #region Implementation of IEnumerable
+
         public int Count { get => Elements.Count; }
+
+        public T this[int index] => Elements.ElementAt(index);
 
         public IEnumerator<T> GetEnumerator()
         {
