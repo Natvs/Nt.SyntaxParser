@@ -10,8 +10,10 @@ namespace Nt.Syntax.Automaton
             ImportedString = null;
             Rule = null;
             Regex = null;
-            Terminal = "";
-            NonTerminal = "";
+            Terminal = null;
+            AddingToNonTerminal = false;
+            NonTerminal = null;
+            AddingToTerminal = false;
         }
 
 
@@ -22,7 +24,7 @@ namespace Nt.Syntax.Automaton
         /// <summary>
         /// Represent the terminal previously parsed
         /// </summary>
-        public string Terminal { get; internal set; } = "";
+        public Terminal? Terminal { get; internal set; }
         internal bool AddingToTerminal { get; set; } = false;
 
 
@@ -33,7 +35,7 @@ namespace Nt.Syntax.Automaton
         /// <summary>
         /// Represent the non terminal previously parsed
         /// </summary>
-        public string NonTerminal { get; internal set; } = "";
+        public NonTerminal? NonTerminal { get; internal set; }
         internal bool AddingToNonTerminal { get; set; } = false;
 
 

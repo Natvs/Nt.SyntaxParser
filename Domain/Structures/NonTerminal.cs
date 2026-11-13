@@ -3,8 +3,8 @@ using Nt.Parser.Symbols;
 
 namespace Nt.Syntax.Structures
 {
-    public class NonTerminal:  GrammarToken
+    public class NonTerminal(ISymbol symbol, int line) :  GrammarToken(GrammarTokenType.NonTerminal, symbol, line)
     {
-        public NonTerminal(ISymbol symbol, int line): base(GrammarTokenType.NonTerminal, symbol, line) { }
+        public override NonTerminal Clone(int line) => new(Symbol, line) { Data = Data };
     }
 }

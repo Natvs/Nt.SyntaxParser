@@ -1,6 +1,8 @@
 ﻿using Nt.Automaton.Actions;
+using Nt.Automaton.Automatons;
 using Nt.Automaton.Tokens;
 using Nt.Parser.Structures;
+using Nt.Parser.Symbols;
 using Nt.Syntax.Automaton;
 using Nt.Syntax.Builders;
 using Nt.Syntax.Exceptions;
@@ -22,9 +24,16 @@ namespace Nt.Syntax.Actions
         {
             try
             {
-                if (!context.Terminal.Equals("", StringComparison.Ordinal))
-                { 
-                    grammar.GetBuilder().AddTerminal(grammar.RemoveEscapeCharacter(context.Terminal)); 
+                if (token is AutomatonToken automatonToken)
+                {
+                    if (context.Terminal == null)
+                    {
+                        throw new SyntaxError(token.Value, automatonToken.Line);
+                    }
+                    
+                    var name = grammar.RemoveEscapeCharacter(context.Terminal.Symbol.Name);
+                    context.Terminal.Symbol = new Symbol(name);
+                    grammar.Terminals.Add(context.Terminal);
                 }
             }
             catch (RegisteredNonTerminalException) { }

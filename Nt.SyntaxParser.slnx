@@ -1,0 +1,20 @@
+<Solution>
+  <Folder Name="/Doc/">
+    <File Path="Doc/Branching.md" />
+    <File Path="Doc/Exceptions.md" />
+    <File Path="Doc/Exportation.md" />
+    <File Path="Doc/Grammar.md" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Solution files/">
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".github/workflows/dotnet.yml" />
+    <File Path=".gitignore" />
+    <File Path="nuget.config" />
+    <File Path="release-notes.md" />
+  </Folder>
+  <Project Path="Application/Application.csproj" />
+  <Project Path="Domain/Domain.csproj" />
+  <Project Path="Tests/Tests.csproj" />
+</Solution>

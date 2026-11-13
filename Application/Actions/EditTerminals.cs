@@ -23,7 +23,7 @@ namespace Nt.Applications.SyntaxParser.Actions
                 return;
             }
             Console.WriteLine("Current terminals:");
-            foreach (var terminal in Context.Grammar.Terminals.GetSymbols())
+            foreach (var terminal in Context.Grammar.Terminals)
             {
                 Console.WriteLine(terminal);
             }

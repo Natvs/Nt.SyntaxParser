@@ -1,20 +1,36 @@
-# Save grammar to files
-This update introduces a new method for exporting grammars.
+# Enhancement of the branching feature
 
-While the previous one is about exporting it to readable texts by the users, this one is about exporting it to files syntax so that it can be later parsed back to a grammar.
+The `branching` feature was useful to create additional data for elements of the grammar.
+However, it was sometimes unclear where to store it and hard to link it to elements.
+Now the branching feature allow to store the data directly inside elements of the grammar, making it easier to manage and link the data to the corresponding elements. 
+This enhancement improves the overall usability and organization of the branching feature, allowing for a more streamlined workflow when working with grammar elements.
 
-For that, import the `Nt.Syntax.Exportation` namespace and then use the `Save` extended method on the grammar object.
-
+Create data for a grammar element with:
 ```csharp
-using Nt.Syntax.Exportation;
-
-var grammar_string = grammar.Save(ExportationMode.Initial);
+var data = new DataType();
+<element>.CreateData(data);
 ```
 
-# Exportation enhancement
-Now when exporting a grammar, the subsequent rules are grouped with ` | ` for better readability.
+Retrieve the stored data with:
+```csharp
+var data = <element>.GetData<DataType>(data);
+```
 
-As a consequence, when exporting with the `ExportationMode.Grouped` or `ExportationMode.Alphabetical` modes, all the rules with a common symbol will be grouped together.
+Element that supports data storage:
+- Terminals
+- Non terminals
+- Rules
+- Regular expressions
 
-# Security integration
-The project integrates code security check at build time using the default Dotnet tools.
+More information in [the branching documentation](Doc/Branching.md).
+
+# Trivy scanning
+
+The workflow for building and publishing packages has been enhanced with a full Trivy scan and CodeQL reports, visible on [the Github security page](https://github.com/Natvs/Nt.SyntaxParser/security/code-scanning).
+
+The SBOM is now generated with Trivy instead of CycloneDX, thus removing the alert due to CycloneDX using Node12.
+
+# Other
+
+- Automatic publication of comments on PR defining if the merge would create a new release or publish new packages.
+- Possibility of publishing packages on local repository only for testing purposes with the `PackageLocalOnly` property in the .csproj file.

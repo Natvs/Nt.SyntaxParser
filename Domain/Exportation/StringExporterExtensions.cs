@@ -20,9 +20,9 @@ namespace Nt.Syntax.Exportation
         /// <param name="symbols">List of symbols to export</param>
         /// <param name="mode">Mode to export the list of symbols</param>
         /// <returns>A string representing this list of symbols</returns>
-        public static string ToString(this SymbolsList symbols, ExportationMode mode)
+        public static string ToString(this ElementsSet<GrammarToken> symbols, ExportationMode mode)
         {
-            var ordered_symbols = Reorder(symbols.GetSymbols(), mode);
+            var ordered_symbols = Reorder(symbols.ToList(), mode);
             return StringExporter.ToString(ordered_symbols);
         }
 
@@ -33,7 +33,7 @@ namespace Nt.Syntax.Exportation
         /// <param name="nonterminals">An ordered collection of nonterminal symbols that determines the output order of the rules.</param>
         /// <param name="mode">The exportation mode that specifies formatting or filtering options for the output.</param>
         /// <returns>A string representation of the grammar rules, formatted according to the specified nonterminals and exportation mode.</returns>
-        public static string ToString(this RulesSet rules, ExportationMode mode)
+        public static string ToString(this ElementsSet<Rule> rules, ExportationMode mode)
         {
             var ordered_rules = Reorder(rules.ToList(), mode);
             return StringExporter.ToString(ordered_rules);
@@ -46,7 +46,7 @@ namespace Nt.Syntax.Exportation
         /// <param name="nonterminals">An ordered collection of nonterminal symbols that determines the output order of the regular expressions.</param>
         /// <param name="mode">The exportation mode that specifies formatting or output rules for the conversion.</param>
         /// <returns>A string representation of the regular expressions, formatted according to the specified nonterminals and exportation mode.</returns>
-        public static string ToString(this RegexSet regexes, ExportationMode mode)
+        public static string ToString(this ElementsSet<RegularExpression> regexes, ExportationMode mode)
         {
             var ordered_regexes = Reorder(regexes.ToList(), mode);
             return StringExporter.ToString(ordered_regexes);
@@ -60,10 +60,10 @@ namespace Nt.Syntax.Exportation
         /// <returns>A string representing the grammar</returns>
         public static string ToString(this Grammar grammar, ExportationMode mode)
         {
-            var terminals = Reorder(grammar.Terminals.GetSymbols(), mode);
-            var nonterminals = Reorder(grammar.NonTerminals.GetSymbols(), mode);
-            var rules = Reorder(grammar.Rules.ToList(), mode);
-            var regexes = Reorder(grammar.RegularExpressions.ToList(), mode);
+            var terminals = Reorder([.. grammar.Terminals], mode);
+            var nonterminals = Reorder([.. grammar.NonTerminals], mode);
+            var rules = Reorder([.. grammar.Rules], mode);
+            var regexes = Reorder([.. grammar.RegularExpressions], mode);
             return StringExporter.ToString(terminals, nonterminals, grammar.Axiom, rules, regexes);
         }
 

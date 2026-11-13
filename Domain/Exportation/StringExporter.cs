@@ -7,7 +7,7 @@ namespace Nt.Syntax.Exportation
 
     internal class StringExporter
     {
-        public static string ToString(IEnumerable<ISymbol> symbols)
+        public static string ToString(IEnumerable<GrammarToken> symbols)
         {
             var sb = new StringBuilder();
             foreach(var symbol in symbols)
@@ -54,7 +54,7 @@ namespace Nt.Syntax.Exportation
             return sb.ToString();
         }
 
-        public static string ToString(IEnumerable<ISymbol> terminals, IEnumerable<ISymbol> nonterminals, NonTerminal? axiom, IEnumerable<Rule> rules, IEnumerable<RegularExpression> regexes)
+        public static string ToString(IEnumerable<GrammarToken> terminals, IEnumerable<GrammarToken> nonterminals, NonTerminal? axiom, IEnumerable<Rule> rules, IEnumerable<RegularExpression> regexes)
         {
             var sb = new StringBuilder();
             sb.AppendLine("Terminals:").Append(ToString(terminals)).AppendLine();

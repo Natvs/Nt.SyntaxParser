@@ -2,8 +2,8 @@
 
 namespace Nt.Syntax.Structures
 {
-    public class Terminal : GrammarToken
+    public class Terminal(ISymbol symbol, int line) : GrammarToken(GrammarTokenType.Terminal, symbol, line)
     {
-        public Terminal(ISymbol symbol, int line): base(GrammarTokenType.Terminal, symbol, line) { }
+        public override Terminal Clone(int line) => new(Symbol, line) { Data = Data };
     }
 }

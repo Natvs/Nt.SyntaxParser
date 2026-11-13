@@ -4,6 +4,8 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
+permissions:
+  contents: read
 
 env:
   # Project settings
@@ -20,127 +22,151 @@ env:
   # API
   API_PACKAGE_PATH: /users/natvs/packages/nuget/Nt.SyntaxParser/versions            
   GH_TOKEN: ${{github.token}}
+  PR_NUMBER: ${{github.event.pull_request.number}}
 
 jobs:
+
+  # Build and Test
+
   build:
     runs-on: ubuntu-latest
-    permissions:
-      packages: read
     steps:
       - name: Checkout solution
         uses: actions/checkout@v7
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 10.0.x
-      - name: Authenticate package source
-        run: |
-          dotnet nuget add source \
-          ${{ env.LOCAL_NUGET_REPO }} \
-            --name github \
-            --username ${{ env.LOCAL_NUGET_USERNAME }} \
-            --password ${{ github.token }} \
-            --store-password-in-clear-text
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
         run: dotnet build --no-restore
       - name: Test
         run: dotnet test --no-build --verbosity normal
-    
-  generate-sbom:
+
+  # Code analysis
+
+  trivy-analysis:
     runs-on: ubuntu-latest
     permissions:
-      packages: read
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+      - name: Run Trivy vulnerability scanner in repo mode
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: 'fs'
+          ignore-unfixed: true
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'HIGH,CRITICAL'
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v4
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  generate-sbom:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    needs:
+      - build
+      - trivy-analysis
+    permissions:
+      contents: read
     steps:
       - name: Checkout solution
         uses: actions/checkout@v7
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v5
+      - name: Generate SBOM with trivy
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
-          dotnet-version: 10.0.x
-      - name: Authenticate package source
-        run: |
-          dotnet nuget add source \
-            "${{ env.LOCAL_NUGET_REPO }}" \
-            --name github \
-            --username "${{ env.LOCAL_NUGET_USERNAME }}" \
-            --password "${{ github.token }}" \
-            --store-password-in-clear-text
-      - name: Restore dependencies
-        run: dotnet restore "${{ env.PROJECT_PATH }}/${{ env.PROJECT_FILE }}"
-      - name: Generate SBOM
-        uses: CycloneDX/gh-dotnet-generate-sbom@v1.0.1
-        with:
-          path: ${{env.PROJECT_PATH}}/${{env.PROJECT_FILE}}
-          out: ${{env.SBOM_PATH}}
-          json: true
-      - name: Upload artifact
-        uses: actions/upload-artifact@v7.0.1
+          scan-type: 'fs'
+          format: 'github'
+          output: ${{env.SBOM_PATH}}
+          scan-ref: '${{env.PROJECT_PATH}}'
+          github-pat: ${{github.token}}
+      - name: Upload trivy report as a Github artifact
+        uses: actions/upload-artifact@v7
         with:
           name: sbom
           path: ${{env.SBOM_PATH}}
 
+  # Release
+
   check-release:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    env:
+      HTML_COMMENT: "<!-- ci:release -->"
     steps:
       - name: Checkout solution
         uses: actions/checkout@v7 
       - name: Retrieve version
         id: version
+        shell: pwsh
         run: |
-          cd ${{env.PROJECT_PATH}}  
-          VERSION=$(dotnet msbuild ${{env.PROJECT_FILE}} -getProperty:Version)
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          cd ${{env.PROJECT_PATH}}
+          $VERSION=$(dotnet msbuild ${{env.PROJECT_FILE}} -getProperty:Version)
+          echo "version=$VERSION" >> "$Env:GITHUB_OUTPUT"
           echo "Project version: $VERSION"
       - name: Create tag
         id: tag
+        shell: pwsh
         run: |
-          TAG="v${{steps.version.outputs.version}}"
-          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          $TAG="v${{steps.version.outputs.version}}"
+          echo "tag=$TAG" >> "$Env:GITHUB_OUTPUT"
       - name: Check release
         id: check
         shell: pwsh
         run: |
           $TAG = "${{steps.tag.outputs.tag}}"
           if (gh release view "$TAG") {     
-            echo "create=false" >> "$env:GITHUB_OUTPUT"
+            echo "create=false" >> "$Env:GITHUB_OUTPUT"
             echo "Release $TAG already exists. No release will be created."
           } else {     
-            echo "create=true" >> "$env:GITHUB_OUTPUT"
+            echo "create=true" >> "$Env:GITHUB_OUTPUT"
             echo "Release $TAG does not exist. A new release will be created."
           }
           exit 0
-    outputs:
-      tag: ${{steps.tag.outputs.tag}}
-      create-release: ${{steps.check.outputs.create}}
-
-  check-nuget:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - name: Retrieve version
-        id: version
-        run: |
-          cd ${{env.PROJECT_PATH}}  
-          VERSION=$(dotnet msbuild ${{env.PROJECT_FILE}} -getProperty:PackageVersion)
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "Package version: $VERSION"
-      - name: Check package
-        id: check
+      - name: Delete previous comment
+        if: github.event_name == 'pull_request'
         shell: pwsh
         run: |
-          $obj = gh api ${{env.API_PACKAGE_PATH}} | ConvertFrom-Json
-          $version = "${{steps.version.outputs.version}}"
-          if ($obj.name | Select-String $version) {
-            echo "create=false" >> "$env:GITHUB_OUTPUT"
-            echo "Package for version $version already exists. No additional to create." 
-          } else {
-            echo "create=true" >> "$env:GITHUB_OUTPUT"
-            echo "Package for version $version inexistant. A new package will be created."
+          $comments = gh api `
+              "repos/${{github.repository}}/issues/${{env.PR_NUMBER}}/comments" `
+              --paginate | ConvertFrom-Json
+          $comment = $comments |
+              Where-Object { $_.body -like '*${{env.HTML_COMMENT}}*' } |
+              Select-Object -Last 1    
+          if ($null -ne $comment) {
+              $id = $comment.id
+              gh api `
+                  --method DELETE `
+                  "repos/${{github.repository}}/issues/comments/$id"
+              Write-Host "Previous comment deleted."
           }
+          else {
+              Write-Host "No previous comment found."
+          }
+      - name: Post comment
+        if: github.event_name == 'pull_request'
+        shell: pwsh
+        env:
+          TAG: ${{steps.tag.outputs.tag}}
+          CREATE: ${{steps.check.outputs.create}}
+        run: |
+          if ("${{env.CREATE}}" -eq $true) {
+            $message = "Information: No release ${{env.TAG}} exists. A new release will be created if the pull request is merged."
+          } else {
+            $message = "Information: A release ${{env.TAG}} already exists."
+          }
+          gh pr comment ${{env.PR_NUMBER}} --body "${{env.HTML_COMMENT}}$message"
     outputs:
-      create-package: ${{steps.check.outputs.create}}
+      tag: ${{steps.tag.outputs.tag}}
+      create: ${{steps.check.outputs.create}}
 
   # This job requires a file release-notes.md in the root of the repository with the release notes for the new release.
   create-release:
@@ -148,7 +174,7 @@ jobs:
       - build
       - check-release
       - generate-sbom
-    if: github.event_name == 'push' && needs.check-release.outputs.create-release == 'true'
+    if: github.event_name == 'push' && needs.check-release.outputs.create == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: write  
@@ -165,57 +191,131 @@ jobs:
           name: sbom
           path: ${{env.SBOM_PATH}}
       - name: Create release
+        shell: pwsh
         run: |
-          gh release create \
-            ${{env.tag}} \
-            "${{env.SBOM_PATH}}/bom.json#sbom.json" \
-            --title ${{env.title}}
+          $bom = Get-ChildItem "${{env.SBOM_PATH}}" | Select-Object -First 1
+          gh release create ${{env.tag}} "$bom#sbom.json" --title ${{env.title}}
       - name: Upload release notes
         shell: pwsh
         run: |
             Get-Content ${{env.release-file}} | gh release edit ${{env.tag}} --notes-file -
 
+  # Package
+
+  check-nuget:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    env:
+      HTML_COMMENT: "<!-- ci:package -->"
+    steps:
+      - uses: actions/checkout@v7
+      - name: Retrieve version and package policy
+        id: version
+        shell: pwsh
+        run: |
+          cd ${{env.PROJECT_PATH}}  
+          $VERSION=$(dotnet msbuild ${{env.PROJECT_FILE}} -getProperty:PackageVersion)
+          $LOCALONLY=$(dotnet msbuild ${{env.PROJECT_FILE}} -getProperty:PackageLocalOnly)
+          echo "version=$VERSION" >> "$Env:GITHUB_OUTPUT"
+          echo "localonly=$LOCALONLY" >> "$Env:GITHUB_OUTPUT"
+          echo "Package version: $VERSION"
+          echo "Package local only: $LOCALONLY"
+      - name: Check package
+        id: check
+        shell: pwsh
+        env:
+          VERSION: ${{steps.version.outputs.version}}
+          LOCALONLY: ${{steps.version.outputs.localonly}}
+        run: |
+          $obj = gh api ${{env.API_PACKAGE_PATH}} | ConvertFrom-Json
+          if ($obj.name | Select-String ${{env.VERSION}}) {
+            echo "publish=false" >> "$Env:GITHUB_OUTPUT"
+            echo "Package for version ${{env.VERSION}} already exists. No additional package to publish." 
+          } 
+          else {
+            echo "publish=true" >> "$Env:GITHUB_OUTPUT"
+            if ("${{env.LOCALONLY}}" -eq $true) {
+              echo "Package for version ${{env.VERSION}} inexistant. The package is marked as local only and will be published locally."
+            }
+            else {
+              echo "Package for version ${{env.VERSION}} inexistant. A new package will be published."
+            }
+          }
+      - name: Delete previous comment
+        if: github.event_name == 'pull_request'
+        shell: pwsh
+        run: |
+          $comments = gh api `
+              "repos/${{github.repository}}/issues/${{env.PR_NUMBER}}/comments" `
+              --paginate | ConvertFrom-Json
+          $comment = $comments |
+              Where-Object { $_.body -like '*${{env.HTML_COMMENT}}*' } |
+              Select-Object -Last 1    
+          if ($null -ne $comment) {
+              $id = $comment.id
+              gh api `
+                  --method DELETE `
+                  "repos/${{github.repository}}/issues/comments/$id" 
+              Write-Host "Previous comment deleted."
+          }
+          else {
+              Write-Host "No previous comment found."
+          }
+      - name: Post comment
+        if: github.event_name == 'pull_request'
+        shell: pwsh
+        env:
+          VERSION: ${{steps.version.outputs.version}}
+          PUBLISH: ${{steps.check.outputs.publish}}
+          LOCAL_ONLY: ${{steps.version.outputs.localonly}}
+        run: |
+          if ("${{env.PUBLISH}}" -eq $true) {
+            if ("${{env.LOCAL_ONLY}}" -eq $true) {
+              $message = "Information: No package for version ${{env.VERSION}} exists but the package is marked as local only. A new package will be published locally if the pull request is merged."
+            } else {
+              $message = "Information: No package for version ${{env.VERSION}} exists. A new package will be published if the pull request is merged."
+            }
+          } else {
+            $message = "Information: A package for version ${{env.VERSION}} already exists."
+          }
+          gh pr comment ${{env.PR_NUMBER}} --body "${{env.HTML_COMMENT}}$message"
+    outputs:
+      publish: ${{steps.check.outputs.publish}}
+      local-only: ${{steps.version.outputs.localonly}}
+
   pack:
     needs: 
       - build
       - check-nuget
-    if: github.event_name == 'push' && needs.check-nuget.outputs.create-package == 'true'
+    if: github.event_name == 'push' && needs.check-nuget.outputs.publish == 'true'
     runs-on: ubuntu-latest
-    permissions:
-      packages: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 10.0.x
-      - name: Authenticate local package source
-        run: |
-          dotnet nuget add source \
-            ${{ env.LOCAL_NUGET_REPO }} \
-            --name github \
-            --username ${{ env.LOCAL_NUGET_USERNAME }} \
-            --password ${{ github.token }} \
-            --store-password-in-clear-text
       - name: Pack
         run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --output ${{ env.NUGET_PATH }} --verbosity quiet
       - name: Upload artifact
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7
         with:
           path: ${{env.NUGET_PATH}}
           name: nuget
 
   publish-local-nuget:
     needs: 
+      - check-nuget
       - pack
     runs-on: ubuntu-latest
     permissions:
       packages: write
     steps:
       - name: Checkout solution
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 10.0.x
       - name: Download package
@@ -235,22 +335,23 @@ jobs:
         shell: pwsh
         run: |
           Get-ChildItem -Path "${{ env.NUGET_PATH }}" -Filter "*.nupkg" | ForEach-Object {
-              dotnet nuget push $_.FullName --source "github" --skip-duplicate
+              dotnet nuget push $_.FullName --source "github"
           }
-
 
   publish-nuget:
     needs: 
+      - check-nuget
       - pack
     runs-on: ubuntu-latest
+    if: needs.check-nuget.outputs.local-only == 'false'
     permissions:
       id-token: write
       contents: read
     steps:
       - name: Checkout solution
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 10.0.x
       - name: Download Nuget

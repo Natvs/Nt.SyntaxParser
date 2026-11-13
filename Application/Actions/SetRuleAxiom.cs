@@ -38,8 +38,9 @@ namespace Nt.Applications.SyntaxParser.Actions
 
             try
             {
-                var symbol = Context.Grammar.NonTerminals.Get(input);
-                Rule.GetBuilder().SetToken(new NonTerminal(symbol, -1));
+                if (Context.Grammar.NonTerminals.TryGet((t) => t.Symbol.Name == input, out var nt)) {
+                    Rule.GetBuilder().SetToken(new NonTerminal(nt.Symbol, -1));
+                }
             }
             catch (KeyNotFoundException)
             {

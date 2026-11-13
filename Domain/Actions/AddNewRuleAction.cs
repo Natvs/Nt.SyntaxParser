@@ -3,6 +3,7 @@ using Nt.Automaton.Tokens;
 using Nt.Syntax.Automaton;
 using Nt.Syntax.Structures;
 using Nt.Syntax.Builders;
+using Nt.Syntax.Exceptions;
 
 namespace Nt.Syntax.Actions
 {
@@ -17,8 +18,25 @@ namespace Nt.Syntax.Actions
             if (token is AutomatonToken automatonToken)
             {
                 context.Rule = new Rule(grammar);
-                context.Rule.GetBuilder().SetToken(new NonTerminal(automatonToken.Symbol, automatonToken.Line));
-                grammar.Rules.Add(context.Rule);
+
+                try
+                {
+                    var axiom = grammar.ParseToGrammarToken(automatonToken);
+                    if (axiom is NonTerminal nonterminal)
+                    {
+                        context.Rule.GetBuilder().SetToken(nonterminal);
+                        grammar.Rules.Add(context.Rule);
+                    }
+                    else
+                    {
+                        throw new AxiomException(automatonToken.Symbol.Name, automatonToken.Line);
+                    }
+                }
+                catch (UnknownSymbolException)
+                {
+                    throw new UnregisteredNonTerminalException(automatonToken.Symbol.Name, automatonToken.Line);
+                }
+
             }
         }
     }

@@ -7,7 +7,7 @@ namespace Nt.Syntax.Exportation
 
     internal sealed class FileExporter
     {
-        public static string Save(IEnumerable<ISymbol> symbols, GrammarTokenType types, FileStyle style = FileStyle.Default)
+        public static string Save(IEnumerable<GrammarToken> symbols, GrammarTokenType types, FileStyle style = FileStyle.Default)
         {
             var sb = new StringBuilder();
 
@@ -144,7 +144,7 @@ namespace Nt.Syntax.Exportation
             return sb.ToString();
         }
 
-        public static string Save(IEnumerable<ISymbol> terminals, IEnumerable<ISymbol> nonterminals, NonTerminal? axiom, IEnumerable<Rule> rules, IEnumerable<RegularExpression> regexes, FileStyle style = FileStyle.Default)
+        public static string Save(IEnumerable<GrammarToken> terminals, IEnumerable<GrammarToken> nonterminals, NonTerminal? axiom, IEnumerable<Rule> rules, IEnumerable<RegularExpression> regexes, FileStyle style = FileStyle.Default)
         {
             var sb = new StringBuilder();
             sb.AppendLine(Save(terminals, GrammarTokenType.Terminal, style));

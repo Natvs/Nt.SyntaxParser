@@ -17,79 +17,74 @@ namespace Nt.Tests.Syntax.Exportation
         [Fact]
         public void Symbols_Reorder_ShouldReturnOriginalOrder()
         {
-            var symbols = new SymbolsList(factory);
-            symbols.AddRange(["B", "A", "C"]);
+            var grammar = new Grammar();
+            grammar.GetBuilder().AddNonTerminals(["B", "A", "C"]);
 
-            var result = Reorder(symbols.GetSymbols(), ExportationMode.Original);
+            var result = Reorder([.. grammar.NonTerminals], ExportationMode.Original);
 
             Assert.Equal(3, result.Count);
-            Assert.Equal(symbols.Get(0), result[0]);
-            Assert.Equal(symbols.Get(1), result[1]);
-            Assert.Equal(symbols.Get(2), result[2]);
+            Assert.Equal(grammar.NonTerminals.Get(0), result[0]);
+            Assert.Equal(grammar.NonTerminals.Get(1), result[1]);
+            Assert.Equal(grammar.NonTerminals.Get(2), result[2]);
         }
 
         [Fact]
         public void Symbols_Reorder_ShouldReturnAlphabeticalOrder()
         {
-            var symbols = new SymbolsList(factory);
-            symbols.AddRange(["B", "A", "C"]);
+            var grammar = new Grammar();
+            grammar.GetBuilder().AddNonTerminals(["B", "A", "C"]);
 
-            var result = Reorder(symbols.GetSymbols(), ExportationMode.Alphabetical);
+            var result = Reorder([.. grammar.NonTerminals], ExportationMode.Alphabetical);
 
             Assert.Equal(3, result.Count);
-            Assert.Equal(symbols.Get(1), result[0]);
-            Assert.Equal(symbols.Get(0), result[1]);
-            Assert.Equal(symbols.Get(2), result[2]);
+            Assert.Equal(grammar.NonTerminals.Get(1), result[0]);
+            Assert.Equal(grammar.NonTerminals.Get(0), result[1]);
+            Assert.Equal(grammar.NonTerminals.Get(2), result[2]);
         }
 
         [Fact]
         public void Symbols_Reorder_ShouldGroupSymbols()
         {
-            var symbols = new SymbolsList(factory);
-            symbols.AddRange(["A", "B", "BA", "AB"]);
+            var grammar = new Grammar();
+            grammar.GetBuilder().AddNonTerminals(["A", "B", "BA", "AB"]);
 
-            var result = Reorder(symbols.GetSymbols(), ExportationMode.Grouped);
+            var result = Reorder([.. grammar.NonTerminals], ExportationMode.Grouped);
 
             Assert.Equal(4, result.Count);
-            Assert.Equal(symbols.Get(0), result[0]);
-            Assert.Equal(symbols.Get(3), result[1]);
-            Assert.Equal(symbols.Get(1), result[2]);
-            Assert.Equal(symbols.Get(2), result[3]);
+            Assert.Equal(grammar.NonTerminals.Get(0), result[0]);
+            Assert.Equal(grammar.NonTerminals.Get(3), result[1]);
+            Assert.Equal(grammar.NonTerminals.Get(1), result[2]);
+            Assert.Equal(grammar.NonTerminals.Get(2), result[3]);
         }
 
         [Fact]
         public void Symbols_Reorder_ShouldNotReorderIfNoCommonRoot()
         {
-            var symbols = new SymbolsList(factory);
-            symbols.AddRange(["AB", "AC"]);
+            var grammar = new Grammar();
+            grammar.GetBuilder().AddNonTerminals(["AB", "AC"]);
 
-            var result = Reorder(symbols.GetSymbols(), ExportationMode.Grouped);
+            var result = Reorder([.. grammar.NonTerminals], ExportationMode.Grouped);
 
             Assert.Equal(2, result.Count);
-            Assert.Equal(symbols.Get(0), result[0]);
-            Assert.Equal(symbols.Get(1), result[1]);
+            Assert.Equal(grammar.NonTerminals.Get(0), result[0]);
+            Assert.Equal(grammar.NonTerminals.Get(1), result[1]);
         }
 
         [Fact]
         public void Symbols_Reorder_ShouldGroupSymbolsButConserveOrder()
         {
-            var symbolA1 = new Symbol("A");
-            var symbolA2 = new Symbol("A1");
-            var symbolA3 = new Symbol("A2");
-            var symbolB1 = new Symbol("B");
-            var symbolB2 = new Symbol("B1");
-            var symbolB3 = new Symbol("B2");
-            var symbols = new List<ISymbol> { symbolA1, symbolB1, symbolA2, symbolA3, symbolB2, symbolB3 };
+            var grammar = new Grammar();
+            grammar.GetBuilder().AddNonTerminals(["A", "B", "A1", "A2", "B1", "B2"]);
 
-            var result = Reorder(symbols, ExportationMode.Grouped);
+            var result = Reorder([.. grammar.NonTerminals], ExportationMode.Grouped);
 
             Assert.Equal(6, result.Count);
-            Assert.Equal(symbolA1, result[0]);
-            Assert.Equal(symbolA2, result[1]);
-            Assert.Equal(symbolA3, result[2]);
-            Assert.Equal(symbolB1, result[3]);
-            Assert.Equal(symbolB2, result[4]);
-            Assert.Equal(symbolB3, result[5]);
+            Assert.Equal(grammar.NonTerminals.Get(0), result[0]);
+            Assert.Equal(grammar.NonTerminals.Get(2), result[1]);
+            Assert.Equal(grammar.NonTerminals.Get(3), result[2]);
+            Assert.Equal(grammar.NonTerminals.Get(1), result[3]);
+            Assert.Equal(grammar.NonTerminals.Get(4), result[4]);
+            Assert.Equal(grammar.NonTerminals.Get(5), result[5]);
         }
 
         // Rules
