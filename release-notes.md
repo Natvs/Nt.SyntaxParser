@@ -32,4 +32,5 @@ The SBOM is now generated with Trivy instead of CycloneDX, thus removing the ale
 
 # Other
 
-One last improvement is the automatic publication of comments on PR defining if the merge would create a new release or publish new packages.
+- Automatic publication of comments on PR defining if the merge would create a new release or publish new packages.
+- Possibility of publishing packages on local repository only for testing purposes with the `PackageLocalOnly` property in the .csproj file.

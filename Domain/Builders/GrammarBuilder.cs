@@ -178,7 +178,6 @@ namespace Nt.Syntax.Builders
         /// </summary>
         /// <param name="rule">Rule to remove</param>
         /// <returns>The current instance of <see cref="GrammarBuilder"/> for method chaining.</returns>
-        /// <exception cref="RuleNotFoundException">Thrown if the specified rule is not found in the grammar.</exception>
         public GrammarBuilder Remove(Rule rule)
         {
             _grammar.Rules.Remove(rule);

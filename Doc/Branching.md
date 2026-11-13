@@ -215,8 +215,10 @@ var ruleData = context.Rule.GetData<MyData>();
 Console.WriteLine($"The value of the rule is: {ruleData.MyBool}");
 ```
 
-Be aware that if the data is not initialized, the method `GetData<T>` will throw an exception.
-You may want to use the method `TryGetData<T>` instead, which doesn't throw an exception and returns a boolean indicating if the data was found or not.
+Be aware that if the data is not initialized, the method `GetData<T>` will throw a `UninitializedDataException`.
+If the data exists but is of a different type than the requested one, the method will throw a `IncorrectDataTypeException`.
+
+You may want to use the method `TryGetData<T>` instead, which doesn't throw any exception and returns a boolean indicating if the data was found or not.
 
 ```csharp
 // Try to get the data of the terminal
@@ -228,4 +230,21 @@ else
 {
 	Console.WriteLine("No data found for the terminal.");
 }
+```
+
+You may also consider using the `GetOrCreateData` method which will create the data if it doesn't exist yet, and return it, thus avoiding a call to the `CreateData` method.
+This method takes a factory as argument to create the data if it doesn't exist yet. The factory must inherit `IDataFactory`.
+
+```csharp
+// Get the data associated to a regular expression, or create one if it doesn't exist yet
+class Factory : IDataFactory<MyData>
+{
+	public MyData CreateData()
+	{
+		return new MyData();
+	}
+}
+
+var data = regex.GetOrCreateData<MyData>(new Factory());
+Console.WriteLine($"The value associated to the regular expression is: {data.MyValue}");
 ```
