@@ -1,10 +1,6 @@
 ﻿using Nt.Parser.Symbols;
 using Nt.Syntax.Exceptions;
 using Nt.Syntax.Structures;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml.Linq;
 
 namespace Nt.Syntax.Builders
 {
@@ -15,6 +11,8 @@ namespace Nt.Syntax.Builders
     public class GrammarBuilder(Grammar grammar)
     {
         private readonly Grammar _grammar = grammar;
+
+        private readonly ISymbolFactory factory = SyntaxParserConfig.GetConfig().SymbolFactory;
 
         /// <summary>
         /// Add a terminal symbol to the grammar.
@@ -28,7 +26,7 @@ namespace Nt.Syntax.Builders
         {
             if (_grammar.Terminals.Contains((t) => t.Symbol.Name == name)) throw new RegisteredTerminalException(name);
             if (_grammar.NonTerminals.Contains((t) => t.Symbol.Name == name)) throw new RegisteredNonTerminalException(name);
-            _grammar.Terminals.Add(new Terminal(new Symbol(name), line));
+            _grammar.Terminals.Add(new Terminal(factory.Create(name), line));
             return this;
         }
 
@@ -44,7 +42,7 @@ namespace Nt.Syntax.Builders
         {
             if (_grammar.NonTerminals.Contains((t) => t.Symbol.Name == name)) throw new RegisteredNonTerminalException(name);
             if (_grammar.Terminals.Contains((t) => t.Symbol.Name == name)) throw new RegisteredTerminalException(name);
-            _grammar.NonTerminals.Add(new NonTerminal(new Symbol(name), line));
+            _grammar.NonTerminals.Add(new NonTerminal(factory.Create(name), line));
             return this;
         }
 
@@ -59,7 +57,7 @@ namespace Nt.Syntax.Builders
             {
                 if (_grammar.NonTerminals.Contains((t) => t.Symbol.Name == name)) throw new RegisteredNonTerminalException(name);
                 if (_grammar.Terminals.Contains((t) => t.Symbol.Name == name)) throw new RegisteredTerminalException(name);
-                _grammar.Terminals.Add(new Terminal(new Symbol(name), -1));
+                _grammar.Terminals.Add(new Terminal(factory.Create(name), -1));
             }
             return this;
         }
@@ -73,7 +71,7 @@ namespace Nt.Syntax.Builders
         {
             foreach (var name in names)
             {
-                _grammar.NonTerminals.Add(new NonTerminal(new Symbol(name), -1));
+                _grammar.NonTerminals.Add(new NonTerminal(factory.Create(name), -1));
             }
             return this;
         }

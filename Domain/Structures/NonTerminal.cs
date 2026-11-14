@@ -1,5 +1,4 @@
-﻿using Nt.Parser.Structures;
-using Nt.Parser.Symbols;
+﻿using Nt.Parser.Symbols;
 
 namespace Nt.Syntax.Structures
 {
