@@ -14,7 +14,7 @@ namespace Nt.Syntax.Structures
     {
         public Grammar()
         {
-            var configuration = SyntaxParserConfig.GetInstance();
+            var configuration = SyntaxParserConfig.GetConfig();
         }
 
         /// <summary>

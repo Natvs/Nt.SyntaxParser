@@ -32,7 +32,7 @@ namespace Nt.Syntax
             {
                 PreAutomaton.SetGrammar(Grammar);
 
-                var configuration = SyntaxParserConfig.GetInstance();
+                var configuration = SyntaxParserConfig.GetConfig();
                 var parser = new SymbolsParser(configuration.SymbolFactory, [' ', '\0', '\n', '\t'], ["import", "IMPORT", "addtopath", "ADDTOPATH", "escape", "ESCAPE", ";"]);
                 var parsed = parser.Parse(content);
 
@@ -91,7 +91,7 @@ namespace Nt.Syntax
 
                 content = PreParseString(content);
 
-                var configuration = SyntaxParserConfig.GetInstance();
+                var configuration = SyntaxParserConfig.GetConfig();
                 var parser = new SymbolsParser(configuration.SymbolFactory, [' ', '\0', '\n', '\t'], ParserSymbols);
                 var parsed = parser.Parse(content);
 

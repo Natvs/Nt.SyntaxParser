@@ -1,6 +1,5 @@
 ﻿using Nt.Automaton.Actions;
 using Nt.Automaton.Tokens;
-using Nt.Parser.Symbols;
 using Nt.Syntax.Automaton;
 
 namespace Nt.Syntax.Actions
@@ -22,12 +21,13 @@ namespace Nt.Syntax.Actions
         {
             if (token is AutomatonToken automatonToken)
             {
+                var factory = SyntaxParserConfig.GetConfig().SymbolFactory;
                 if (!context.AddingToTerminal)
                 {
-                    context.Terminal = new Structures.Terminal(new Symbol(""), automatonToken.Line);
+                    context.Terminal = new Structures.Terminal(factory.Create(""), automatonToken.Line);
                     context.AddingToTerminal = true;
                 }
-                context.Terminal?.Symbol = new Symbol(context.Terminal.Symbol.Name + automatonToken.Symbol.Name);
+                context.Terminal?.Symbol = factory.Create(context.Terminal.Symbol.Name + automatonToken.Symbol.Name);
             }
         }
     }
