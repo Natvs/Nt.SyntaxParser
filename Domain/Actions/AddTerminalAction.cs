@@ -32,7 +32,9 @@ namespace Nt.Syntax.Actions
                     }
                     
                     var name = grammar.RemoveEscapeCharacter(context.Terminal.Symbol.Name);
-                    context.Terminal.Symbol = new Symbol(name);
+
+                    var factory = SyntaxParserConfig.GetConfig().SymbolFactory;
+                    context.Terminal.Symbol = factory.Create(name);
                     grammar.Terminals.Add(context.Terminal);
                 }
             }

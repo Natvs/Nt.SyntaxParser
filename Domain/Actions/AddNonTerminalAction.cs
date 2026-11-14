@@ -3,8 +3,6 @@ using Nt.Automaton.Tokens;
 using Nt.Syntax.Automaton;
 using Nt.Syntax.Exceptions;
 using Nt.Syntax.Structures;
-using Nt.Syntax.Builders;
-using Nt.Parser.Symbols;
 
 namespace Nt.Syntax.Actions
 {
@@ -31,7 +29,9 @@ namespace Nt.Syntax.Actions
                     }
 
                     var name = grammar.RemoveEscapeCharacter(context.NonTerminal.Symbol.Name);
-                    context.NonTerminal.Symbol = new Symbol(name);
+
+                    var factory = SyntaxParserConfig.GetConfig().SymbolFactory;
+                    context.NonTerminal.Symbol = factory.Create(name);
                     grammar.NonTerminals.Add(context.NonTerminal);
                 }
             }

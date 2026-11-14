@@ -15,12 +15,13 @@ namespace Nt.Syntax.Actions
         {
             if (token is AutomatonToken automatonToken)
             {
+                var factory = SyntaxParserConfig.GetConfig().SymbolFactory;
                 if (!context.AddingToNonTerminal)
                 {
-                    context.NonTerminal = new Structures.NonTerminal(new Symbol(""), automatonToken.Line);
+                    context.NonTerminal = new Structures.NonTerminal(factory.Create(""), automatonToken.Line);
                     context.AddingToNonTerminal = true;
                 }
-                context.NonTerminal?.Symbol = new Symbol(context.NonTerminal.Symbol.Name + automatonToken.Symbol.Name);
+                context.NonTerminal?.Symbol = factory.Create(context.NonTerminal.Symbol.Name + automatonToken.Symbol.Name);
             }
         }
     }
