@@ -44,10 +44,13 @@ namespace Nt.Tests.Syntax
             instance.SetSymbolFactory(factory);
 
             var parser = new SyntaxParser();
-            var grammar = parser.ParseString("N = {A} T = {a}");
+            var grammar = parser.ParseString("N = {A} T = {a} R: A -> a; E: A = abc;");
 
             Assert.IsType<CustomSymbol>(grammar.NonTerminals[0].Symbol);
             Assert.IsType<CustomSymbol>(grammar.Terminals[0].Symbol);
+            Assert.IsType<CustomSymbol>(grammar.Rules[0].Token?.Symbol);
+            Assert.IsType<CustomSymbol>(grammar.Rules[0].Derivation[0].Symbol);
+            Assert.IsType<CustomSymbol>(grammar.RegularExpressions[0].Token?.Symbol);
         }
 
 
