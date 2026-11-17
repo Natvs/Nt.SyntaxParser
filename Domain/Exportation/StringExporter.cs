@@ -27,18 +27,18 @@ namespace Nt.Syntax.Exportation
                 if (symbol == "")
                 {
                     sb.Append("- ").Append(rule);
-                    symbol = rule.Token?.Name;
+                    symbol = rule.Axiom?.Name;
                     continue;
                 }
 
-                if (symbol == rule.Token?.Name)
+                if (symbol == rule.Axiom?.Name)
                 {
                     sb.Append(" | ").Append(rule.Derivation);
                 }
                 else
                 {
                     sb.AppendLine().Append("- ").Append(rule);
-                    symbol = rule.Token?.Name;
+                    symbol = rule.Axiom?.Name;
                 }
             }
             return sb.ToString();

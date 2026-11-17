@@ -66,18 +66,18 @@ namespace Nt.Syntax.Exportation
                     {
                         if (symbol == "")
                         {
-                            symbol = rule.Token?.Symbol.Name;
+                            symbol = rule.Axiom?.Symbol.Name;
                             sb.Append("     ").Append(rule);
                             continue;
                         }
 
-                        if (symbol == rule.Token?.Symbol.Name)
+                        if (symbol == rule.Axiom?.Symbol.Name)
                         {
                             sb.Append(" | ").Append(rule.Derivation);
                         }
                         else
                         {
-                            symbol = rule.Token?.Symbol.Name;
+                            symbol = rule.Axiom?.Symbol.Name;
                             sb.AppendLine(",").Append("    ").Append(rule);
                         }
                     }
@@ -91,18 +91,18 @@ namespace Nt.Syntax.Exportation
                     {
                         if (symbol == "")
                         {
-                            symbol = rule.Token?.Symbol.Name;
+                            symbol = rule.Axiom?.Symbol.Name;
                             sb.Append("R: ").Append(rule);
                             continue;
                         }
 
-                        if (symbol == rule.Token?.Symbol.Name)
+                        if (symbol == rule.Axiom?.Symbol.Name)
                         {
                             sb.Append(" | ").Append(rule.Derivation);
                         }
                         else
                         {
-                            symbol = rule.Token?.Symbol.Name;
+                            symbol = rule.Axiom?.Symbol.Name;
                             sb.AppendLine(";").Append("R: ").Append(rule);
                         }
                     }

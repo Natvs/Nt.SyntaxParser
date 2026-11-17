@@ -2,79 +2,58 @@
 
 namespace Nt.Syntax.Automaton
 {
-    public class AutomatonContext
+    internal class AutomatonContext
     {
         internal void Reset()
         {
             ImportPath.ClearPath();
-            ImportedString = null;
+            Files.Clear();
             Rule = null;
             Regex = null;
             Terminal = null;
-            AddingToNonTerminal = false;
             NonTerminal = null;
-            AddingToTerminal = false;
         }
 
-
-
-
-        // Terminal
+        // Parsed Elements
 
         /// <summary>
         /// Represent the terminal previously parsed
         /// </summary>
-        public Terminal? Terminal { get; internal set; }
-        internal bool AddingToTerminal { get; set; } = false;
-
-
-
-
-        // Non terminal
+        internal Terminal? Terminal { get; set; }
 
         /// <summary>
         /// Represent the non terminal previously parsed
         /// </summary>
-        public NonTerminal? NonTerminal { get; internal set; }
-        internal bool AddingToNonTerminal { get; set; } = false;
-
-
-
-        // Rule
+        internal NonTerminal? NonTerminal { get; set; }
 
         /// <summary>
         /// Represents the last rule that was processed in the automaton context.
         /// </summary>
-        public Rule? Rule { get; internal set; }
-
-
-
-
-        // Regular expression
+        internal Rule? Rule { get; set; }
 
         /// <summary>
         /// Represents the last regular expression that was processed in the automaton context.
         /// </summary>
-        public RegularExpression? Regex { get; internal set; }
-
-
+        internal RegularExpression? Regex { get; set; }
 
 
         // Importation
 
         /// <summary>
-        /// Represents the last imported string from an import statement.
+        /// Represents a list of all files imported to the current grammar
         /// </summary>
-        public string? ImportedString { get; internal set; }
-        internal ImportPath ImportPath { get; } = new ImportPath();
-        internal string CurrentImportFile { get; set; } = "";
-        internal string CurrentImportPath { get; set; } = "";
+        internal List<string> Files { get; set; } = [];
 
         /// <summary>
-        /// Get a list of paths that have been added to the import path.
+        /// Represents all the paths used to import files
+        /// </summary>
+        internal ImportPath ImportPath { get; } = new ImportPath();
+
+        /// <summary>
+        /// Get a list of paths that have been added to the import path
         /// </summary>
         /// <returns></returns>
-        public List<string> GetPath()
+        internal List<string> GetPath()
         {
             return ImportPath.GetPath();
         }

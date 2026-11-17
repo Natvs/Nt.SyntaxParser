@@ -47,7 +47,7 @@ namespace Nt.Syntax.Structures
         /// Adds the elements of the specified collection to the current collection.
         /// </summary>
         /// <param name="elements">The collection of elements to add.</param>
-        internal void AddRange(IEnumerable<T> elements)
+        private void AddRange(IEnumerable<T> elements)
         {
             foreach (var element in elements)
             {
@@ -62,7 +62,7 @@ namespace Nt.Syntax.Structures
         /// <exception cref="InternalException">Thrown if the specified element is not found in the collection.</exception>
         internal void Remove(T element)
         {
-            if (!Elements.Remove(element)) throw new InternalException($"Element {element} not found in collection of elements");
+            if (!Elements.Remove(element)) throw new KeyNotFoundException($"Element {element} not found in collection of elements");
         }
 
         /// <summary>
@@ -153,6 +153,7 @@ namespace Nt.Syntax.Structures
             }
             return false;
         }
+
     }
 
 }

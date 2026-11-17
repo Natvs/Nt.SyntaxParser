@@ -1,0 +1,5 @@
+NON TERMINALS (
+	A
+	B
+	C
+)

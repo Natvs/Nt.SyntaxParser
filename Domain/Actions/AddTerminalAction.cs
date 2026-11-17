@@ -1,8 +1,5 @@
 ﻿using Nt.Automaton.Actions;
-using Nt.Automaton.Automatons;
 using Nt.Automaton.Tokens;
-using Nt.Parser.Structures;
-using Nt.Parser.Symbols;
 using Nt.Syntax.Automaton;
 using Nt.Syntax.Builders;
 using Nt.Syntax.Exceptions;
@@ -11,13 +8,14 @@ using Nt.Syntax.Structures;
 namespace Nt.Syntax.Actions
 {
     /// <summary>
-    /// Represents an action that adds a new terminal to the grammar
+    /// Represent an action that adds a new terminal to the grammar
     /// </summary>
     /// <param name="grammar">Grammar datas</param>
-    public class AddTerminalAction(Grammar grammar, AutomatonContext context) : ITokenAction<string>
+    /// <param name="context">Automaton context</param>
+    internal class AddTerminalAction(Grammar grammar, AutomatonContext context) : ITokenAction<string>
     {
         /// <summary>
-        /// Adds a parsed token as a new terminal of the grammar
+        /// Add a parsed token as a new terminal of the grammar
         /// </summary>
         /// <param name="token">Parsed token to add as new terminal</param>
         public void Perform(IAutomatonToken<string> token)
@@ -26,22 +24,13 @@ namespace Nt.Syntax.Actions
             {
                 if (token is AutomatonToken automatonToken)
                 {
-                    if (context.Terminal == null)
-                    {
-                        throw new SyntaxError(token.Value, automatonToken.Line);
-                    }
-                    
-                    var name = grammar.RemoveEscapeCharacter(context.Terminal.Symbol.Name);
-
-                    var factory = SyntaxParserConfig.GetConfig().SymbolFactory;
-                    context.Terminal.Symbol = factory.Create(name);
-                    grammar.Terminals.Add(context.Terminal);
+                    var name = grammar.RemoveEscapeCharacter(automatonToken.Value);
+                    grammar.GetBuilder().AddTerminal(name, automatonToken.Line);
+                    context.Terminal = grammar.Terminals.Get((t) => t.Name == name);
                 }
             }
             catch (RegisteredNonTerminalException) { }
             catch (RegisteredTerminalException) { }
-
-            context.AddingToTerminal = false;
         }
     }
 }

@@ -39,14 +39,14 @@ namespace Nt.Syntax.Exportation
                 case ExportationMode.Original:
                     return rules;
                 case ExportationMode.Alphabetical:
-                    var queue = new List<Rule>(rules.OrderBy(rule => rule.Token?.Name));
+                    var queue = new List<Rule>(rules.OrderBy(rule => rule.Axiom?.Name));
                     var ordered_rules = new List<Rule>();
                     while (queue.Count > 0)
                     {
                         var current_rule = queue[0];
                         ordered_rules.Add(current_rule);
                         queue.RemoveAt(0);
-                        var similar_rules = queue.Where(rule => rule.Token?.Name == current_rule.Token?.Name).OrderBy(rule => rule.ToString()).ToList();
+                        var similar_rules = queue.Where(rule => rule.Axiom?.Name == current_rule.Axiom?.Name).OrderBy(rule => rule.ToString()).ToList();
                         foreach (var rule in similar_rules)
                         {
                             ordered_rules.Add(rule);
@@ -62,8 +62,8 @@ namespace Nt.Syntax.Exportation
                         var current_rule = queue[0];
                         ordered_rules.Add(current_rule);
                         queue.RemoveAt(0);
-                        if (current_rule.Token == null) continue;
-                        var similar_rules = queue.Where(rule => rule.Token != null && rule.Token.Name.StartsWith(current_rule.Token.Name, StringComparison.Ordinal)).ToList();
+                        if (current_rule.Axiom == null) continue;
+                        var similar_rules = queue.Where(rule => rule.Axiom != null && rule.Axiom.Name.StartsWith(current_rule.Axiom.Name, StringComparison.Ordinal)).ToList();
                         foreach (var rule in similar_rules)
                         {
                             ordered_rules.Add(rule);
@@ -82,7 +82,7 @@ namespace Nt.Syntax.Exportation
                 case ExportationMode.Original:
                     return regexes;
                 case ExportationMode.Alphabetical:
-                    var queue = new List<RegularExpression>(regexes.OrderBy(regex => regex.Token?.Name));
+                    var queue = new List<RegularExpression>(regexes.OrderBy(regex => regex.Axiom?.Name));
                     var ordered_regexes = new List<RegularExpression>();
                     while (queue.Count > 0)
                     {
@@ -90,7 +90,7 @@ namespace Nt.Syntax.Exportation
                         ordered_regexes.Add(current_regex);
                         queue.RemoveAt(0);
 
-                        var similar_regexes = queue.Where(regex => regex.Token?.Name == current_regex.Token?.Name).OrderBy(regex => regex.ToString()).ToList();
+                        var similar_regexes = queue.Where(regex => regex.Axiom?.Name == current_regex.Axiom?.Name).OrderBy(regex => regex.ToString()).ToList();
                         foreach (var regex in similar_regexes)
                         {
                             ordered_regexes.Add(regex);
@@ -107,8 +107,8 @@ namespace Nt.Syntax.Exportation
                         ordered_regexes.Add(current_regex);
                         queue.RemoveAt(0);
 
-                        if (current_regex.Token == null) continue;
-                        var similar_regexes = queue.Where(regex => regex.Token != null && regex.Token.Name.StartsWith(current_regex.Token.Name, StringComparison.Ordinal)).ToList();
+                        if (current_regex.Axiom == null) continue;
+                        var similar_regexes = queue.Where(regex => regex.Axiom != null && regex.Axiom.Name.StartsWith(current_regex.Axiom.Name, StringComparison.Ordinal)).ToList();
                         foreach (var regex in similar_regexes)
                         {
                             ordered_regexes.Add(regex);

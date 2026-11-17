@@ -1,0 +1,11 @@
+NON TERMINALS (
+	A
+	B
+	C
+)
+
+REGULAR EXPRESSIONS (
+	A = a
+	B = b
+	C = c
+)

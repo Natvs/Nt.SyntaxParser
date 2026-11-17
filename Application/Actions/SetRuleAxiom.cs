@@ -39,7 +39,7 @@ namespace Nt.Applications.SyntaxParser.Actions
             try
             {
                 if (Context.Grammar.NonTerminals.TryGet((t) => t.Symbol.Name == input, out var nt)) {
-                    Rule.GetBuilder().SetToken(new NonTerminal(nt.Symbol, -1));
+                    Rule.GetBuilder().SetAxiom(nt.Symbol.Name, -1);
                 }
             }
             catch (KeyNotFoundException)

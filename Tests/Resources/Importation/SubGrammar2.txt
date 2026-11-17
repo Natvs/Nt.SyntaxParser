@@ -1,0 +1,11 @@
+﻿NON TERMINALS (
+	B
+)
+
+TERMINALS (
+	b
+)
+
+RULES (
+	B -> b ;
+)

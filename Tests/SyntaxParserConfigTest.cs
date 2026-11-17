@@ -1,5 +1,6 @@
 ﻿using Nt.Parser.Symbols;
 using Nt.Syntax;
+using static Nt.Tests.Syntax.SyntaxTestUtils;
 
 namespace Nt.Tests.Syntax
 {
@@ -36,23 +37,68 @@ namespace Nt.Tests.Syntax
         }
 
         [Fact]
-        public void SyntaxParserConfig_SetFactory_ShouldCreateCorrectSymbols()
+        public void SyntaxParserConfig_SetFactory_ShouldCreateCorrectTerminal()
         {
             var factory = new CustomSymbolFactory();
-
             var instance = SyntaxParserConfig.GetConfig();
             instance.SetSymbolFactory(factory);
 
-            var parser = new SyntaxParser();
-            var grammar = parser.ParseString("N = {A} T = {a} R: A -> a; E: A = abc;");
+            var grammar = ParseTest(TestType.Syntax, "SingleTerminal");
 
-            Assert.IsType<CustomSymbol>(grammar.NonTerminals[0].Symbol);
             Assert.IsType<CustomSymbol>(grammar.Terminals[0].Symbol);
-            Assert.IsType<CustomSymbol>(grammar.Rules[0].Token?.Symbol);
-            Assert.IsType<CustomSymbol>(grammar.Rules[0].Derivation[0].Symbol);
-            Assert.IsType<CustomSymbol>(grammar.RegularExpressions[0].Token?.Symbol);
         }
 
+        [Fact]
+        public void SyntaxParserConfig_SetFactory_ShouldCreateCorrectNonTerminal()
+        {
+            var factory = new CustomSymbolFactory();
+            var instance = SyntaxParserConfig.GetConfig();
+            instance.SetSymbolFactory(factory);
+
+            var grammar = ParseTest(TestType.Syntax, "SingleNonTerminal");
+
+            Assert.IsType<CustomSymbol>(grammar.NonTerminals[0].Symbol);
+        }
+
+        [Fact]
+        public void SyntaxParserConfig_SetFactory_ShouldCreateCorrectAxiom()
+        {
+            var factory = new CustomSymbolFactory();
+            var instance = SyntaxParserConfig.GetConfig();
+            instance.SetSymbolFactory(factory);
+
+            var grammar = ParseTest(TestType.Syntax, "Axiom");
+
+            Assert.IsType<CustomSymbol>(grammar.Axiom?.Symbol);
+        }
+
+        [Fact]
+        public void SyntaxParserConfig_SetFactory_ShouldCreateCorrectRule()
+        {
+            var factory = new CustomSymbolFactory();
+            var instance = SyntaxParserConfig.GetConfig();
+            instance.SetSymbolFactory(factory);
+
+            var grammar = ParseTest(TestType.Syntax, "SingleRule");
+
+            Assert.IsType<CustomSymbol>(grammar.Rules[0].Axiom?.Symbol);
+            foreach (var symbol in grammar.Rules[0].Derivation)
+            {
+                Assert.IsType<CustomSymbol>(symbol.Symbol);
+            }
+        }
+
+        [Fact]
+        public void SyntaxParserConfig_SetFactory_ShouldCreateCorrectRegex()
+        {
+            var factory = new CustomSymbolFactory();
+            var instance = SyntaxParserConfig.GetConfig();
+            instance.SetSymbolFactory(factory);
+
+            var grammar = ParseTest(TestType.Syntax, "SingleRegex");
+
+            Assert.IsType<CustomSymbol>(grammar.RegularExpressions[0].Axiom?.Symbol);
+        }
 
     }
 }

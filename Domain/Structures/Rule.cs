@@ -16,7 +16,7 @@ namespace Nt.Syntax.Structures
         /// <summary>
         /// Token that would derive into derivation
         /// </summary>
-        public NonTerminal? Token { get; internal set; }
+        public NonTerminal? Axiom { get; internal set; }
         /// <summary>
         /// List of tokens that represent derivation
         /// </summary>
@@ -29,7 +29,7 @@ namespace Nt.Syntax.Structures
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append(Token == null ? "<<undefined>>" : Token.Name);
+            sb.Append(Axiom == null ? "<<undefined>>" : Axiom.Name);
             sb.Append(" -> "); sb.Append(Derivation.ToString());
             return sb.ToString();
         }

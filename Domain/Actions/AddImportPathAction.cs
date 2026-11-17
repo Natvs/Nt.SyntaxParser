@@ -4,7 +4,7 @@ using Nt.Syntax.Automaton;
 
 namespace Nt.Syntax.Actions
 {
-    public class AddImportPathAction(AutomatonContext context) : ITokenAction<string>
+    internal class AddImportPathAction(AutomatonContext context) : ITokenAction<string>
     {
         /// <summary>
         /// Add the token read to the import path.
@@ -12,8 +12,7 @@ namespace Nt.Syntax.Actions
         /// <param name="token">The token that is read</param>
         public void Perform(IAutomatonToken<string> token)
         {
-            context.ImportPath.AddPath(context.CurrentImportPath);
-            context.CurrentImportPath = "";
+            context.ImportPath.AddPath(token.Value);
         }
     }
 

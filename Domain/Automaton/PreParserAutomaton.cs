@@ -22,27 +22,14 @@ namespace Nt.Syntax.Automaton
 
             initial.AddTransition(new Transition("import", importState));
             initial.AddTransition(new Transition("IMPORT", importState));
-            importState.SetDefault(new Transition(importState).SetAction(new AppendToCurrentImportFileAction(Context)));
-            importState.AddTransition(new Transition(";", initial).SetAction(new ImportFileAction(Context)));
+            importState.SetDefault(new Transition(initial).SetAction(new ImportFileAction(Context)));
 
             initial.AddTransition(new Transition("addtopath", addToPathState));
             initial.AddTransition(new Transition("ADDTOPATH", addToPathState));
-            addToPathState.SetDefault(new Transition(addToPathState).SetAction(new AppendToCurrentImportPathAction(Context)));
-            addToPathState.AddTransition(new Transition(";", initial).SetAction(new AddImportPathAction(Context)));
+            addToPathState.SetDefault(new Transition(initial).SetAction(new AddImportPathAction(Context)));
 
             initial.AddTransition(new Transition("ESCAPE", escapeState));
             initial.AddTransition(new Transition("escape", escapeState));
-        }
-
-        // Internal methods
-        internal string? GetImportedString()
-        {
-            return Context.ImportedString;
-        }
-
-        internal void ResetImportedString()
-        {
-            Context.ImportedString = null;
         }
 
     }

@@ -43,7 +43,7 @@ namespace Nt.Applications.SyntaxParser.Actions
             try
             {
                 var nt = Context.Grammar.NonTerminals.Get((t) => t.Name == name);
-                Context.Grammar.GetBuilder().SetAxiom(new NonTerminal(nt.Symbol, -1));
+                //Context.Grammar.GetBuilder().SetAxiom(new NonTerminal(nt.Symbol, -1));
             }
             catch (KeyNotFoundException) 
             {

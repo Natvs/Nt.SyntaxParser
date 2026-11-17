@@ -17,11 +17,14 @@ namespace Nt.Syntax.Builders
         /// <param name="nt">Non-terminal to set</param>
         /// <returns>This instance of <see cref="RegexBuilder"/> for method chaining</returns>
         /// <exception cref="UnregisteredNonTerminalException">Thrown if the <paramref name="nt"/> is not registered in the grammar.</exception>
-        public RegexBuilder SetToken(NonTerminal nt)
+        public RegexBuilder SetAxiom(string name, int line)
         {
-            if (!_regex.Grammar.NonTerminals.Contains((t) => t.Name == nt.Name)) throw new UnregisteredNonTerminalException(nt.Name, nt.Line);
-            _regex.Token = nt;
-            return this;
+            if (_regex.Grammar.NonTerminals.TryGet((t) => t.Name == name, out var nonterminal))
+            {
+                _regex.Axiom = nonterminal.Clone(line);
+                return this;
+            }
+            throw new AxiomException(name, line);
         }
 
         /// <summary>

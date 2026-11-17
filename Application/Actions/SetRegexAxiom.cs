@@ -40,7 +40,7 @@ namespace Nt.Applications.SyntaxParser.Actions
             {
                 if (Context.Grammar.NonTerminals.TryGet((t) => t.Name == input, out var nt))
                 {
-                    Regex.GetBuilder().SetToken(new NonTerminal(nt.Symbol, -1));
+                    Regex.GetBuilder().SetAxiom(input, -1);
                 }
             }
             catch (KeyNotFoundException)

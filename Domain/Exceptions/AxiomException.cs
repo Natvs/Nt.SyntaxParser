@@ -1,6 +1,6 @@
 ﻿namespace Nt.Syntax.Exceptions
 {
-    internal class AxiomException(string name, int line) : InternalException($"The axiom {name} at line {line} is registered as a terminal, but is expected to be a nonterminal.")
+    public class AxiomException(string name, int line) : Exception($"The axiom {name} at line {line} is not registered as a non terminal.")
     {
         public string Name { get; } = name;
         public int Line { get; } = line;

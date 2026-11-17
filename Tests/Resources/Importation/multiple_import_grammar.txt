@@ -1,6 +1,0 @@
-﻿IMPORT ../../../Resources/Importation/import_subgrammar1.txt;
-IMPORT ../../../Resources/Importation/import_subgrammar2.txt;
-
-S = A
-
-R: A -> B ;

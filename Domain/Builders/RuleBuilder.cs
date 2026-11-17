@@ -17,11 +17,14 @@ namespace Nt.Syntax.Builders
         /// <param name="nt">The non-terminal symbol the rule must derive.</param>
         /// <returns>The current instance of <see cref="RuleBuilder"/> for method chaining.</returns>
         /// <exception cref="UnregisteredNonTerminalException">Thrown if <paramref name="nt"/> is not registered in the grammar's collection of non-terminals.</exception>
-        public RuleBuilder SetToken(NonTerminal nt)
+        public RuleBuilder SetAxiom(string name, int line)
         {
-            if (!_rule.Grammar.NonTerminals.Contains((t) => t.Name == nt.Name)) throw new UnregisteredNonTerminalException(nt.Name, nt.Line);
-            _rule.Token = nt;
-            return this;
+            if (_rule.Grammar.NonTerminals.TryGet((t) => t.Name == name, out var nonterminal))
+            {
+                _rule.Axiom = nonterminal.Clone(line);
+                return this;
+            }
+            throw new AxiomException(name, line);
         }
 
         /// <summary>
@@ -37,15 +40,23 @@ namespace Nt.Syntax.Builders
         /// <summary>
         /// Add a <see cref="GrammarToken"/> to the rule's derivation sequence.
         /// </summary>
-        /// <param name="token">Grammar token to add. Can be either a terminal or non-terminal symbol.</param>
+        /// <param name="token">Name of the token to add.</param>
+        /// <param name="line">Line of the token</param>
         /// <returns>The current instance of <see cref="RuleBuilder"/> for method chaining.</returns>
         /// <exception cref="UnknownSymbolException">Thrown if <paramref name="token"/> is neither registered as a terminal or non terminal.</exception>
-        public RuleBuilder Add(GrammarToken token)
+        public RuleBuilder Add(string token, int line)
         {
-            if (!_rule.Grammar.Terminals.Contains((t) => t.Name == token.Name) && !_rule.Grammar.NonTerminals.Contains((t) => t.Name == token.Name))
-                throw new UnknownSymbolException(token.Name, token.Line);
-            _rule.Derivation.Add(token);
-            return this;
+            if (_rule.Grammar.Terminals.TryGet((t) => t.Name == token, out var terminal))
+            {
+                _rule.Derivation.Add(terminal.Clone(line));
+                return this;
+            }
+            if (_rule.Grammar.NonTerminals.TryGet((t) => t.Name == token, out var nonTerminal))
+            {
+                _rule.Derivation.Add(nonTerminal.Clone(line));
+                return this;
+            }
+            throw new UnknownSymbolException(token, line);
         }
         
         /// <summary>
@@ -55,12 +66,19 @@ namespace Nt.Syntax.Builders
         /// <param name="token">Grammar token to insert. Can be either a terminal or non-terminal symbol.</param>
         /// <returns>The current instance of <see cref="RuleBuilder"/> for method chaining.</returns>
         /// <exception cref="UnknownSymbolException">Thrown if <paramref name="token"/> is neither registered as a terminal or non terminal.</exception>
-        public RuleBuilder Insert(int position, GrammarToken token)
+        public RuleBuilder Insert(int position, string token, int line)
         {
-            if (!_rule.Grammar.Terminals.Contains((t) => t.Name == token.Name) && !_rule.Grammar.NonTerminals.Contains((t) => t.Name == token.Name))
-                throw new UnknownSymbolException(token.Name, token.Line);
-            _rule.Derivation.Insert(position, token);
-            return this;
+            if (_rule.Grammar.Terminals.TryGet((t) => t.Name == token, out var terminal))
+            {
+                _rule.Derivation.Insert(position, terminal.Clone(line));
+                return this;
+            }
+            if (_rule.Grammar.NonTerminals.TryGet((t) => t.Name == token, out var nonTerminal))
+            {
+                _rule.Derivation.Insert(position, nonTerminal.Clone(line));
+                return this;
+            }
+            throw new UnknownSymbolException(token, line);
         }
 
         /// <summary>
