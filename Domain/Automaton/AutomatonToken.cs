@@ -4,7 +4,7 @@ using Nt.Parser.Structures;
 
 namespace Nt.Syntax.Automaton
 {
-    public class AutomatonToken : ParsedToken, IAutomatonToken<string>
+    internal class AutomatonToken : ParsedToken, IAutomatonToken<string>
     {
         public string Value { get; }
 

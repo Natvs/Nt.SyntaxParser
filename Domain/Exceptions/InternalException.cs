@@ -1,7 +1,8 @@
 ﻿namespace Nt.Syntax.Exceptions
 {
-    public class InternalException(string message) : Exception(message)
+    internal class InternalException(string message) : Exception(message)
     {
         
     }
+
 }

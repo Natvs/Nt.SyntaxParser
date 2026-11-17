@@ -1,10 +1,8 @@
-﻿using Nt.Parser.Symbols;
-using Nt.Syntax.Structures;
-using System.Globalization;
+﻿using Nt.Syntax.Structures;
 
 namespace Nt.Syntax.Exportation
 {
-    public static class ExportationMethods
+    internal static class ExportationMethods
     {
         public static List<GrammarToken> Reorder(List<GrammarToken> symbols, ExportationMode mode)
         {

@@ -1,5 +1,4 @@
-﻿using Nt.Parser.Symbols;
-using Nt.Syntax.Structures;
+﻿using Nt.Syntax.Structures;
 using System.Text;
 
 namespace Nt.Syntax.Exportation
@@ -7,151 +6,101 @@ namespace Nt.Syntax.Exportation
 
     internal sealed class FileExporter
     {
-        public static string Save(IEnumerable<GrammarToken> symbols, GrammarTokenType types, FileStyle style = FileStyle.Default)
+        public static string Save(IEnumerable<GrammarToken> symbols, GrammarTokenType types)
         {
             var sb = new StringBuilder();
 
             var first = true;
-            switch (style)
+
+            if (types == GrammarTokenType.Terminal) sb.AppendLine("TERMINALS (");          
+            else sb.AppendLine("NON TERMINALS (");
+
+            foreach (var symbol in symbols)
             {
-                case FileStyle.Light:
-                    if (types == GrammarTokenType.Terminal) sb.AppendLine("Terminals:");          
-                    else sb.AppendLine("Non Terminals:");
-
-                    foreach (var symbol in symbols)
-                    {
-                        if (first)
-                        {
-                            first = false;
-                            sb.Append("     ").Append(symbol.Name);
-                            continue;
-                        }
-                        sb.AppendLine(",").Append("    ").Append(symbol.Name);
-                    }
-                    sb.AppendLine(";");
-
-                    break;
-                case FileStyle.Default:
-                    if (types == GrammarTokenType.Terminal) sb.Append("T = {");
-                    else sb.Append("N = {");
-
-                    foreach (var symbol in symbols)
-                    {
-                        if (first)
-                        {
-                            first = false;
-                            sb.Append(symbol.Name);
-                            continue;
-                        }
-                        sb.Append(", ").Append(symbol.Name);
-                    }
-                    sb.AppendLine("}");
-                    break;
+                if (first)
+                {
+                    first = false;
+                    sb.Append("    ").AppendLine(symbol.Name);
+                    continue;
+                }
             }
-
+            sb.Append(')');
             return sb.ToString();
         }
 
-        public static string Save(IEnumerable<Rule> rules, FileStyle style = FileStyle.Default)
+        public static string Save(IEnumerable<Rule> rules)
         {
             var sb = new StringBuilder();
 
             var symbol = "";
-            switch (style) 
+            sb.AppendLine("RULES (");
+            foreach (var rule in rules)
             {
-                case FileStyle.Light:
-                    sb.AppendLine("Rules:");
+                if (symbol == "")
+                {
+                    symbol = rule.Axiom?.Symbol.Name;
+                    sb.Append("    ").Append(rule);
+                    continue;
+                }
 
-                    foreach (var rule in rules)
-                    {
-                        if (symbol == "")
-                        {
-                            symbol = rule.Axiom?.Symbol.Name;
-                            sb.Append("     ").Append(rule);
-                            continue;
-                        }
-
-                        if (symbol == rule.Axiom?.Symbol.Name)
-                        {
-                            sb.Append(" | ").Append(rule.Derivation);
-                        }
-                        else
-                        {
-                            symbol = rule.Axiom?.Symbol.Name;
-                            sb.AppendLine(",").Append("    ").Append(rule);
-                        }
-                    }
-
-                    sb.AppendLine(";");
-                    break;
-
-                case FileStyle.Default:
-                    
-                    foreach (var rule in rules)
-                    {
-                        if (symbol == "")
-                        {
-                            symbol = rule.Axiom?.Symbol.Name;
-                            sb.Append("R: ").Append(rule);
-                            continue;
-                        }
-
-                        if (symbol == rule.Axiom?.Symbol.Name)
-                        {
-                            sb.Append(" | ").Append(rule.Derivation);
-                        }
-                        else
-                        {
-                            symbol = rule.Axiom?.Symbol.Name;
-                            sb.AppendLine(";").Append("R: ").Append(rule);
-                        }
-                    }
-                   
-                    sb.AppendLine(";");
-                    break;
+                if (symbol == rule.Axiom?.Symbol.Name)
+                {
+                    sb.Append(" | ").Append(rule.Derivation);
+                }
+                else
+                {
+                    symbol = rule.Axiom?.Symbol.Name;
+                    sb.AppendLine(" ;").Append("    ").Append(rule);
+                }
             }
+
+            sb.AppendLine(" ;").Append(')');
 
             return sb.ToString();
         }
 
-        public static string Save(IEnumerable<RegularExpression> regexes, FileStyle style = FileStyle.Default)
+        public static string Save(IEnumerable<RegularExpression> regexes)
         {
             var sb = new StringBuilder();
-            var first = true;
-            switch (style)
+            sb.AppendLine("REGULAR EXPRESSIONS (");
+            foreach (var regex in regexes)
             {
-                case FileStyle.Light:
-                    sb.AppendLine("Regular Expressions:");
-                    foreach (var regex in regexes)
-                    {
-                        if (first)
-                        {
-                            first = false;
-                            sb.Append("     ").Append(regex);
-                            continue;
-                        }                    
-                        sb.AppendLine(",").Append("    ").Append(regex);
-                    }
-                    sb.AppendLine(";");
-                    break;
-                case FileStyle.Default:
-                    foreach (var regex in regexes)
-                    {
-                        sb.Append("E: ").Append(regex).AppendLine(";");
-                    }
-                    break;
+                sb.Append("    ").Append(regex).AppendLine();
             }
+            sb.Append(')');
+
             return sb.ToString();
         }
 
-        public static string Save(IEnumerable<GrammarToken> terminals, IEnumerable<GrammarToken> nonterminals, NonTerminal? axiom, IEnumerable<Rule> rules, IEnumerable<RegularExpression> regexes, FileStyle style = FileStyle.Default)
+        public static string Save(IEnumerable<GrammarToken> terminals, IEnumerable<GrammarToken> nonterminals, NonTerminal? axiom, IEnumerable<Rule> rules, IEnumerable<RegularExpression> regexes)
         {
             var sb = new StringBuilder();
-            sb.AppendLine(Save(terminals, GrammarTokenType.Terminal, style));
-            sb.AppendLine(Save(nonterminals, GrammarTokenType.NonTerminal, style));
-            if (axiom != null) sb.Append("S = ").Append(axiom).AppendLine().AppendLine();
-            if (rules.Any()) sb.AppendLine(Save(rules, style));
-            if (regexes.Any()) sb.AppendLine(Save(regexes, style));
+            var jump = false;
+            if (terminals.Any())
+            {
+                jump = true;
+                sb.Append(Save(terminals, GrammarTokenType.Terminal));
+            }
+            if (nonterminals.Any())
+            {
+                if (jump) sb.AppendLine().AppendLine();
+                sb.Append(Save(nonterminals, GrammarTokenType.NonTerminal));
+            }
+            if (axiom != null)
+            {
+                if (jump) sb.AppendLine().AppendLine();
+                sb.Append("Axiom ( ").Append(axiom).Append(" )");
+            }
+            if (rules.Any())
+            {
+                if (jump) sb.AppendLine().AppendLine();
+                sb.Append(Save(rules));
+            }
+            if (regexes.Any())
+            {
+                if (jump) sb.AppendLine().AppendLine();
+                sb.Append(Save(regexes));
+            }
             return sb.ToString();
         }
 
