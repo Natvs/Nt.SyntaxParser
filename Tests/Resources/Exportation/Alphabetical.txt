@@ -1,0 +1,24 @@
+TERMINALS (
+	a
+	b
+	c
+)
+
+NON TERMINALS (
+	A
+	B
+	C
+	D
+	E
+)
+
+RULES (
+	A -> a ;
+	B -> b ;
+	C -> c ;
+)
+
+REGULAR EXPRESSIONS (
+	D = d
+	E = e
+)

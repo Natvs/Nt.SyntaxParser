@@ -1,0 +1,12 @@
+TERMINALS (
+	a
+	b
+)
+
+NON TERMINALS (
+	A
+)
+
+RULES (
+	A -> a | b ;
+)

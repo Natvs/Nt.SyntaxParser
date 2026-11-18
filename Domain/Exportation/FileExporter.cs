@@ -12,19 +12,14 @@ namespace Nt.Syntax.Exportation
 
             var first = true;
 
-            if (types == GrammarTokenType.Terminal) sb.AppendLine("TERMINALS (");          
-            else sb.AppendLine("NON TERMINALS (");
+            if (types == GrammarTokenType.Terminal) sb.Append("TERMINALS (");          
+            else sb.Append("NON TERMINALS (");
 
             foreach (var symbol in symbols)
             {
-                if (first)
-                {
-                    first = false;
-                    sb.Append("    ").AppendLine(symbol.Name);
-                    continue;
-                }
+                sb.AppendLine().Append('\t').Append(symbol.Name);
             }
-            sb.Append(')');
+            sb.Append("\r\n)");
             return sb.ToString();
         }
 
@@ -39,7 +34,7 @@ namespace Nt.Syntax.Exportation
                 if (symbol == "")
                 {
                     symbol = rule.Axiom?.Symbol.Name;
-                    sb.Append("    ").Append(rule);
+                    sb.Append('\t').Append(rule);
                     continue;
                 }
 
@@ -50,7 +45,7 @@ namespace Nt.Syntax.Exportation
                 else
                 {
                     symbol = rule.Axiom?.Symbol.Name;
-                    sb.AppendLine(" ;").Append("    ").Append(rule);
+                    sb.AppendLine(" ;").Append('\t').Append(rule);
                 }
             }
 
@@ -65,7 +60,7 @@ namespace Nt.Syntax.Exportation
             sb.AppendLine("REGULAR EXPRESSIONS (");
             foreach (var regex in regexes)
             {
-                sb.Append("    ").Append(regex).AppendLine();
+                sb.Append('\t').Append(regex).AppendLine();
             }
             sb.Append(')');
 
@@ -103,6 +98,5 @@ namespace Nt.Syntax.Exportation
             }
             return sb.ToString();
         }
-
     }
 }

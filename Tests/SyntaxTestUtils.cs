@@ -9,7 +9,8 @@ namespace Nt.Tests.Syntax
         {
             Syntax,
             Importation,
-            PreParsing
+            PreParsing,
+            Exportation
         }
 
 
@@ -20,6 +21,7 @@ namespace Nt.Tests.Syntax
                 TestType.Syntax => "../../../Resources/Syntax/" + file + ".txt",
                 TestType.Importation => "../../../Resources/Importation/" + file + ".txt",
                 TestType.PreParsing => "../../../Resources/PreParsing/" + file + ".txt",
+                TestType.Exportation => "../../../Resources/Exportation/" + file + ".txt",
                 _ => "no file",
             };
         }

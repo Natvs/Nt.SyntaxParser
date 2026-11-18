@@ -15,14 +15,26 @@ namespace Nt.Syntax.Exportation
     {
 
         /// <summary>
-        /// Export a collection of symbols to string with the specified exportation mode.
+        /// Export a collection of terminals to string with the specified exportation mode.
         /// </summary>
-        /// <param name="symbols">Set of symbols to export</param>
+        /// <param name="symbols">Set of terminals to export</param>
         /// <param name="mode">Exportation mode (original, sorted, etc.)</param>
-        /// <returns>A string representing this list of symbols</returns>
-        public static string ToString(this ElementsSet<GrammarToken> symbols, ExportationMode mode)
+        /// <returns>A string representing this list of terminals</returns>
+        public static string ToString(this ElementsSet<Terminal> symbols, ExportationMode mode)
         {
-            var ordered_symbols = Reorder(symbols.ToList(), mode);
+            var ordered_symbols = Reorder([.. symbols.ToList()], mode);
+            return StringExporter.ToString(ordered_symbols);
+        }
+
+        /// <summary>
+        /// Export a collection of non terminals to string with the specified exportation mode.
+        /// </summary>
+        /// <param name="symbols">Set of non terminals to export</param>
+        /// <param name="mode">Exportation mode (original, sorted, etc.)</param>
+        /// <returns>A string representing this list of non terminals</returns>
+        public static string ToString(this ElementsSet<NonTerminal> symbols, ExportationMode mode)
+        {
+            var ordered_symbols = Reorder([.. symbols.ToList()], mode);
             return StringExporter.ToString(ordered_symbols);
         }
 
