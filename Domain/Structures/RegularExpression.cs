@@ -6,7 +6,7 @@ namespace Nt.Syntax.Structures
     public class RegularExpression(Grammar grammar)
     {
         internal Grammar Grammar { get; } = grammar;
-        internal IData? Data { get; set; } = null;
+        internal IPayload? Data { get; set; } = null;
 
         public NonTerminal? Axiom { get; internal set; }
         public string Pattern { get; private set; } = "";

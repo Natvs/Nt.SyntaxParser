@@ -11,7 +11,7 @@ namespace Nt.Syntax.Structures
     public class Rule(Grammar grammar)
     {
         internal Grammar Grammar { get; } = grammar;
-        internal IData? Data { get; set; } = null;
+        internal IPayload? Data { get; set; } = null;
 
         /// <summary>
         /// Token that would derive into derivation

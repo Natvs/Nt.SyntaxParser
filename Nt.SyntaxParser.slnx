@@ -1,9 +1,9 @@
 <Solution>
   <Folder Name="/Doc/">
-    <File Path="Doc/Branching.md" />
     <File Path="Doc/Exceptions.md" />
     <File Path="Doc/Exportation.md" />
     <File Path="Doc/Grammar.md" />
+    <File Path="Doc/Payload.md" />
     <File Path="README.md" />
   </Folder>
   <Folder Name="/Solution files/">

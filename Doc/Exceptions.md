@@ -17,11 +17,11 @@ See [the parser projet official documentation](https://github.com/Natvs/Nt.Parse
 |---|---|
 |`UnregisteredTerminalException`| Use of a terminal that has not been previously declared. |
 |`UnregisteredNonTerminalException`| Use of a non-terminal that has not been previously declared. |
-|`SyntaxError`| Your grammar file or string contains a syntax error. More informations are given in the error message. |
 |`UnknownSymbolException`| A rule derivation contains a symbol that was not previously declared as terminal or non-terminal. |
-|`AxiomException`| A non-terminal was expected but a terminal was found instead. This can happen to the axiom, rules or regular expressions. |
+|`AxiomException`| A non-terminal was expected but the parser found either a terminal or an undefined symbol. |
 |`EndOfStringException`| The grammar file ends unexpectedly. Check the syntax. |
 |`UninitializedDataException`| A custom data type has not been initialized for a specific element. |
+|`ExpectedTokenException`| A token was expected but a different token was found. The exception message will provide more details. |
 |`IncorrectDataTypeException`| The data associated to an element is of a different type than the one requested. |
 
 ## Unlisted exceptions

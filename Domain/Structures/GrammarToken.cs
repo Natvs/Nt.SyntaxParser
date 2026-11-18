@@ -12,7 +12,7 @@ namespace Nt.Syntax.Structures
     {
         public GrammarTokenType Type { get; } = type;
         public ISymbol Symbol { get; internal set; } = symbol;
-        internal IData? Data { get; set; } = null; 
+        internal IPayload? Data { get; set; } = null; 
 
         public string Name { get => Symbol.Name; }
         public int Line { get; } = line;
