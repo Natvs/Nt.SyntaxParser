@@ -113,7 +113,7 @@ namespace Nt.Syntax.Automaton
                 )
                 .AddTransition(
                     new StringTransition(derivationState)
-                    .AddPattern(":*(-+|=+)>+")
+                    .AddPattern(":=|-+>|=+>")
                 );
             derivationState
                 .SetDefault(
@@ -165,7 +165,7 @@ namespace Nt.Syntax.Automaton
                 )
                 .AddTransition(
                     new StringTransition(readState)
-                    .AddPattern(":*=+")
+                    .AddPattern(":?=+")
                 );
             readState
                 .SetDefault(

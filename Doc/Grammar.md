@@ -1,258 +1,168 @@
 # Grammar file syntax
 
-- [Syntax of a grammar file](#syntax-of-a-grammar-file)
-	- [Defining symbols used in the grammar](#defining-symbols-used-in-the-grammar)
-	- [Setting grammar rules](#setting-grammar-rules)
-	- [Defining regular expression](#defining-regular-expressions)
-	- [Setting grammar axiom](#setting-grammar-axiom)
-	- [Escape characters](#escape-characters)
-- [Pre-parsing instructions](#pre-parsing-instructions)
-	- [More about importing files](#more-about-importing-files)
-	- [Configuration commands](#configuration-commands)
-- [Example of use case of a grammar file](#example-of-grammar-file-use-case)
-- [Lightweight grammars](#lightweight-grammars)
-	- [Defining terminals](#defining-terminals)
-	- [Defining non-terminals](#defining-non-terminals)
-	- [Defining rules](#defining-rules)
-	- [Defining regex](#defining-regex)
-	- [Setting the axiom](#setting-the-axiom)
+- [Introduction](#introduction)
+- [Structure of a grammar file](#structure-of-a-grammar-file)
+  - [Terminals](#terminals)
+  - [Non-terminals](#non-terminals)
+  - [Rules](#rules)
+  - [Regular expressions](#regular-expressions)
+- [Importing an external grammar](#importing-an-external-grammar)
+  - [Import from the grammar file](#import-from-the-grammar-file)
+  - [Use the imported grammar](#use-the-imported-grammar)
 
-Parsing the grammar file occurs in two steps. The grammar file is first parsed to process pre-parsing lines.
-The resulted file is then parsed into the final grammar file that would be parsed into a grammar structure.
+## Introduction
 
-## Syntax of a grammar file
+A grammar is a structure used to define a language.
+It consists of a set of symbols, a set of rules and an axiom.
 
-### Defining symbols used in the grammar
-You need to provide the grammar with a list of all symbols used before using them.
-These symbols are divided into terminals (constant strings) and non terminals (symbols to derive).
+There are two types of symbols:
+- `Terminals` are symbols that are constant strings. They are the building blocks of the language and can be keywords, operators, or other fixed elements.
+- `Non-terminals` are symbols used in rules and regular expressions. The rules define how those non-terminals can be derived into sequences of terminals and non-terminals.
 
-Terminals and non terminals are both listed into a list of the form `{symbol1, symbol2, ...}`. What changes however is the start of the line.
+The `axiom` is the first non-terminal of the grammar. It means that all languages described by the grammar are derivations of the axiom.
 
-To define terminals, use:
-```
-T = {terminal1, terminal2, ...}
-```
-To define non terminals, use:
-```
-N = {nonterminal1, nonterminal2, ...}
-```
+A particularity of this syntax parser is the possibility to define regular expressions along with the other elements of the grammar, avoiding the troubles of manipulating many rules for creating some.
 
-Note that symbols defined here can contain any characthers except the symbols `,` `}` `\` or any white space. If you wish to add a symbol containing such a character into your grammar, you must use the escape character `\`.  See [the parser escape characters](../README.md#escape-character) for more details.
+## Structure of a grammar file
 
-### Setting grammar rules
-You need to provide each non-terminal at least one derivation rule. The derivation can be any sequence of previously defined symbols.
+All of these elements are defined in a grammar file. 
+Each type of element described in a `block`. 
+A block begins with the name of the element, and the description is between parentheses.
 
-These rules have the following syntax:
-```
-R: non-terminal -> symbol1 symbol2 symbol3 ... ;
-```
+As there are five elements in the grammar, there are also five blocks in a grammar file.
 
-You can define multiple derivations for a same non-terminal with the syntax:
-```
-R: non-terminal -> symbol11 symbol12 ... | symbol21 symbol22 ... ;
-```
+> A block that is repeated multiple times in the file won't overwrite itself but instead each redefinition will extend the initial block.
 
-You need to separate all your symbols by at least one white space. White spaces you write are ignored when parsing. If you wish to include a white space as a symbol, or a symbol among `,` `}` `\`, you can use the escape character `\`. See [the parser escape characters](../README.md#escape-character) for more details.
+### Terminals
 
-A derivation should be followed with `;` to mark the end of the rule. Remark that the escape symbol `\;` is interpreted by the parser as `;` and thus also marks the end of the rule. Please have a look at [the section about escape characters](#escape-characters) for a way to include it.
-
-> Note that the arrow `->` can be as long as you want. It must begin with `-` and ends with a `>`. So `---->` is also valid.
-
-### Defining regular expressions
-Alternatively, you define a derivation for non-terminal as a regular expression.
-Regular expressions can always be described by a grammar. However it is sometimes a hassle to set terminals, non-terminals and many rules that can make your code less manageable.
-You can use regular expressions without having to previously define the symbols used in it and define it all in just one rule. The syntax is a follow:
+Terminals are defined in a terminal block.
+All unique terminals must be separated by (at least) one space or new line.
 
 ```
-E: non-terminal = regex ;
+TERMINALS (
+	if
+	else
+	while
+	for
+	return
+	+
+	-
+	*
+	/
+)
 ```
 
-See [official microsoft documentation](https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-language-quick-reference) to learn more about regex.
-Once again, pay attention that you need to [use escape characters](#escape-characters) for including the symbol `;`.
+You may want to include the symbol `)`. In this case, you should escape it `')`.
+The escape character is configurable. Add `ESCAPE` followed by a character in the file to change it.
 
-### Setting grammar axiom
-The grammar needs a symbol to begin with for syntaxically defining if a string belongs to the grammar language. This symbol is called axiom and is defined with the syntax:
+The following example shows how to escape the terminal `)` with the character `#`.
 ```
-S = axiom
+ESCAPE #
+
+TERMINALS (
+	#)
+)
 ```
-The axiom can be any non-terminal, but only one of those.
 
-### Escape characters
-Here there is a need to distinguish the [escape character for text parsing](../README.md#escape-character) and the one for syntax parsing.
-- For **text parsing**, the escape character is `\` and only ensures the next character is in the continuity of the token.
-- For **syntax parsing**, the escape character is `'` by default and is used in rules definitions to ensure the derivation symbol is treated as as part of a terminal or non terminal.
+The escape character must be only one character, and it must not be `\`.
 
-When writing a grammar, here is how to use each escape character:
+### Non-terminals
 
-1. Use `\` for symbols `:`, `,`, `=`, `{`, `}`, `;`, `-`, `>`, `+`, `*` and `\` to include them in the continuity of the token. If not present, it will create a new token. Note that this escape character also works for any symbol.
+Non-terminals are defined in a non-terminal block.
+All unique non-terminals must be separated by (at least) one space or new line.
 
-> Example: `a+b` will be parsed as three tokens `a`, `+` and `b`. However, if you write `a\+b`, it will be parsed as one token `a+b`.
-
-2. Use `'` in rule derivations definitions for symbols `|` and `'` to define them as rule symbols and not rule end markers. The escape character `'` can also be used for any character, though it has no effect.
-
-> Example: `R: A -> a | b ;` will be parsed as a rule with two derivations `a` and `b`. However, if you write `R: A -> a \| b \| c ;`, it will be parsed as a rule with one derivation `a | b | c`.
-
-3. To include a terminal containing `,` or `}` in a terminals set (`T={...}`), use the combination `'\,` and `'\}`
-
-> Example: `T = {a, '\,, '\}};` will be parsed as a set of three terminals `a`, `,` and `}`.
-
-4. To include `;` in a rule derivation or a regular expression, use the combination `'\;`.
-
-
-
-## Pre-parsing instructions
-Before parsing the grammar, a pre-parser is first applied to the grammar file. It consists of pre-parsing instructions which stands for configuration commands. Both the upper and lower case versions of these instructions are accepted.
-
-| Instruction | Meaning | Example |
-| --- | --- | --- |
-|addtopath|Adds a folder to the import path|ADDTOPATH ../grammars ;|
-|import|Imports the content of an external grammar file|IMPORT grammar.txt ;|
-|escape|Redefines the syntax escape character (`'` by default)|ESCAPE $|
-
-Please pay attention to the instructions followed by `;` and the ones that are not.
-
-### More about importing files
-If you have a grammar file under "../grammars/grammar.txt", then there are two ways of importing it.
 ```
-IMPORT ../grammars/grammar.txt
+NON TERMINALS (
+	Expression
+	Statement
+	Function
+)
 ```
-or
+
+### Rules
+
+Rules define how non-terminals can be derived into sequences of terminals and non-terminals.
+There are defined in a rules block. 
+Each rule begins with the non-terminal it defines, called `axiom` of the rule.
+The axiom and the production are separated by an assignation `->`, `=>` or `:=`.
+The production must be ended by a semicolon `;`.
+
 ```
-ADDTOPATH ../grammars
+RULES (
+	A -> a B c ;
+	B -> b B ;
+)
+```
+
+### Regular expressions
+
+Regular expressions are similar to rules in that they also define how a non-terminal can be derived into a production, though the production is a string.
+The axiom and the production are separated by an assigination `=` or `:=`.
+
+```
+REGULAR EXPRESSIONS (
+	Identifier = [a-zA-Z_][a-zA-Z0-9_]*
+	Integer = [0-9]+
+)
+```
+
+Regular expressions can only be defined one time for a same axiom. 
+A good practice also states that there can't be non terminals being axioms of both a rule and a regular expression.
+
+
+## Importing an external grammar
+
+## Import from the grammar file
+
+The parser supports importing external grammars into the current one. 
+The file to import is described in the grammar file with an `IMPORT` statement.
+
+```
+IMPORT path/to/grammar/file.txt
+```
+
+By default, the parser will look for a file of exactly the name after the `IMPORT` from the same directory as the current grammar file.
+It is however possible to specify a path to look for the file before importing it.
+
+```
+ADDTOPATH path/to/look/for/grammars
 IMPORT grammar.txt
 ```
 
-Here are important things to know about importing instructions:
-- The importation is recursive, that means you can import other grammar files from the file imported.
-- The folders added to the path are still valid in imported files.
-- Order matters: the folders added to the path and the importation of files occur in the order you write it in the grammar.
-
-### Configuration commands
-These pre-parsing instructions are used to edit the configuration for parsing the grammar. There is only the command `ESCAPE` for now.
-
-- For configuration commands like `ESCAPE`, only the last command is valid. Previous instructions are ignored.
-
-## Example of grammar file use case
-Consider the following grammar files.
-
-File `const.txt`
-```
-N = {CONST, STRING, INT, FLOAT}
-
-R: CONST -> STRING | INT | FLOAT ;
-
-E: STRING = [a-zA-Z]* ;
-E: INT = (0|[0-9]*) ;
-E: FLOAT = [0-9]+(,[0-9]+)? ;
-```
-
-File `params.txt`
-```
-N = {PARAMS, TYPE, STRING}
-T = {;, '\,}
-
-R: PARAMS -> TYPE STRING '\;
-		   | TYPE STRING , PARAMS '\; ;
-
-E: TYPE = (int|double|char|string) ;
-```
-
-These files can't be directly used as grammars as they don't define any axiom. In params, the symbol `STRING` that is used is not even defined.
-Where these files could be of interest however, is when imported into other big files.
-
-```body.txt
-IMPORT const.txt ;
-IMPORT params.txt ;
-
-T = {(, ), {, }, ;, =}
-N = {BODY, TYPE, STRING, CONST}
-S = BODY
-R: BODY -> TYPE STRING '\;
-		 | TYPE STRING = CONST '\;
-		 | TYPE STRING ( ) { BODY } '\;
-		 | TYPE STRING ( PARAMS ) { BODY } '\; ;
-```
-
-After pre-parsing, the grammar becomes something like
-```
-T = {;, ,, (, ), {, }, =}
-N = {CONST, STRING, INT, FLOAT, PARAMS, TYPE, BODY}
-
-S = BODY
-
-R: CONST -> STRING | INT | FLOAT ;
-R: PARAMS -> TYPE STRING '\;
-		   | TYPE STRING , PARAMS '\; ;
-R: BODY -> TYPE STRING '\;
-		 | TYPE STRING = CONST '\;
-		 | TYPE STRING ( ) { BODY } '\;
-		 | TYPE STRING ( PARAMS ) { BODY } '\; ;
-
-E: STRING = [a-zA-Z]* ;
-E: INT = (0|[0-9]*) ;
-E: FLOAT = [0-9]+(,[0-9]+)? ;
-E: TYPE = (int|double|char|string) ;
-```
-
-## Lightweight grammars
-An other syntax is also accepted for defining grammars. The new syntax is lighter and more readable.
-
-### Defining terminals
-To define terminals, use the syntax:
+The parser will concatenate all files with the provided paths in the order they are defined.
+If no path contains such a file, the parser will look in the current directory.
+If there are still no file, the parser throws a `ImportFileNotFoundException` exception.
 
 ```
-TERMINALS:
-	terminal1,
-	terminal2,
-	...,
-	terminaln;
+ADDTOPATH my/first/path
+ADDTOPATH my/second/path
+IMPORT grammar.txt
 ```
 
-The header `TERMINALS` can also be written `Terminals` or `terminals`.
+The parser will first look for `my/first/path/grammar.txt`, then `my/second/path/grammar.txt`, and finally `./grammar.txt`.
+Only the first one will be imported. If none of those files exist, the parser will throw an exception.
 
-### Defining non-terminals
-To define non-terminals, use the syntax:
+## Use the imported grammar
 
+After importing a grammar, all elements of the imported grammar are available in the current grammar.
+
+Here is an example:
+
+`imported_grammar.txt`
 ```
-NON TERMINALS:
-	nonterminal1,
-	nonterminal2,
-	...,
-	nonterminaln;
-```
-
-The header `NON TERMINALS` can also be written `Non Terminals` or `non terminals`.
-
-### Defining rules
-You can define rules with the following syntax:
-
-```
-RULES:
-	non-terminal1 -> symbol11 symbol12 symbol13 ...,
-	non-terminal2 -> symbol21 symbol22 symbol23 ...,
-	...,
-	non-terminaln -> symboln1 symboln2 symboln3 ...;
+NON TERMINALS (
+	IDENTIFIER
+)
 ```
 
-The header `RULES` can also be written `Rules` or `rules`.
-
-### Defining regex
-You can define regular expressions with the following syntax:
-
+`grammar.txt`
 ```
-REGULAR EXPRESSIONS:
-	non-terminal1 = regex1,
-	non-terminal2 = regex2,
-	...,
-	non-terminaln = regexn;
+IMPORT imported_grammar.txt
+
+REGULAR EXPRESSIONS (
+	IDENTIFIER = [a-zA-Z_][a-zA-Z0-9_]*
+)
 ```
 
-The header `REGULAR EXPRESSIONS` can also be written `Regular Expressions` or `regular expressions`.
-
-### Setting the axiom
-To set the axiom, use the syntax:
-```
-AXIOM: axiom;
-```
-
-The new syntax is entirely compatible with the old syntax and both can be used in the same file.
+In this example, the non-terminal `IDENTIFIER` is defined in an external grammar file.
+The importation allows the current grammar to use it in a regular expression.

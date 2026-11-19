@@ -3,9 +3,9 @@
 - [Introduction](#introduction)
 - [Prerequisites](#prerequisites)
 - [Creating and accessing data payload](#creating-and-accessing-data-payload)
-  - [1. Define the payload structure](#1-define-the-payload-structure)
-  - [2. Store a new payload in an element of the grammar](#2-store-a-new-payload-in-an-element-of-the-grammar)
-  - [3. Access the payload](#3-access-the-payload)
+	- [1. Define the payload structure](#1-define-the-payload-structure)
+	- [2. Store a new payload in an element of the grammar](#2-store-a-new-payload-in-an-element-of-the-grammar)
+	- [3. Access the payload](#3-access-the-payload)
 
 ## Introduction
 

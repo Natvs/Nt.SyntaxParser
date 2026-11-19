@@ -16,7 +16,7 @@ TERMINAL (
 
 All older syntaxes are not supported anymore. Please update your grammar files to the new syntax.
 
-See more details in the documentation.
+See more details in the [documentation](./Doc/Grammar.md#structure-of-a-grammar-file).
 
 
 # Improved the `IMPORT` statement
@@ -47,11 +47,10 @@ IMPORT terminals.txt
 // Now you can use the terminal symbols defined in terminals.txt
 ```
 
-See more details in the documentation.
+Please look at the [documentation](./Doc/Grammar.md#importing-an-external-grammar) for more details about the importation of grammars.
 
+# Miscellaneous and bug corrections
 
-# Exportation to strings and files
-
-The exportation to string has been improved, removing the extra lines added during exportation.
-
-The exportation to file has been reviewed to export the grammar in the new syntax format.
+- The previous custom data feature has been replaced by the `payload` feature. See the [documentation](./Doc/Payload.md) for more information.
+- Exportation to string has been improved, removing the extra lines added during exportation.
+- Exportation to file has been reviewed to export the grammar in the new syntax format.
