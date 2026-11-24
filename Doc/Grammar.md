@@ -112,7 +112,7 @@ A good practice also states that there can't be non terminals being axioms of bo
 
 ## Importing an external grammar
 
-## Import from the grammar file
+### Import from the grammar file
 
 The parser supports importing external grammars into the current one. 
 The file to import is described in the grammar file with an `IMPORT` statement.
@@ -142,7 +142,7 @@ IMPORT grammar.txt
 The parser will first look for `my/first/path/grammar.txt`, then `my/second/path/grammar.txt`, and finally `./grammar.txt`.
 Only the first one will be imported. If none of those files exist, the parser will throw an exception.
 
-## Use the imported grammar
+### Use the imported grammar
 
 After importing a grammar, all elements of the imported grammar are available in the current grammar.
 

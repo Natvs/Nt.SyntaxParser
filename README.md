@@ -25,9 +25,11 @@ Define a grammar for the language you want to parse, and the syntax parser will 
 
 - Block syntax designed to be light and efficient
 - Define regular expressions to avoid troubles with complex derivation rules
+- Load a grammar, edit it and save it back to a file
+- Extend the syntax to include your own configurations
 - Store custom payload into an element of the grammar
-- Add custom configurations within the same file that describes the grammar
-- Supports importation for splitting the grammar into multiple ones
+- Import external grammars for use of external elements
+- Cross-application support for grammar files
 - Ready for analysis with `Nt.SyntaxAnalyzer`
 
 ## Prerequisites
@@ -79,13 +81,6 @@ var generator = new SyntaxParser();
 Grammar grammar = generator.ParseFile(filePath);
 ```
 
-
-
-> The unit of the parser is the `symbol`. The lists of terminals and non-terminals, or even the derivation rules are all made of symbols.
-> These symbols are by default an instance of the `Symbol` class and only contain a name. For advanced use cases, you may need to create your own symbol class.
-> In this case, the custom symbol must extend the `ISymbol` interface and you have to provide a custom symbol factory implementing the `ISymbolFactory`.
-> You can then set this factory as default factory for parsing with `SyntaxParserConfig.GetInstance().SetSymbolFactory(new_factory)`.
-
 ## Additional features of the parser
 
 ### Extend the grammar syntax with custom blocks
@@ -109,19 +104,19 @@ Do you need to add external information to an element of the grammar, but don't 
 The `payload` feature is meant to link elements like terminals or rules with additional information, like tags, conditions or any other information.
 
 With the `payload` feature activated, there is no need to manage external data structures as the data is contained inside the grammar itself.
-The payload accepts any structure of data, so it's up to you which data you want to store.
+The payload accepts any structure of data, so it's up to you to decide which data you store.
 
 The whole feature, and how to activate it, is described in the [payload documentation](Doc/Payload.md).
 
 ### Export the grammar to a string
 
-Once you created a grammar, you can choose to export it to a string.
-The exported string can be in different formats, depending on your needs.
+Once a grammar is created, you can choose to export it to a string.
+The exported string can be of different formats, depending on your needs.
 
 - Export to a user-readable string to show user of your applications what the grammar looks like.
 - Export to a string in the same format as the grammar file, so you can save it to a file and reuse it later.
 
-As you may bring modifications once grammar is parsed, the possibility to save the grammar back is a step of a complete grammar management workflow.
+As you may bring modifications once a grammar is parsed, the possibility to save the grammar back is a step of a complete grammar management workflow.
 
 See the [documentation](Doc/Exportation.md) for more details about the exportation of grammars.
 
