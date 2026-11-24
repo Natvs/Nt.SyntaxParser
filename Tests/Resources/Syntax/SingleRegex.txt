@@ -1,0 +1,7 @@
+NON TERMINALS (
+	A
+)
+
+REGULAR EXPRESSIONS (
+	A = a
+)

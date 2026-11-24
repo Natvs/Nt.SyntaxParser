@@ -1,5 +1,5 @@
 ﻿using Nt.Automaton.States;
-using Nt.Syntax.Branching;
+using Nt.Syntax.Actions;
 using Nt.Syntax.Structures;
 using StateAutomaton = Nt.Automaton.Automatons.StateAutomaton<string>;
 using Transition = Nt.Automaton.Transitions.Transition<string>;
@@ -8,47 +8,46 @@ namespace Nt.Syntax.Automaton
 {
     internal abstract class BaseAutomaton
     {
-        public AutomatonContext Context { get; protected set; } = new AutomatonContext();
+        internal AutomatonContext Context { get; set; } = new AutomatonContext();
         protected StateAutomaton? Automaton {  get; set; }
+        protected State<string> InitialState { get; set; } = new State<string>();
         protected Grammar Grammar { get; private set; } = new Grammar();
+        private bool Built { get; set; } = false;
 
-        private HashSet<BranchStart> BranchStarts { get; set; } = [];
-        private HashSet<BranchEnd> BranchEnds { get; set; } = [];
+        public BaseAutomaton() {
+            Automaton = new StateAutomaton(InitialState);
+            InitialState
+            .SetDefault(
+                new Transition(InitialState)
+                .SetAction(new ExpectedAction("a new block"))
+                .OnCondition(() => !Context.IgnoreUnknownBlocks)
+            );
+        }
 
-        public BaseAutomaton() { }
-
-        public void SetGrammar(Grammar grammar)
+        internal void Build(Grammar grammar)
         {
-            this.Grammar = grammar;
-            Build();
-            AddBranching();
+            Context.Reset();
+            Grammar = grammar;
+
+            // Build the automaton if it hasn't been built yet
+            if (!Built)
+            {
+                Built = true;
+                Build();
+            }
         }
 
         protected abstract void Build();
-        private void AddBranching()
-        {
-            if (Automaton == null) return;
-            foreach (var branch in BranchStarts)
-            {
-                Automaton.CurrentState.AddTransition(new Transition(branch.Token, branch.Target));
-            }
-            foreach (var branch in BranchEnds)
-            {
-                branch.Origin.AddTransition(new Transition(branch.Token, Automaton.CurrentState));
-            }
-        }
 
         internal void Read(AutomatonToken token)
         {
             Automaton?.Read(token);
         }
-        internal void StartBranch(string token, IState<string> state)
+        internal SyntaxBlock CreateBlock(string blockName)
         {
-            BranchStarts.Add(new(token, state));
-        }
-        internal void EndBranch(IState<string> state, string token)
-        {
-            BranchEnds.Add(new(state, token));
+            var syntaxBlock = new SyntaxBlock(blockName);
+            syntaxBlock.Link(InitialState, InitialState);
+            return syntaxBlock;
         }
     }
 }

@@ -16,10 +16,7 @@ namespace Nt.Syntax
 
         public static SyntaxParserConfig GetConfig()
         {
-            if (_instance == null)
-            {
-                _instance = new SyntaxParserConfig();
-            }
+            _instance ??= new SyntaxParserConfig();
             return _instance;
         }
     }

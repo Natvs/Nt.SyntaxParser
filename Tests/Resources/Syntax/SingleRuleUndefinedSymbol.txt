@@ -1,0 +1,7 @@
+﻿NON TERMINALS (
+    A
+)
+
+RULES (
+    A -> a ;
+)

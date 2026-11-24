@@ -7,17 +7,16 @@ using Nt.Syntax.Builders;
 
 namespace Nt.Syntax.Actions
 {
-    public class AddRuleDerivationAction(Grammar grammar, AutomatonContext context) : ITokenAction<string>
+    internal class AddRuleDerivationAction(Grammar grammar, AutomatonContext context) : ITokenAction<string>
     {
         public void Perform(IAutomatonToken<string> token)
         {
             if (token is AutomatonToken automatonToken)
             {
-                if (context.Rule == null) throw new NullRuleException("Attempting to write to a derivation of a non existent rule");
+                if (context.Rule == null) throw new InternalException("Attempting to write to a derivation of a non existent rule");
 
-                // Handles escape characters
-                var new_token = grammar.ParseToGrammarToken(automatonToken);
-                context.Rule.GetBuilder().Add(new_token);
+                var new_token = grammar.RemoveEscapeCharacter(automatonToken.Value);
+                context.Rule.GetBuilder().Add(new_token, automatonToken.Line);
             }
         }
     }

@@ -23,7 +23,7 @@ namespace Nt.Applications.SyntaxParser.Actions
 
         public override void Perform()
         {
-            Transition();
+            Clear();
             Console.WriteLine("Welcome to Nt Syntax Analyser!");
             Console.WriteLine("Select a program to execute");
             Console.WriteLine("1. Write new grammar");

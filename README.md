@@ -1,18 +1,34 @@
 # SyntaxParser
 
 - [Introduction](#introduction)
+- [Advantages of using Nt.SyntaxParser](#advantages-of-using-ntsyntaxparser)
 - [Prerequisites](#prerequisites)
 	- [Install the Nt.SyntaxParser package](#install-the-ntsyntaxparser-package)
 	- [Define the grammar syntax](#define-the-grammar-syntax)
 - [Using the syntax parser](#using-the-syntax-parser)
 - [Additional features of the parser](#additional-features-of-the-parser)
-	- [Branching](#branching)
-	- [Export the grammar](#export-the-grammar)
+	- [Extend the grammar syntax with custom blocks](#extend-the-grammar-syntax-with-custom-blocks)
+	- [Store custom payload into an element of the grammar](#store-custom-payload-into-an-element-of-the-grammar)
+	- [Export the grammar to a string](#export-the-grammar-to-a-string)
+	- [Specify a custom symbol factory for parsing](#specify-a-custom-symbol-factory-for-parsing)
 - [Exceptions](#exceptions)
 
 ## Introduction
-This project takes a grammar file as input and parses into a grammar structure.
-It aims to be used when creating new software languages.
+
+Do you ever had trouble manually parsing a file and looking for an information inside it ?
+Or do you want to create your own language and need to interpret it ?
+
+This project is the first step to that purpose.
+Define a grammar for the language you want to parse, and the syntax parser will take care of parsing it for you.
+
+## Advantages of using Nt.SyntaxParser
+
+- Block syntax designed to be light and efficient
+- Define regular expressions to avoid troubles with complex derivation rules
+- Store custom payload into an element of the grammar
+- Add custom configurations within the same file that describes the grammar
+- Supports importation for splitting the grammar into multiple ones
+- Ready for analysis with `Nt.SyntaxAnalyzer`
 
 ## Prerequisites
 
@@ -21,17 +37,15 @@ It aims to be used when creating new software languages.
 Install the NuGet package `Nt.SyntaxParser` in your project from Nuget.org:
 
  ```powerShell
- dotnet add package Nt.SyntaxParser --version 1.2.1
+ dotnet add package Nt.SyntaxParser --version 2.0.0
  ```
 
 or add the following line to your project file:
 ```xml
-<PackageReference Include="Nt.SyntaxParser" Version="1.2.1" />
+<PackageReference Include="Nt.SyntaxParser" Version="2.0.0" />
 ```
 
-### Define the grammar syntax
-
-**Grammar structure**
+### Create the grammar used to parse a file
 
 A grammar contains the following elements:
 - A set of terminal symbols (constant strings)
@@ -40,10 +54,9 @@ A grammar contains the following elements:
 - A set of regular expression rules (rules to derive non-terminals into regular expressions)
 - An axiom (the starting non-terminal symbol for derivations)
 
-> A rule is composed of a symbol (or token) and a derivation. The derivation is a sequence of terminals and non-terminals that the symbol can be derived into.
-
 The syntax parser uses a grammar file to create a grammar structure.
-A grammar file is a text file that describes the grammar of a language. It contains the list of symbols used in the grammar and the rules. The syntax of the grammar file is described in the [grammar file syntax documentation](Doc/Grammar.md).
+A grammar file is a text file that describes the grammar of a language. 
+The syntax of the grammar file is described in the [grammar file syntax documentation](Doc/Grammar.md).
 
 ## Using the syntax parser
 To use the syntax parser, you first need to create an instance of the `SyntaxParser` class. There are two ways of parsing a grammar file: from a string or from a file.
@@ -66,7 +79,7 @@ var generator = new SyntaxParser();
 Grammar grammar = generator.ParseFile(filePath);
 ```
 
-Also parsing a grammar always applies the pre-parser on it, it's also possible to get a string representing the grammar after pre-parsing with the method `PreParseString(string grammarString)`.
+
 
 > The unit of the parser is the `symbol`. The lists of terminals and non-terminals, or even the derivation rules are all made of symbols.
 > These symbols are by default an instance of the `Symbol` class and only contain a name. For advanced use cases, you may need to create your own symbol class.
@@ -75,55 +88,74 @@ Also parsing a grammar always applies the pre-parser on it, it's also possible t
 
 ## Additional features of the parser
 
-### Branching
+### Extend the grammar syntax with custom blocks
 
-The syntax parser supports parsing additional features written in the grammar file. 
+Whether you want to add more information to the grammar or add custom configurations, you can add new blocks to the grammar file on top of the 5 existing ones.
 
-For example, it is possible to define priority values associated to terminals.
+For example, it is possible to specify that some terminals of the grammar are considered operators within a custom block.
+```
+OPERATORS (
+	+ - * /
+)
+```
+Of course these can be hard coded, but creating a new block allow users to specify their own operators without having to modify the code of the parser.
+
+This blocks extension supports cross-applications usage, meaning that multiple applications can share the same grammar file while including their own specific information.
+Find more information about this feature in the [extensions documentation](Doc/Extensions.md).
+
+### Store custom payload into an element of the grammar
+
+Do you need to add external information to an element of the grammar, but don't know how to store it ?
+The `payload` feature is meant to link elements like terminals or rules with additional information, like tags, conditions or any other information.
+
+With the `payload` feature activated, there is no need to manage external data structures as the data is contained inside the grammar itself.
+The payload accepts any structure of data, so it's up to you which data you want to store.
+
+The whole feature, and how to activate it, is described in the [payload documentation](Doc/Payload.md).
+
+### Export the grammar to a string
+
+Once you created a grammar, you can choose to export it to a string.
+The exported string can be in different formats, depending on your needs.
+
+- Export to a user-readable string to show user of your applications what the grammar looks like.
+- Export to a string in the same format as the grammar file, so you can save it to a file and reuse it later.
+
+As you may bring modifications once grammar is parsed, the possibility to save the grammar back is a step of a complete grammar management workflow.
+
+See the [documentation](Doc/Exportation.md) for more details about the exportation of grammars.
+
+### Specify a custom symbol factory for parsing
+
+All elements of the grammar use a `symbol` as unit. 
+
+This `symbol` is an implementation of the `ISymbol` interface.
+The parser creates symbols using a `symbol factory` that implements the `ISymbolFactory` interface.
+
+By default the symbol contains only a field `name`. However, it is possible to extend the default symbol with one of your own if needed.
 
 ```csharp
-T = {A}
-PRIORITY = 2
+class MySymbol : ISymbol
+{
+	public string Name { get; set; }
+	public string CustomField { get; set; }
+}
+
+class MySymbolFactory : ISymbolFactory
+{
+	public ISymbol Create(string name)
+	{
+		return new MySymbol { Name = name, CustomField = "My custom data" };
+	}
+}
+
+// You need to set the configurations of the parser before any parsing operation !!!
+SyntaxParserConfig.GetConfig().SetSymbolFactory(new MySymbolFactory());
 ```
 
-The parser will read it, and interpret it as long as you provide it with the logic. Then, you can add some logic to your code to handle the priority.
+By setting the custom symbol above, all symbols will also contain a field `CustomField`.
 
-Branching is described in the [branching documentation](Doc/Branching.md) which contains more information about how to use it and how to implement your own branching logic.
-
-### Export the grammar
-The grammar is meant to get different transformation in your code. After that, you may need to get the grammar displayed or written back in a file.
-This is why this project supports exporting grammars.
-
-For example, you can display the grammar using the method `ToString()`. This method will display the content of the grammar in a user-friendly way.
-
-Grammar file:
-```
-TERMINALS: a, b;
-NON TERMINALS: S, D;
-AXIOM: S
-RULES: S -> D, D -> a b;
-```
-
-The grammar after exportation:
-```
-Terminals:
-- a
-- b
-
-Non Terminals:
-- S
-- D
-
-Axiom: S
-
-Rules:
-- S -> D
-- D -> a b
-```
-
-There are different modes of exporting a grammar, please read the [exportation documentation](Doc/Exportation.md) which describes how to export a grammar and contains more informations about methods of exporting it.
-
-
+> In practice, extending symbols is used when the symbol must also implement an external interface.
 
 ## Exceptions
 This project contains several custom exceptions to handle errors that may occur during the parsing of grammar files or input strings. See a list of exceptions [here](Doc/Exceptions.md).

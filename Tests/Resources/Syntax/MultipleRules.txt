@@ -1,0 +1,17 @@
+﻿TERMINALS (
+    a
+    b
+    c
+)
+
+NON TERMINALS (
+    A
+    B
+    C
+)
+
+RULES (
+    A -> a ;
+    B -> b ;
+    C -> c ;
+)

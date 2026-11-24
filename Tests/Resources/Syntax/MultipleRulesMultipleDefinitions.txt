@@ -1,0 +1,23 @@
+﻿TERMINALS (
+    a
+    b
+    c
+    d
+    e
+    f
+    g
+    h
+    i
+)
+
+NON TERMINALS (
+    A
+    B
+    C
+)
+
+RULES (
+    A -> a | b | c ;
+    B -> d | e | f ;
+    C -> g | h | i ;
+)

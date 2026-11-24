@@ -6,9 +6,9 @@ namespace Nt.Syntax.Structures
     public class RegularExpression(Grammar grammar)
     {
         internal Grammar Grammar { get; } = grammar;
-        internal IData? Data { get; set; } = null;
+        internal IPayload? Data { get; set; } = null;
 
-        public NonTerminal? Token { get; internal set; }
+        public NonTerminal? Axiom { get; internal set; }
         public string Pattern { get; private set; } = "";
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace Nt.Syntax.Structures
         {
             var sb = new StringBuilder();
 
-            if (Token != null) sb.Append(Token.Symbol.Name);
+            if (Axiom != null) sb.Append(Axiom.Symbol.Name);
             else sb.Append("<<undefined>>");
 
             sb.Append(" = ").Append(Pattern.Equals("", StringComparison.Ordinal) ? "<<empty>>" : Pattern);

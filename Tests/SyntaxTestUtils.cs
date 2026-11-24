@@ -1,21 +1,50 @@
 ﻿using Nt.Parser.Structures;
+using Nt.Syntax;
 using Nt.Syntax.Structures;
 
 namespace Nt.Tests.Syntax
 {
-    public class SyntaxTestUtils
+    internal class SyntaxTestUtils
     {
-        private static bool DerivationEquals(Grammar grammar, RuleDerivation derivation, List<string> referenceList)
+        public enum TestType
         {
-            if (referenceList.Count != derivation.Count) return false;
-            for (int i = 0; i < derivation.Count; i++)
-            {
-                if (!referenceList[i].Equals(derivation[i].Name)) return false;
-            }
-            return true;
+            Syntax,
+            Importation,
+            PreParsing,
+            Exportation,
+            Blocks
         }
 
-        #region Grammar checking
+
+        public static string GetTestFile(TestType type, string file)
+        {
+            return type switch
+            {
+                TestType.Syntax => "../../../Resources/Syntax/" + file + ".txt",
+                TestType.Importation => "../../../Resources/Importation/" + file + ".txt",
+                TestType.PreParsing => "../../../Resources/PreParsing/" + file + ".txt",
+                TestType.Exportation => "../../../Resources/Exportation/" + file + ".txt",
+                TestType.Blocks => "../../../Resources/Blocks/" + file + ".txt",
+                _ => "no file",
+            };
+        }
+
+        public static Grammar ParseTest(TestType type, string file)
+        {
+            var parser = new SyntaxParser();
+            return ParseTest(parser, type, file);
+        }
+        
+        public static Grammar ParseTest(SyntaxParser parser, TestType type, string file)
+        {
+            if (!File.Exists(GetTestFile(type, file)))
+            {
+                throw new FileNotFoundException($"Test file {file} not found.");
+            }
+            var grammar = parser.ParseString(File.ReadAllText(GetTestFile(type, file)));
+            return grammar;
+        }
+
         internal static void AssertTokens(ElementsSet<Terminal> tokens, List<string> reference)
         {
             Assert.Equal(reference.Count, tokens.Count);
@@ -24,6 +53,7 @@ namespace Nt.Tests.Syntax
                 Assert.Equal(reference[i], tokens.Get(i).Name);
             }
         }
+        
         internal static void AssertTokens(ElementsSet<NonTerminal> tokens, List<string> reference)
         {
             Assert.Equal(reference.Count, tokens.Count);
@@ -39,8 +69,8 @@ namespace Nt.Tests.Syntax
             foreach (var reference in referenceList)
             {
                 Assert.Contains(grammar.Rules, rule =>
-                    rule.Token != null
-                    && rule.Token.Name.Equals(reference.Item1)
+                    rule.Axiom != null
+                    && rule.Axiom.Name.Equals(reference.Item1)
                     && DerivationEquals(grammar, rule.Derivation, reference.Item2));
             }
         }
@@ -51,8 +81,8 @@ namespace Nt.Tests.Syntax
             foreach (var reference in referenceList)
             {
                 Assert.Contains(grammar.RegularExpressions, regex =>
-                    regex.Token != null
-                    && regex.Token.Name == reference.Item1
+                    regex.Axiom != null
+                    && regex.Axiom.Name == reference.Item1
                     && regex.Pattern == reference.Item2);
             }
         }
@@ -69,31 +99,17 @@ namespace Nt.Tests.Syntax
             Assert.Equal(axiom, grammar.Axiom.Name);
         }
 
-        #endregion
-
-        #region Individual components checking
-
-        internal static void AssertRule(Rule? rule, string token, List<string> derivation)
+        private static bool DerivationEquals(Grammar grammar, RuleDerivation derivation, List<string> referenceList)
         {
-            Assert.NotNull(rule);
-            Assert.NotNull(rule.Token);
-            Assert.Equal(token, rule.Token.Name);
-            Assert.Equal(derivation.Count, rule.Derivation.Count);
+            if (referenceList.Count != derivation.Count) return false;
             for (int i = 0; i < derivation.Count; i++)
             {
-                Assert.Equal(derivation[i], rule.Derivation[i].Name);
+                if (!referenceList[i].Equals(derivation[i].Name)) return false;
             }
+            return true;
         }
 
-        internal static void AssertRegex(RegularExpression? regex, string token, string pattern)
-        {
-            Assert.NotNull(regex);
-            Assert.NotNull(regex.Token);
-            Assert.Equal(token, regex.Token.Name);
-            Assert.Equal(pattern, regex.Pattern);
-        }
 
-        #endregion
 
     }
 }

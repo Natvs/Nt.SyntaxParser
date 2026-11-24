@@ -15,23 +15,34 @@ namespace Nt.Syntax.Exportation
     {
 
         /// <summary>
-        /// Export a collection of symbols to string with the specified exportation mode.
+        /// Export a collection of terminals to string with the specified exportation mode.
         /// </summary>
-        /// <param name="symbols">List of symbols to export</param>
-        /// <param name="mode">Mode to export the list of symbols</param>
-        /// <returns>A string representing this list of symbols</returns>
-        public static string ToString(this ElementsSet<GrammarToken> symbols, ExportationMode mode)
+        /// <param name="symbols">Set of terminals to export</param>
+        /// <param name="mode">Exportation mode (original, sorted, etc.)</param>
+        /// <returns>A string representing this list of terminals</returns>
+        public static string ToString(this ElementsSet<Terminal> symbols, ExportationMode mode)
         {
-            var ordered_symbols = Reorder(symbols.ToList(), mode);
+            var ordered_symbols = Reorder([.. symbols.ToList()], mode);
+            return StringExporter.ToString(ordered_symbols);
+        }
+
+        /// <summary>
+        /// Export a collection of non terminals to string with the specified exportation mode.
+        /// </summary>
+        /// <param name="symbols">Set of non terminals to export</param>
+        /// <param name="mode">Exportation mode (original, sorted, etc.)</param>
+        /// <returns>A string representing this list of non terminals</returns>
+        public static string ToString(this ElementsSet<NonTerminal> symbols, ExportationMode mode)
+        {
+            var ordered_symbols = Reorder([.. symbols.ToList()], mode);
             return StringExporter.ToString(ordered_symbols);
         }
 
         /// <summary>
         /// Export a set of grammar rules to its string representation using the given nonterminals and exportation mode.
         /// </summary>
-        /// <param name="rules">The set of grammar rules to convert to a string.</param>
-        /// <param name="nonterminals">An ordered collection of nonterminal symbols that determines the output order of the rules.</param>
-        /// <param name="mode">The exportation mode that specifies formatting or filtering options for the output.</param>
+        /// <param name="rules">Set of grammar rules to convert to a string.</param>
+        /// <param name="mode">Exportation mode (original, sorted, etc.)</param>
         /// <returns>A string representation of the grammar rules, formatted according to the specified nonterminals and exportation mode.</returns>
         public static string ToString(this ElementsSet<Rule> rules, ExportationMode mode)
         {
@@ -42,9 +53,8 @@ namespace Nt.Syntax.Exportation
         /// <summary>
         /// Export a set of regular expressions to a string representation according to the provided nonterminals and exportation mode.
         /// </summary>
-        /// <param name="regexes">The set of regular expressions to convert.</param>
-        /// <param name="nonterminals">An ordered collection of nonterminal symbols that determines the output order of the regular expressions.</param>
-        /// <param name="mode">The exportation mode that specifies formatting or output rules for the conversion.</param>
+        /// <param name="regexes">Set of regular expressions to convert.</param>
+        /// <param name="mode">Exportation mode (original, sorted, etc.)</param>
         /// <returns>A string representation of the regular expressions, formatted according to the specified nonterminals and exportation mode.</returns>
         public static string ToString(this ElementsSet<RegularExpression> regexes, ExportationMode mode)
         {
@@ -56,7 +66,7 @@ namespace Nt.Syntax.Exportation
         /// Export a grammar to string with the specified exportation mode.
         /// </summary>
         /// <param name="grammar">Grammar to export</param>
-        /// <param name="mode">Mode to export the grammar</param>
+        /// <param name="mode">Exportation mode (original, sorted, etc.)</param>
         /// <returns>A string representing the grammar</returns>
         public static string ToString(this Grammar grammar, ExportationMode mode)
         {

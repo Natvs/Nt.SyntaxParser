@@ -1,0 +1,5 @@
+NON TERMINALS (
+	S
+)
+
+AXIOM ( S )

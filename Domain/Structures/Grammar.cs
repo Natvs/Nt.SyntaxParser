@@ -1,8 +1,5 @@
-﻿using Nt.Parser.Structures;
-using Nt.Syntax.Branching;
-using Nt.Syntax.Exceptions;
+﻿using Nt.Syntax.Builders;
 using Nt.Syntax.Exportation;
-using System.Text.RegularExpressions;
 
 namespace Nt.Syntax.Structures
 {
@@ -10,12 +7,8 @@ namespace Nt.Syntax.Structures
     /// <summary>
     /// Represents datas of a language grammar
     /// </summary>
-    public class Grammar
+    public class Grammar()
     {
-        public Grammar()
-        {
-            var configuration = SyntaxParserConfig.GetConfig();
-        }
 
         /// <summary>
         /// Removes escape characters from the specified string, returning a new string with escape sequences processed.
@@ -37,29 +30,6 @@ namespace Nt.Syntax.Structures
                 escape = false;
             }
             return new_content;
-        }
-
-        /// <summary>
-        /// Converts a parsed token to the corresponding grammar token, identifying it as either a terminal or nonterminal symbol.
-        /// </summary>
-        /// <param name="token">The parsed token to convert. Must contain a valid symbol name.</param>
-        /// <returns>A <see cref="GrammarToken"/> representing the terminal or nonterminal symbol corresponding to the parsed token.</returns>
-        /// <exception cref="UnknownSymbolException">Thrown if the symbol name in <paramref name="token"/> does not match any known terminal or nonterminal symbol.</exception>
-        internal GrammarToken ParseToGrammarToken(ParsedToken token)
-        {
-            // Remove escape characters
-            string new_content = RemoveEscapeCharacter(token.Symbol.Name);
-
-            // Check if terminal or non terminal
-            if (Terminals.TryGet((t) => t.Name == new_content, out var terminal))
-            {
-                return terminal.Clone(token.Line);
-            }
-            else if (NonTerminals.TryGet((t) => t.Name == new_content, out var nonterminal))
-            {
-                return nonterminal.Clone(token.Line);
-            }
-            throw new UnknownSymbolException(new_content, token.Line);
         }
 
         #region Public
@@ -87,6 +57,73 @@ namespace Nt.Syntax.Structures
         public override string ToString()
         {
            return this.ToString(ExportationMode.Original);
+        }
+
+        public static Grammar operator + (Grammar grammar1, Grammar grammar2)
+        {
+            var joinedGrammar = new Grammar();
+            var builder = joinedGrammar.GetBuilder();
+
+            // Merge terminals
+            foreach (var terminal in grammar1.Terminals)
+            {
+                builder.AddTerminal(terminal.Name, -1);
+            }
+            foreach (var terminal in grammar2.Terminals)
+            {
+                if (!joinedGrammar.Terminals.Contains((t) => t.Name == terminal.Name))
+                {
+                    builder.AddTerminal(terminal.Name, -1);
+                }
+            }
+
+            // Merge non-terminals
+            foreach (var nonTerminal in grammar1.NonTerminals)
+            {
+                builder.AddNonTerminal(nonTerminal.Name, -1);
+            }
+            foreach (var nonTerminal in grammar2.NonTerminals)
+            {
+                if (!joinedGrammar.NonTerminals.Contains((nt) => nt.Name == nonTerminal.Name))
+                {
+                    builder.AddNonTerminal(nonTerminal.Name, -1);
+                }
+            }
+
+            // Merge rules
+            foreach (var rule in grammar1.Rules)
+            {
+                if (rule.Axiom == null) continue;
+                builder.AddRule(rule.Axiom.Name, rule.Axiom.Line, out var new_rule);
+                foreach (var derivation in rule.Derivation)
+                {
+                    new_rule.GetBuilder().Add(derivation.Name, -1);
+                }
+            }
+            foreach (var rule in grammar2.Rules)
+            {
+                if (rule.Axiom == null) continue;
+                builder.AddRule(rule.Axiom.Name, rule.Axiom.Line, out var new_rule);
+                foreach (var derivation in rule.Derivation)
+                {
+                    new_rule.GetBuilder().Add(derivation.Name, -1);
+                }
+            }
+
+            // Merge regular expressions
+            foreach (var regex in grammar1.RegularExpressions)
+            {
+                if (regex.Axiom == null) continue;
+                builder.AddRegularExpression(regex.Axiom.Name, regex.Axiom.Line, out var new_regex);
+                new_regex.GetBuilder().SetPattern(regex.Pattern);
+            }
+            foreach (var regex in grammar2.RegularExpressions)
+            {
+                if (regex.Axiom == null) continue;
+                builder.AddRegularExpression(regex.Axiom.Name, regex.Axiom.Line, out var new_regex);
+                new_regex.GetBuilder().SetPattern(regex.Pattern);
+            }
+            return joinedGrammar;
         }
 
         #endregion

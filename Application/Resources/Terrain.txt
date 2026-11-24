@@ -1,26 +1,31 @@
-NON TERMINALS:
-	AXIOM,
-	TERRAIN,
-	TYPE,
-	SIZE;
+NON TERMINALS (
+	AXIOM
+	TERRAIN
+	TYPE
+	SIZE
+)
 
-TERMINALS:
-	Terrain;
+TERMINALS (
+	Terrain
+)
 
-TERMINALS:
-	mountain,
-	plain,
-	sea;
+TERMINALS (
+	mountain
+	plain
+	sea
+)
 
-TERMINALS:
-	small,
-	medium,
-	large;
+TERMINALS (
+	small
+	medium
+	large
+)
 
-S = AXIOM
+AXIOM ( AXIOM )
 
-RULES:
-	AXIOM -> TERRAIN AXIOM | TERRAIN,
-	TERRAIN -> Terrain TYPE SIZE,
-	TYPE -> mountain | plain | sea,
-	SIZE -> small | medium | large;
+RULES (
+	AXIOM -> TERRAIN AXIOM | TERRAIN ;
+	TERRAIN -> Terrain TYPE SIZE ;
+	TYPE -> mountain | plain | sea ;
+	SIZE -> small | medium | large ;
+)

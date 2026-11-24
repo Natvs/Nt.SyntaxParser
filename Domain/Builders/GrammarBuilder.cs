@@ -1,6 +1,7 @@
 ﻿using Nt.Parser.Symbols;
 using Nt.Syntax.Exceptions;
 using Nt.Syntax.Structures;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Nt.Syntax.Builders
 {
@@ -13,6 +14,8 @@ namespace Nt.Syntax.Builders
         private readonly Grammar _grammar = grammar;
 
         private readonly ISymbolFactory factory = SyntaxParserConfig.GetConfig().SymbolFactory;
+
+        // Terminals and non terminals
 
         /// <summary>
         /// Add a terminal symbol to the grammar.
@@ -102,96 +105,87 @@ namespace Nt.Syntax.Builders
             return this;
         }
 
-        /// <summary>
-        /// Sets the axiom (start symbol) of the grammar to the specified non-terminal.
-        /// </summary>
-        /// <param name="name">The name of the non-terminal to set as the axiom. Cannot be null or empty. Must refer to a registered non-terminal.</param>
-        /// <returns>The current instance of <see cref="GrammarBuilder"/> to allow method chaining.</returns>
-        /// <exception cref="UnregisteredNonTerminalException">Thrown if the specified non-terminal name is not registered in the grammar.</exception>
-        public GrammarBuilder SetAxiom(string name)
-        {
-            if (_grammar.NonTerminals.TryGet((t) => t.Symbol.Name == name, out var nonterminal))
-            {
-                _grammar.Axiom = new NonTerminal(nonterminal.Symbol, -1);
-            }
-            throw new UnregisteredNonTerminalException(name, -1);
-        }
-
-        /// <summary>
-        /// Sets the axiom (start symbol) of the grammar to the specified non-terminal symbol.
-        /// </summary>
-        /// <param name="symbol">The symbol to set as the axiom. Must be a non-terminal symbol defined in the grammar.</param>
-        /// <param name="line">The line number of the symbol in the source code. Defaults to -1.</param>
-        /// <returns>The current instance of <see cref="GrammarBuilder"/> to allow method chaining.</returns>
-        /// <exception cref="UnregisteredNonTerminalException">Thrown if <paramref name="symbol"/> is not a non-terminal symbol in the grammar.</exception>
-        public GrammarBuilder SetAxiom(Symbol symbol, int line = -1)
-        {
-            if (_grammar.NonTerminals.TryGet((t) => t.Symbol.Name == symbol.Name, out var nonterminal))
-            {
-                _grammar.Axiom = new NonTerminal(nonterminal.Symbol, line);
-            }
-            throw new UnregisteredNonTerminalException(symbol.Name, line);
-        }
+        // Axiom
 
         /// <summary>
         /// Sets the axiom (start symbol) of the grammar to the specified non-terminal token.
         /// </summary>
         /// <param name="token">The non-terminal token to use as the axiom of the grammar. Cannot be null.</param>
         /// <returns>The current instance of <see cref="GrammarBuilder"/> for method chaining.</returns>
-        /// <exception cref="UnregisteredNonTerminalException">Thrown if <paramref name="token"/> is not a non-terminal symbol in the grammar.</exception>
-        public GrammarBuilder SetAxiom(NonTerminal token)
+        /// <exception cref="AxiomException">Thrown if the token is not a non-terminal symbol in the grammar.</exception>
+        public GrammarBuilder SetAxiom(string name, int line)
         {
-            if (_grammar.NonTerminals.TryGet((t) => t.Symbol.Name == token.Symbol.Name, out var nonterminal))
+            if (_grammar.NonTerminals.TryGet((t) => t.Symbol.Name == name, out var nonterminal))
             {
-                _grammar.Axiom = new NonTerminal(nonterminal.Symbol, token.Line);
+                _grammar.Axiom = nonterminal.Clone(line);
                 return this;
             }
-            throw new UnregisteredNonTerminalException(token.Symbol.Name, token.Line);          
+            throw new AxiomException(name, line);          
         }
 
+        // Rules
+
         /// <summary>
-        /// Add a rule to the grammar
+        /// Add a new rule to the grammar
         /// </summary>
-        /// <param name="rule">Rule to add</param>
+        /// <param name="axiom">Axiom of the new rule</param>
+        /// <param name="line">Line of the new rule</param>
+        /// <param name="rule">The newly created rule</param>
         /// <returns>The current instance of <see cref="GrammarBuilder"/> for method chaining.</returns>
-        public GrammarBuilder Add(Rule rule)
+        /// <exception cref="AxiomException">Thrown if the axiom is not a non-terminal symbol in the grammar.</exception>
+        public GrammarBuilder AddRule(string axiom, int line, [NotNull] out Rule rule)
         {
+            rule = new Rule(_grammar).GetBuilder().SetAxiom(axiom, line).Build();
             _grammar.Rules.Add(rule);
             return this;
+            throw new AxiomException(axiom, line);
         }
 
         /// <summary>
-        /// Add a regular expression to the grammar
-        /// </summary>
-        /// <param name="regex">Regular expression to add</param>
-        /// <returns>The current instance of <see cref="GrammarBuilder"/> for method chaining.</returns>
-        public GrammarBuilder Add(RegularExpression regex)
-        {
-            _grammar.RegularExpressions.Add(regex);
-            return this;
-        }
-
-        /// <summary>
-        /// Remove the specified rule from the grammar.
+        /// Remove a rule from the grammar.
         /// </summary>
         /// <param name="rule">Rule to remove</param>
         /// <returns>The current instance of <see cref="GrammarBuilder"/> for method chaining.</returns>
+        /// <exception cref="KeyNotFoundException">Thrown if the rule is not found in the grammar.</exception>
         public GrammarBuilder Remove(Rule rule)
         {
             _grammar.Rules.Remove(rule);
             return this;
         }
 
+        // Regex
+
         /// <summary>
-        /// Removes the specified regular expression from the grammar.
+        /// Add a new regular expression to the grammar
         /// </summary>
-        /// <param name="regex">The regular expression to remove from the grammar. Cannot be null.</param>
+        /// <param name="pattern">Pattern of the new regular expression</param>
+        /// <param name="line">Line of the new regular expression</param>
+        /// <param name="regex">The newly created regular expression</param>
         /// <returns>The current instance of <see cref="GrammarBuilder"/> for method chaining.</returns>
+        /// <exception cref="AxiomException">Thrown if the pattern is not a non-terminal symbol in the grammar.</exception>
+        public GrammarBuilder AddRegularExpression(string pattern, int line, [NotNull] out RegularExpression regex)
+        {
+            if (_grammar.NonTerminals.TryGet((t) => t.Symbol.Name == pattern, out var nonterminal))
+            {
+                regex = new RegularExpression(_grammar).GetBuilder().SetAxiom(pattern, line).Build();
+                _grammar.RegularExpressions.Add(regex);
+                return this;
+            }
+            throw new AxiomException(pattern, line);
+        }
+        
+        /// <summary>
+        /// Remove a regular expression from the grammar.
+        /// </summary>
+        /// <param name="regex">Regular expression to remove</param>
+        /// <returns>The current instance of <see cref="GrammarBuilder"/> for method chaining.</returns>
+        /// <exception cref="KeyNotFoundException">Thrown if the regular expression is not found in the grammar.</exception>
         public GrammarBuilder Remove(RegularExpression regex)
         {
             _grammar.RegularExpressions.Remove(regex);
             return this;
         }
+
 
         /// <summary>
         /// Builds and returns the configured Grammar instance.

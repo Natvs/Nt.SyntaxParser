@@ -1,0 +1,35 @@
+TERMINALS (
+	a
+	b
+	c
+	d
+	a2
+	b2
+	c2
+	d2
+)
+
+NON TERMINALS (
+	A
+	B
+	C
+	D
+	A2
+	B2
+	C2
+	D2
+)
+
+RULES (
+	A -> a ;
+	B -> b ;
+	A2 -> a2 ;
+	B2 -> b2 ;
+)
+
+REGULAR EXPRESSIONS (
+	C = c
+	D = d
+	C2 = c2
+	D2 = d2
+)

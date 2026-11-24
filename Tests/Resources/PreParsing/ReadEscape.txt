@@ -1,0 +1,5 @@
+ESCAPE $
+
+TERMINALS (
+	$a
+)

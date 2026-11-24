@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using Nt.Parser;
 
-using IState = Nt.Automaton.States.IState<string>;
 using Nt.Syntax.Automaton;
 using Nt.Syntax.Structures;
 using Nt.Syntax.Exceptions;
@@ -13,59 +12,61 @@ namespace Nt.Syntax
     public class SyntaxParser
     {
 
-
-        private Grammar Grammar { get; set; } = new();
+        internal Grammar Grammar { get; private set; } = new();
         internal PreParserAutomaton PreAutomaton { get; } = new PreParserAutomaton();
         internal ParserAutomaton Automaton { get; } = new ParserAutomaton();
-        private List<string> ParserSymbols { get; } = [":", ",", "=", "{", "}", ";", "-", ">", "+", "*"];
-
-
 
         /// <summary>
         /// Apply the pre-parser on a given grammar string
         /// </summary>
         /// <param name="content">String to pre-parse</param>
         /// <returns>A pre-parsed string of the grammar</returns>
-        public string PreParseString(string content)
+        internal void PreParseString(string content)
         {
             try
             {
-                PreAutomaton.SetGrammar(Grammar);
+                PreAutomaton.Build(Grammar);
+                
 
+                // Parse the content
                 var configuration = SyntaxParserConfig.GetConfig();
-                var parser = new SymbolsParser(configuration.SymbolFactory, [' ', '\0', '\n', '\t'], ["import", "IMPORT", "addtopath", "ADDTOPATH", "escape", "ESCAPE", ";"]);
+                var parser = new SymbolsParser(configuration.SymbolFactory, [' ', '\0', '\n', '\t'], []);
                 var parsed = parser.Parse(content);
 
-                var sb = new StringBuilder();
+                // Read the parsed content into the pre-automaton
                 foreach (var token in parsed.GetParsed())
                 {
                     PreAutomaton.Read(new AutomatonToken(token));
+                }
 
-                    var importedString = PreAutomaton.GetImportedString();
-                    if (importedString != null)
+                // Parse each imported file recursively
+                foreach (string file in PreAutomaton.Context.Files)
+                {
+                    var syntaxparser = new SyntaxParser();
+                    var imported = false;
+                    foreach (string path in PreAutomaton.Context.GetPath())
                     {
-                        sb.Append(importedString);
-                        PreAutomaton.ResetImportedString();
+                        if (File.Exists(path + "/" + file)) 
+                        {
+                            var new_grammar = syntaxparser.ParseFile(path + "/" + file);
+                            Grammar += new_grammar;
+                        }
+                        imported = true;
                     }
-                }
 
-                var imported = false;
-                var contentReader = new StringReader(content);
-                string? line;
-                while ((line = contentReader.ReadLine()) != null)
-                {
-                    if (line.StartsWith("import", StringComparison.CurrentCultureIgnoreCase)) { imported = true; continue; }
-                    if (line.StartsWith("addtopath", StringComparison.CurrentCultureIgnoreCase)) continue;
-                    if (line.StartsWith("escape", StringComparison.CurrentCultureIgnoreCase)) continue;
-                    sb.AppendLine(line);
-                }
+                    if (imported) continue;
+                    if (!imported)
+                    {
+                        if (File.Exists(file)) 
+                        { 
+                            var new_grammar = syntaxparser.ParseFile(file);
+                            Grammar += new_grammar;
+                        }
+                        continue;
+                    }
 
-                var new_content = sb.ToString();
-                if (imported)
-                {
-                    return PreParseString(new_content);
+                    throw new ImportFileNotFoundException(file);
                 }
-                return new_content;
             }
             catch (InternalException)
             {
@@ -73,7 +74,7 @@ namespace Nt.Syntax
             }
             catch
             {
-                throw new InternalException("An error occurred while trying to pre-parse the string.");
+                throw;
             }
         }
 
@@ -86,15 +87,36 @@ namespace Nt.Syntax
         {
             try
             {
-                Grammar = new Grammar();
-                Automaton.SetGrammar(Grammar);
+                PreParseString(content);
+                Automaton.Context.IgnoreUnknownBlocks = PreAutomaton.Context.IgnoreUnknownBlocks;
+                Automaton.Build(Grammar);
 
-                content = PreParseString(content);
+                // Replace the pre parsing commands with empty lines
+                var contentReader = new StringReader(content);
+                var sb = new StringBuilder();
+                string? line;
+                while ((line = contentReader.ReadLine()) != null)
+                {
+                    var ispreparsercommand = false;
+                    foreach (var command in PreParserAutomaton.Commands)
+                    {
+                        if (line.StartsWith(command, StringComparison.CurrentCultureIgnoreCase)) 
+                        {
+                            ispreparsercommand = true;
+                            sb.AppendLine(); 
+                            break; 
+                        }
+                    }
+                    if (!ispreparsercommand) sb.AppendLine(line);
+                }
+                content = sb.ToString();
 
+                // Parse the content
                 var configuration = SyntaxParserConfig.GetConfig();
-                var parser = new SymbolsParser(configuration.SymbolFactory, [' ', '\0', '\n', '\t'], ParserSymbols);
+                var parser = new SymbolsParser(configuration.SymbolFactory, [' ', '\0', '\n', '\t'], []);
                 var parsed = parser.Parse(content);
 
+                // Read the parsed tokens into the automaton
                 foreach (var token in parsed.GetParsed())
                 {
                     Automaton.Read(new AutomatonToken(token));
@@ -103,10 +125,14 @@ namespace Nt.Syntax
 
                 return Grammar;
             }
-            catch (InternalException) { throw;  }
+            catch (InternalException)
+            {
+                throw;
+                //throw new InternalException("An error occurred while trying to parse the string.");
+            }
             catch
             {
-                throw new InternalException("An error occurred while trying to parse the string.");
+                throw;
             }
         }
 
@@ -129,8 +155,6 @@ namespace Nt.Syntax
                 throw new InternalException($"An error occurred while trying to parse the file at {path}.");
             }
         }
-
-
 
     }
 }
