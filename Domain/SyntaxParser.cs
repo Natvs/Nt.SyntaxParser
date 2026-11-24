@@ -12,12 +12,9 @@ namespace Nt.Syntax
     public class SyntaxParser
     {
 
-
-        private Grammar Grammar { get; set; } = new();
+        internal Grammar Grammar { get; private set; } = new();
         internal PreParserAutomaton PreAutomaton { get; } = new PreParserAutomaton();
         internal ParserAutomaton Automaton { get; } = new ParserAutomaton();
-        private List<string> ParserSymbols { get; } = [];
-
 
         /// <summary>
         /// Apply the pre-parser on a given grammar string
@@ -28,7 +25,7 @@ namespace Nt.Syntax
         {
             try
             {
-                PreAutomaton.BuildNodes(Grammar);
+                PreAutomaton.Build(Grammar);
 
                 // Parse the content
                 var configuration = SyntaxParserConfig.GetConfig();
@@ -90,7 +87,7 @@ namespace Nt.Syntax
             try
             {
                 PreParseString(content);
-                Automaton.BuildNodes(Grammar);
+                Automaton.Build(Grammar);
 
                 // Replace the pre parsing commands with empty lines
                 var contentReader = new StringReader(content);
@@ -107,7 +104,7 @@ namespace Nt.Syntax
 
                 // Parse the content
                 var configuration = SyntaxParserConfig.GetConfig();
-                var parser = new SymbolsParser(configuration.SymbolFactory, [' ', '\0', '\n', '\t'], ParserSymbols);
+                var parser = new SymbolsParser(configuration.SymbolFactory, [' ', '\0', '\n', '\t'], []);
                 var parsed = parser.Parse(content);
 
                 // Read the parsed tokens into the automaton

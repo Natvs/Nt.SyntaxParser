@@ -21,6 +21,8 @@ namespace Nt.Syntax
         }
         private List<string> Patterns { get; set; } = [];
 
+        // States
+
         /// <summary>
         /// Represent the start of the block
         /// </summary>

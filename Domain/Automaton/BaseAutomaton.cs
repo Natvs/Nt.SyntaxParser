@@ -8,11 +8,11 @@ namespace Nt.Syntax.Automaton
 {
     internal abstract class BaseAutomaton
     {
-        public AutomatonContext Context { get; protected set; } = new AutomatonContext();
+        internal AutomatonContext Context { get; set; } = new AutomatonContext();
         protected StateAutomaton? Automaton {  get; set; }
         protected State<string> InitialState { get; set; } = new State<string>();
         protected Grammar Grammar { get; private set; } = new Grammar();
-        protected List<SyntaxBlock> SyntaxBlocks { get; } = [];
+        private bool Built { get; set; } = false;
 
         public BaseAutomaton() {
             Automaton = new StateAutomaton(InitialState);
@@ -23,19 +23,16 @@ namespace Nt.Syntax.Automaton
             );
         }
 
-        internal void BuildNodes(Grammar grammar)
+        internal void Build(Grammar grammar)
         {
-            Grammar = grammar;
             Context.Reset();
-            SyntaxBlocks.Clear();
+            Grammar = grammar;
 
-            // Builds the automaton with the provided grammar
-            Build();
-
-            // Add the predefined blocks in the automaton
-            foreach (var block in SyntaxBlocks)
+            // Build the automaton if it hasn't been built yet
+            if (!Built)
             {
-                block.Link(InitialState, InitialState);
+                Built = true;
+                Build();
             }
         }
 
@@ -48,8 +45,7 @@ namespace Nt.Syntax.Automaton
         internal SyntaxBlock CreateBlock(string blockName)
         {
             var syntaxBlock = new SyntaxBlock(blockName);
-            SyntaxBlocks.Add(syntaxBlock);
-
+            syntaxBlock.Link(InitialState, InitialState);
             return syntaxBlock;
         }
     }
