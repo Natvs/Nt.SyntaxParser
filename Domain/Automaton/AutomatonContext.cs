@@ -36,6 +36,9 @@ namespace Nt.Syntax.Automaton
         /// </summary>
         internal RegularExpression? Regex { get; set; }
 
+        // Pre parsing
+
+        internal bool IgnoreUnknownBlocks { get; set; } = false;
 
         // Importation
 

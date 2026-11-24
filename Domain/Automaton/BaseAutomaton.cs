@@ -20,6 +20,7 @@ namespace Nt.Syntax.Automaton
             .SetDefault(
                 new Transition(InitialState)
                 .SetAction(new ExpectedAction("a new block"))
+                .OnCondition(() => !Context.IgnoreUnknownBlocks)
             );
         }
 

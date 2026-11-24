@@ -1,5 +1,17 @@
 # Custom Blocks
 
+- [Why Custom Blocks?](#why-custom-blocks)
+- [Extending the Grammar Syntax](#extending-the-grammar-syntax)
+    - [Recognition vs. Interpretation](#recognition-vs-interpretation)
+- [Defining a new block](#defining-a-new-block)
+    - [Creating States](#creating-states)
+    - [Creating Transitions](#creating-transitions)
+    - [Interpreting a new block](#interpreting-a-new-block)
+- [Complete Example](#complete-example)
+    - [Defining the block syntax](#defining-the-block-syntax)
+    - [Implementation](#implementation)
+- [Cross-applications Support](#cross-applications-support)
+
 ## Why Custom Blocks?
 
 A grammar file describes the structure and rules of a language. 
@@ -42,7 +54,7 @@ It is important to distinguish between two responsibilities:
 
 For example, the syntax parser can recognize an instruction such as `terminals 2 5 ;`, but it does not automatically know that this instruction should print the second through fifth terminals. The user must provide that behavior through a custom action.
 
-## Defining a New Block
+## Defining a new block
 
 After creating an instance of the syntax parser, you can register a new block using the following method:
 
@@ -135,7 +147,7 @@ parser.SetTransition(origin, target, @"\d+");
 
 This creates a transition from `origin` to `target` whenever the parser encounters a sequence of digits.
 
-### Adding Custom Logic
+### Interpreting a new block
 
 Once the states and transitions are defined, the syntax parser can recognize the content of the block. However, recognizing syntax does not mean interpreting it.
 
@@ -337,3 +349,23 @@ The transition from `block.CloseState` back to `startState` allows multiple inst
 **Note:** The indices in this example are one-based, meaning that the first element has index `1`. The code subtracts `1` when accessing the underlying C# collections, which are zero-based.
 
 This example demonstrates how custom blocks can extend the grammar file format with application-specific syntax and behavior, while leaving the built-in parsing functionality unchanged.
+
+---
+
+## Cross-applications Support
+
+The ability to extend the grammar syntax allow multiple applications to share the same grammar file while including their own specific information. 
+Each application can define its own custom blocks, states, and transitions without interfering with others.
+
+However, all applications may not define all blocks, so to ensure there are no errors, just add a directive in your file.
+
+```
+ignore_unknown
+
+UNKNOWN BLOCK (
+    if this block is not defined in the application, it will be ignored
+)
+```
+
+> **Note:** The directive can be written in many different ways, such as `ignore_unknown`, `IgnoreUnknown`, or `IGNORE_UNKNOWN`.
+> It should match `([Ii]gnore|IGNORE)_?([Uu]nknown|UNKNOWN)_?([Bb]locks|BLOCKS)?`

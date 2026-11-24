@@ -7,7 +7,7 @@
 	- [Define the grammar syntax](#define-the-grammar-syntax)
 - [Using the syntax parser](#using-the-syntax-parser)
 - [Additional features of the parser](#additional-features-of-the-parser)
-	- [Add new blocks to the grammar file](#add-new-blocks-to-the-grammar-file)
+	- [Extend the grammar syntax with custom blocks](#extend-the-grammar-syntax-with-custom-blocks)
 	- [Store custom payload into an element of the grammar](#store-custom-payload-into-an-element-of-the-grammar)
 	- [Export the grammar to a string](#export-the-grammar-to-a-string)
 	- [Specify a custom symbol factory for parsing](#specify-a-custom-symbol-factory-for-parsing)
@@ -88,13 +88,24 @@ Grammar grammar = generator.ParseFile(filePath);
 
 ## Additional features of the parser
 
-### Add new blocks to the grammar file
+### Extend the grammar syntax with custom blocks
 
 Whether you want to add more information to the grammar or add custom configurations, you can add new blocks to the grammar file on top of the 5 existing ones.
 
+For example, it is possible to specify that some terminals of the grammar are considered operators within a custom block.
+```
+OPERATORS (
+	+ - * /
+)
+```
+Of course these can be hard coded, but creating a new block allow users to specify their own operators without having to modify the code of the parser.
+
+This blocks extension supports cross-applications usage, meaning that multiple applications can share the same grammar file while including their own specific information.
+Find more information about this feature in the [extensions documentation](Doc/Extensions.md).
+
 ### Store custom payload into an element of the grammar
 
-you need to add external information to an element of the grammar, but don't know how to store it ?
+Do you need to add external information to an element of the grammar, but don't know how to store it ?
 The `payload` feature is meant to link elements like terminals or rules with additional information, like tags, conditions or any other information.
 
 With the `payload` feature activated, there is no need to manage external data structures as the data is contained inside the grammar itself.

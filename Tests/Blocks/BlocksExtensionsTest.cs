@@ -16,7 +16,7 @@ namespace Nt.Tests.Syntax.Blocks
             var block = parser.CreateBlock("NEW", "anything");
             parser.SetTransition(block.OpenState, block.CloseState, "anything");
 
-            ParseTest(parser, TestType.Blocks, "NoSpaceTitle");
+            ParseTest(parser, TestType.Blocks, "SimpleBlock");
         }
 
         [Fact]
@@ -26,7 +26,7 @@ namespace Nt.Tests.Syntax.Blocks
             var block = parser.CreateBlock("NEW", "error");
             parser.SetTransition(block.OpenState, block.CloseState, "error");
 
-            Assert.Throws<ExpectedException>(() => ParseTest(parser, TestType.Blocks, "NoSpaceTitle"));
+            Assert.Throws<ExpectedException>(() => ParseTest(parser, TestType.Blocks, "SimpleBlock"));
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace Nt.Tests.Syntax.Blocks
 
             var actionExecuted = false;
             parser.SetTransition(block.OpenState, block.CloseState, "anything", (g, t) => { actionExecuted = true; });
-            ParseTest(parser, TestType.Blocks, "NoSpaceTitle");
+            ParseTest(parser, TestType.Blocks, "SimpleBlock");
             
             Assert.True(actionExecuted);
         }

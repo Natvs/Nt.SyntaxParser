@@ -1,35 +1,32 @@
-﻿using Nt.Syntax.Actions;
+﻿using Nt.Automaton.Transitions.Strings;
+using Nt.Syntax.Actions.PreParsing;
 using State = Nt.Automaton.States.State<string>;
-using StateAutomaton = Nt.Automaton.Automatons.StateAutomaton<string>;
 using Transition = Nt.Automaton.Transitions.Transition<string>;
 
 namespace Nt.Syntax.Automaton
 {
     internal class PreParserAutomaton : BaseAutomaton
     {
+        internal static List<string> Commands { get; } = ["import", "addtopath", "escape", "ignore_unknown"];
 
         // Generation
         protected override void Build()
-        {
-            var initial = new State(); initial.SetDefault(new Transition(initial));
-            Context.Reset();
+        { 
+            InitialState.SetDefault(new Transition(InitialState));
 
-            Automaton = new StateAutomaton(initial);
+            var importState = new State()
+                        .SetDefault(new Transition(InitialState).SetAction(new ImportFileAction(Context)));
+            InitialState.AddTransition(new StringTransition(importState).AddPattern("[Ii]mport|IMPORT"));
 
-            var addToPathState = new State();
-            var importState = new State();
-            var escapeState = new State().SetDefault(new Transition(initial).SetAction(new SetEscapeCharAction(Grammar)));
+            var addToPathState = new State()
+                        .SetDefault(new Transition(InitialState).SetAction(new AddImportPathAction(Context)));
+            InitialState.AddTransition(new StringTransition(addToPathState).AddPattern("(([Aa]dd|ADD)_?([Tt]o|TO)_?)?([Pp]ath|PATH)"));
 
-            initial.AddTransition(new Transition("import", importState));
-            initial.AddTransition(new Transition("IMPORT", importState));
-            importState.SetDefault(new Transition(initial).SetAction(new ImportFileAction(Context)));
+            var escapeState = new State()
+                        .SetDefault(new Transition(InitialState).SetAction(new SetEscapeCharAction(Grammar)));
+            InitialState.AddTransition(new StringTransition(escapeState).AddPattern("[Ee]scape|ESCAPE"));
 
-            initial.AddTransition(new Transition("addtopath", addToPathState));
-            initial.AddTransition(new Transition("ADDTOPATH", addToPathState));
-            addToPathState.SetDefault(new Transition(initial).SetAction(new AddImportPathAction(Context)));
-
-            initial.AddTransition(new Transition("ESCAPE", escapeState));
-            initial.AddTransition(new Transition("escape", escapeState));
+            InitialState.AddTransition(new StringTransition(InitialState).AddPattern("([Ii]gnore|IGNORE)_?([Uu]nknown|UNKNOWN)_?([Bb]locks|BLOCKS)?").SetAction(new IgnoreUnknownBlocksAction(Context)));
         }
 
     }

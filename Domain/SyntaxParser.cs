@@ -26,6 +26,7 @@ namespace Nt.Syntax
             try
             {
                 PreAutomaton.Build(Grammar);
+                
 
                 // Parse the content
                 var configuration = SyntaxParserConfig.GetConfig();
@@ -38,7 +39,7 @@ namespace Nt.Syntax
                     PreAutomaton.Read(new AutomatonToken(token));
                 }
 
-                // Parse each file recursively
+                // Parse each imported file recursively
                 foreach (string file in PreAutomaton.Context.Files)
                 {
                     var syntaxparser = new SyntaxParser();
@@ -87,6 +88,7 @@ namespace Nt.Syntax
             try
             {
                 PreParseString(content);
+                Automaton.Context.IgnoreUnknownBlocks = PreAutomaton.Context.IgnoreUnknownBlocks;
                 Automaton.Build(Grammar);
 
                 // Replace the pre parsing commands with empty lines
@@ -95,10 +97,17 @@ namespace Nt.Syntax
                 string? line;
                 while ((line = contentReader.ReadLine()) != null)
                 {
-                    if (line.StartsWith("import", StringComparison.CurrentCultureIgnoreCase)) { sb.AppendLine(); continue; }
-                    if (line.StartsWith("addtopath", StringComparison.CurrentCultureIgnoreCase)) { sb.AppendLine(); continue; }
-                    if (line.StartsWith("escape", StringComparison.CurrentCultureIgnoreCase)) { sb.AppendLine(); continue; }
-                    sb.AppendLine(line);
+                    var ispreparsercommand = false;
+                    foreach (var command in PreParserAutomaton.Commands)
+                    {
+                        if (line.StartsWith(command, StringComparison.CurrentCultureIgnoreCase)) 
+                        {
+                            ispreparsercommand = true;
+                            sb.AppendLine(); 
+                            break; 
+                        }
+                    }
+                    if (!ispreparsercommand) sb.AppendLine(line);
                 }
                 content = sb.ToString();
 

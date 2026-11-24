@@ -4,7 +4,7 @@ using Nt.Automaton.Tokens;
 using Nt.Syntax.Structures;
 using Nt.Syntax.Automaton;
 
-namespace Nt.Syntax.Actions
+namespace Nt.Syntax.Actions.PreParsing
 {
     internal class SetEscapeCharAction(Grammar grammar) : ITokenAction<string>
     {
