@@ -49,6 +49,20 @@ IMPORT terminals.txt
 
 Please look at the [documentation](./Doc/Grammar.md#importing-an-external-grammar) for more details about the importation of grammars.
 
+# Migration from `branching` to blocks extension
+
+As the new syntax changes, so is the branching feature.
+Now you can add custom blocks that the parser can read and interpret.
+
+// Example of a custom block
+```
+CUSTOM_BLOCK (
+	inside you can define any additional content you need
+)
+```
+
+For more information about the blocks extension, please see the [documentation](./Doc/Extensions.md).
+
 # Miscellaneous and bug corrections
 
 - The previous custom data feature has been replaced by the `payload` feature. See the [documentation](./Doc/Payload.md) for more information.
