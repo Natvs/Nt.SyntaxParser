@@ -1,7 +1,9 @@
 ﻿using Nt.Automaton.States;
 using Nt.Automaton.Transitions;
+using Nt.Syntax.Exportation;
+using Nt.Applications.SyntaxParser.Actions.FinalStates;
 
-namespace Nt.Applications.SyntaxParser.Actions
+namespace Nt.Applications.SyntaxParser.Actions.IntermediatesStates
 {
     internal class EditTerminals(ApplicationContext context) : ProgramAction(context)
     {
@@ -16,22 +18,16 @@ namespace Nt.Applications.SyntaxParser.Actions
         }
         public override void Perform()
         {
-            Transition();
-            if (Context.Grammar == null)
+            if (GetGrammar(out var grammar))
             {
-                Console.WriteLine("No current grammar. Please load or create a grammar first.");
-                return;
+                Clear();
+                Console.WriteLine("Current terminals:");
+                Console.WriteLine(grammar.Terminals.ToString(ExportationMode.Original));
+                Console.WriteLine();
+                Console.WriteLine("1. Add a terminal");
+                Console.WriteLine("2. Remove a terminal");
+                Console.WriteLine("3. Exit");
             }
-            Console.WriteLine("Current terminals:");
-            foreach (var terminal in Context.Grammar.Terminals)
-            {
-                Console.WriteLine(terminal);
-            }
-            
-            Console.WriteLine();
-            Console.WriteLine("1. Add a terminal");
-            Console.WriteLine("2. Remove a terminal");
-            Console.WriteLine("3. Exit");
         }
     }
 }

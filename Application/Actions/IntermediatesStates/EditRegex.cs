@@ -1,8 +1,9 @@
 ﻿using Nt.Automaton.States;
 using Nt.Automaton.Transitions;
 using Nt.Syntax.Structures;
+using Nt.Applications.SyntaxParser.Actions.FinalStates;
 
-namespace Nt.Applications.SyntaxParser.Actions
+namespace Nt.Applications.SyntaxParser.Actions.IntermediatesStates
 {
     internal class EditRegex(ApplicationContext context, RegularExpression regex) : ProgramAction(context)
     {
@@ -24,8 +25,10 @@ namespace Nt.Applications.SyntaxParser.Actions
 
         public override void Perform()
         {
-            Transition();
-
+            Clear();
+            Console.WriteLine($"Editing regular expression: {Regex}");
+            Console.WriteLine("");
+            Console.WriteLine("Select an option:");
             Console.WriteLine("1. Edit regular expression axiom");
             Console.WriteLine("2. Set regular expression pattern");
             Console.WriteLine("3. Delete regular expression");

@@ -1,7 +1,9 @@
 ﻿using Nt.Automaton.States;
 using Nt.Automaton.Transitions;
+using Nt.Syntax.Exportation;
+using Nt.Applications.SyntaxParser.Actions.FinalStates;
 
-namespace Nt.Applications.SyntaxParser.Actions
+namespace Nt.Applications.SyntaxParser.Actions.IntermediatesStates
 {
     internal class EditRules(ApplicationContext context) : ProgramAction(context)
     {
@@ -19,11 +21,16 @@ namespace Nt.Applications.SyntaxParser.Actions
 
         public override void Perform()
         {
-            Transition();
-
-            Console.WriteLine("1. Select a rule to edit");
-            Console.WriteLine("2. Add a new rule");
-            Console.WriteLine("3. Back");
+            if (GetGrammar(out var grammar))
+            {
+                Clear();
+                Console.WriteLine("Current rules:");
+                Console.WriteLine(grammar.Rules.ToString(ExportationMode.Original));
+                Console.WriteLine();
+                Console.WriteLine("1. Select a rule to edit");
+                Console.WriteLine("2. Add a new rule");
+                Console.WriteLine("3. Back");
+            }
         }
     }
 }

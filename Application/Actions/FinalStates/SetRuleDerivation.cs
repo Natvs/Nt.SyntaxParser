@@ -1,13 +1,13 @@
 ﻿using Nt.Syntax.Structures;
 using Nt.Syntax.Builders;
 using Nt.Automaton.States;
+using Nt.Syntax.Exceptions;
 
-namespace Nt.Applications.SyntaxParser.Actions
+namespace Nt.Applications.SyntaxParser.Actions.FinalStates
 {
-    internal class SetRuleAxiom(ApplicationContext context, Rule rule) : ProgramAction(context)
+    internal class SetRuleDerivation(ApplicationContext context, Rule rule) : ProgramAction(context)
     {
         private Rule Rule { get; set; } = rule;
-
 
         public override IState<string> GetState()
         {
@@ -27,8 +27,7 @@ namespace Nt.Applications.SyntaxParser.Actions
                 Console.WriteLine("No current grammar. Please load or create a grammar first.");
                 return false;
             }
-
-            Console.WriteLine("Enter the axiom for the rule");
+            Console.WriteLine("Enter the derivation for the rule (insert ' ' between each symbol)");
             string? input = Console.ReadLine();
             if (input == null)
             {
@@ -36,16 +35,18 @@ namespace Nt.Applications.SyntaxParser.Actions
                 return false;
             }
 
+            var tokens = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            var builder = Rule.GetBuilder().Clear();
             try
             {
-                if (Context.Grammar.NonTerminals.TryGet((t) => t.Symbol.Name == input, out var nt)) {
-                    Rule.GetBuilder().SetAxiom(nt.Symbol.Name, -1);
+                foreach (var token in tokens)
+                {
+                    builder.Add(token, -1);
                 }
             }
-            catch (KeyNotFoundException)
+            catch (UnknownSymbolException ex)
             {
-                Console.WriteLine($"Symbol '{input}' is not a non-terminal of the current grammar. Please try again.");
-                return false;
+                Console.WriteLine($"Unknown symbol {ex.Name} found in the derivation. Please try again.");
             }
             return true;
         }

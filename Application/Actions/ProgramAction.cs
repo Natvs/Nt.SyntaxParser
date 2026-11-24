@@ -2,6 +2,7 @@
 using Nt.Automaton.States;
 using Nt.Syntax.Structures;
 using Nt.Syntax.Exportation;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
@@ -9,11 +10,32 @@ namespace Nt.Applications.SyntaxParser.Actions
     {
         protected ApplicationContext Context { get; } = context;
 
-        protected static void Transition()
+        private static void Transition()
         {
             Console.WriteLine();
             Console.WriteLine("- - - - - - - - - -");
             Console.WriteLine();
+        }
+
+        protected static void Clear()
+        {
+            Transition();
+            Console.Clear();
+        }
+
+        protected bool GetGrammar([NotNullWhen(true)] out Grammar? grammar)
+        {
+            if (Context.Grammar == null)
+            {
+                Transition();
+                Console.WriteLine("No current grammar. Please load or create a grammar first.");
+                Transition();
+
+                grammar = default;
+                return false;
+            }
+            grammar = Context.Grammar;
+            return true;
         }
 
         protected void PrintGrammar()

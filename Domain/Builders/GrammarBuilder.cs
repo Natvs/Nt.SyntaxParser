@@ -112,7 +112,7 @@ namespace Nt.Syntax.Builders
         /// </summary>
         /// <param name="token">The non-terminal token to use as the axiom of the grammar. Cannot be null.</param>
         /// <returns>The current instance of <see cref="GrammarBuilder"/> for method chaining.</returns>
-        /// <exception cref="UnregisteredNonTerminalException">Thrown if the tokenis not a non-terminal symbol in the grammar.</exception>
+        /// <exception cref="AxiomException">Thrown if the token is not a non-terminal symbol in the grammar.</exception>
         public GrammarBuilder SetAxiom(string name, int line)
         {
             if (_grammar.NonTerminals.TryGet((t) => t.Symbol.Name == name, out var nonterminal))

@@ -2,7 +2,7 @@
 using Nt.Syntax.Builders;
 using Nt.Automaton.States;
 
-namespace Nt.Applications.SyntaxParser.Actions
+namespace Nt.Applications.SyntaxParser.Actions.FinalStates
 {
     internal class SetRegexPattern(ApplicationContext context, RegularExpression regex) : ProgramAction(context)
     {
@@ -21,11 +21,6 @@ namespace Nt.Applications.SyntaxParser.Actions
 
         public bool Prompt()
         {
-            if (Context.Grammar == null)
-            {
-                Console.WriteLine("No current grammar. Please load or create a grammar first.");
-                return false;
-            }
             Console.WriteLine("Enter the pattern for the regular expression:");
             string? input = Console.ReadLine();
             if (input == null)

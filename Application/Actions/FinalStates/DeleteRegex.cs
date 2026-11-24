@@ -2,7 +2,7 @@
 using Nt.Syntax.Builders;
 using Nt.Syntax.Structures;
 
-namespace Nt.Applications.SyntaxParser.Actions
+namespace Nt.Applications.SyntaxParser.Actions.FinalStates
 {
     internal class DeleteRegex(ApplicationContext context, RegularExpression regex) : ProgramAction(context)
     {
@@ -13,14 +13,12 @@ namespace Nt.Applications.SyntaxParser.Actions
         private RegularExpression Regex { get; set; } = regex;
         public override void Perform()
         {
-            if (Context.Grammar == null)
+            if (GetGrammar(out var grammar))
             {
-                Console.WriteLine("No current grammar. Please load or create a grammar first.");
-                return;
+                grammar.GetBuilder().Remove(Regex);
+                Console.WriteLine($"Regular expression {Regex} has been removed");
+                Context.Automaton.Pop();
             }
-            Context.Grammar.GetBuilder().Remove(Regex);
-            Console.WriteLine($"Regular expression {Regex} has been removed");
-            Context.Automaton.Pop();
         }
     }
 }

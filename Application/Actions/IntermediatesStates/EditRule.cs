@@ -1,8 +1,9 @@
 ﻿using Nt.Automaton.States;
 using Nt.Automaton.Transitions;
 using Nt.Syntax.Structures;
+using Nt.Applications.SyntaxParser.Actions.FinalStates;
 
-namespace Nt.Applications.SyntaxParser.Actions
+namespace Nt.Applications.SyntaxParser.Actions.IntermediatesStates
 {
     internal class EditRule(ApplicationContext context, Rule rule) : ProgramAction(context)
     {
@@ -24,8 +25,10 @@ namespace Nt.Applications.SyntaxParser.Actions
 
         public override void Perform()
         {
-            Transition();
-
+            Clear();
+            Console.WriteLine($"Editing rule: {Rule}");
+            Console.WriteLine("");
+            Console.WriteLine("Select an option:");
             Console.WriteLine("1. Edit rule axiom");
             Console.WriteLine("2. Set rule derivation");
             Console.WriteLine("3. Delete rule");

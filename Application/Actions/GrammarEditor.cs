@@ -1,8 +1,7 @@
 ﻿using Nt.Automaton.States;
 using Nt.Automaton.Transitions;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Nt.Applications.SyntaxParser.Actions.IntermediatesStates;
+using Nt.Applications.SyntaxParser.Actions.FinalStates;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
@@ -28,23 +27,19 @@ namespace Nt.Applications.SyntaxParser.Actions
 
         public override void Perform()
         {
-            Transition();
-            if (Context.Grammar == null)
+            if (GetGrammar(out var grammar))
             {
-                Console.WriteLine("No current grammar. Please load or create a grammar first.");
-                Transition();
-                return;
+                Clear();
+                Console.WriteLine("Current grammar:");
+                PrintGrammar();
+
+                Console.WriteLine("1. Edit list of non terminals");
+                Console.WriteLine("2. Edit list of terminals");
+                Console.WriteLine("3. Edit axiom");
+                Console.WriteLine("4. Edit rules");
+                Console.WriteLine("5. Edit regular expressions");
+                Console.WriteLine("6. Exit");
             }
-
-            Console.WriteLine("Current grammar:");
-            PrintGrammar();
-
-            Console.WriteLine("1. Edit list of non terminals");
-            Console.WriteLine("2. Edit list of terminals");
-            Console.WriteLine("3. Edit axiom");
-            Console.WriteLine("4. Edit rules");
-            Console.WriteLine("5. Edit regular expressions");
-            Console.WriteLine("6. Exit");
         }
     }
 }

@@ -2,7 +2,7 @@
 using Nt.Syntax.Builders;
 using Nt.Syntax.Structures;
 
-namespace Nt.Applications.SyntaxParser.Actions
+namespace Nt.Applications.SyntaxParser.Actions.FinalStates
 {
     internal class DeleteRule(ApplicationContext context, Rule rule) : ProgramAction(context)
     {
@@ -13,14 +13,12 @@ namespace Nt.Applications.SyntaxParser.Actions
         }
         public override void Perform()
         {
-            if (Context.Grammar == null)
+            if (GetGrammar(out var grammar))
             {
-                Console.WriteLine("No current grammar. Please load or create a grammar first.");
-                return;
+                grammar.GetBuilder().Remove(Rule);
+                Console.WriteLine($"Rule {Rule} has been removed");
+                Context.Automaton.Pop();
             }
-            Context.Grammar.GetBuilder().Remove(Rule);
-            Console.WriteLine($"Rule {Rule} has been removed");
-            Context.Automaton.Pop();
         }
     }
 }

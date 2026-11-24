@@ -3,8 +3,6 @@ using Nt.Syntax.Structures;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
-    using Nt.Syntax.Exportation;
-
     internal class GrammarLoader(ApplicationContext context) : ProgramAction(context)
     {
         private static List<string> paths = ["grammars", "../../../Resources"];
@@ -16,7 +14,8 @@ namespace Nt.Applications.SyntaxParser.Actions
 
         public override void Perform()
         {
-            Transition();
+            Clear();
+
             var files = new List<string>();
             foreach (var path in paths)
             {
@@ -72,11 +71,6 @@ namespace Nt.Applications.SyntaxParser.Actions
                 // If the "Select an other path" option was selected, request a path and load the grammar from it
                 Context.Grammar = LoadFromPath();
             }
-
-            // Display loaded grammar
-            Console.WriteLine();
-            Console.WriteLine("Loaded grammar:");
-            PrintGrammar();
         }
 
         /// <summary>

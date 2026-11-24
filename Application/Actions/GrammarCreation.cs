@@ -1,5 +1,4 @@
 ﻿using Nt.Automaton.States;
-using Nt.Syntax.Structures;
 
 namespace Nt.Applications.SyntaxParser.Actions
 {
@@ -12,7 +11,7 @@ namespace Nt.Applications.SyntaxParser.Actions
 
         public override void Perform()
         {
-            Transition();
+            Clear();
 
             string? text = null;
             string input = "";
