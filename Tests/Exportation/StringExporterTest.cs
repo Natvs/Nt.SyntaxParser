@@ -19,25 +19,25 @@ namespace Nt.Tests.Syntax.Exportation
 
             var result = grammar.ToString(mode);
             Assert.Equal("" +
-                "Terminals:\r\n" +
-                "- a\r\n" +
-                "- b\r\n" +
-                "- c\r\n" +
-                "\r\n" +
-                "Non terminals:\r\n" +
-                "- A\r\n" +
-                "- B\r\n" +
-                "- C\r\n" +
-                "- D\r\n" +
-                "- E\r\n" +
-                "\r\n" +
-                "Rules:\r\n" +
-                "- A -> a\r\n" +
-                "- B -> b\r\n" +
-                "- C -> c\r\n" +
-                "\r\n" +
-                "Regular expressions:\r\n" +
-                "- D = d\r\n" +
+                "Terminals:" + Environment.NewLine +
+                "- a" + Environment.NewLine +
+                "- b" + Environment.NewLine +
+                "- c" + Environment.NewLine +
+                Environment.NewLine +
+                "Non terminals:" + Environment.NewLine +
+                "- A" + Environment.NewLine +
+                "- B" + Environment.NewLine +
+                "- C" + Environment.NewLine +
+                "- D" + Environment.NewLine +
+                "- E" + Environment.NewLine +
+                Environment.NewLine +
+                "Rules:" + Environment.NewLine +
+                "- A -> a" + Environment.NewLine +
+                "- B -> b" + Environment.NewLine +
+                "- C -> c" + Environment.NewLine +
+                Environment.NewLine +
+                "Regular expressions:" + Environment.NewLine +
+                "- D = d" + Environment.NewLine +
                 "- E = e", result);
         }
 

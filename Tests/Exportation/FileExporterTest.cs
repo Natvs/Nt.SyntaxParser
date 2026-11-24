@@ -16,29 +16,29 @@ namespace Nt.Tests.Syntax.Exportation
             var result = grammar.Save(mode);
             
             Assert.Equal("" +
-                "TERMINALS (\r\n" +
-                "\ta\r\n" +
-                "\tb\r\n" +
-                "\tc\r\n" +
-                ")\r\n" +
-                "\r\n" +
-                "NON TERMINALS (\r\n" +
-                "\tA\r\n" +
-                "\tB\r\n" +
-                "\tC\r\n" +
-                "\tD\r\n" +
-                "\tE\r\n" +
-                ")\r\n" +
-                "\r\n" +
-                "RULES (\r\n" +
-                "\tA -> a ;\r\n" +
-                "\tB -> b ;\r\n" +
-                "\tC -> c ;\r\n" +
-                ")\r\n" +
-                "\r\n" +
-                "REGULAR EXPRESSIONS (\r\n" +
-                "\tD = d\r\n" +
-                "\tE = e\r\n" +
+                "TERMINALS (" + Environment.NewLine +
+                "\ta" + Environment.NewLine +
+                "\tb" + Environment.NewLine +
+                "\tc" + Environment.NewLine +
+                ")" + Environment.NewLine +
+                Environment.NewLine +
+                "NON TERMINALS (" + Environment.NewLine +
+                "\tA" + Environment.NewLine +
+                "\tB" + Environment.NewLine +
+                "\tC" + Environment.NewLine +
+                "\tD" + Environment.NewLine +
+                "\tE" + Environment.NewLine +
+                ")" + Environment.NewLine +
+                Environment.NewLine +
+                "RULES (" + Environment.NewLine +
+                "\tA -> a ;" + Environment.NewLine +
+                "\tB -> b ;" + Environment.NewLine +
+                "\tC -> c ;" + Environment.NewLine +
+                ")" + Environment.NewLine +
+                Environment.NewLine +
+                "REGULAR EXPRESSIONS (" + Environment.NewLine +
+                "\tD = d" + Environment.NewLine +
+                "\tE = e" + Environment.NewLine +
                 ")", result);
         }
 
@@ -51,7 +51,7 @@ namespace Nt.Tests.Syntax.Exportation
             var result = grammar.Save(mode);
 
             Assert.Equal("" +
-                "TERMINALS (\r\n" +
+                "TERMINALS (" +
                 "\ta" + Environment.NewLine +
                 "\ta2" + Environment.NewLine +
                 "\tb" + Environment.NewLine +
