@@ -52,39 +52,39 @@ namespace Nt.Tests.Syntax.Exportation
 
             Assert.Equal("" +
                 "TERMINALS (\r\n" +
-                "\ta\r\n" +
-                "\ta2\r\n" +
-                "\tb\r\n" +
-                "\tb2\r\n" +
-                "\tc\r\n" +
-                "\tc2\r\n" +
-                "\td\r\n" +
-                "\td2\r\n" +
-                ")\r\n" +
-                "\r\n" +
-                "NON TERMINALS (\r\n" +
-                "\tA\r\n" +
-                "\tA2\r\n" +
-                "\tB\r\n" +
-                "\tB2\r\n" +
-                "\tC\r\n" +
-                "\tC2\r\n" +
-                "\tD\r\n" +
-                "\tD2\r\n" +
-                ")\r\n" +
-                "\r\n" +
-                "RULES (\r\n" +
-                "\tA -> a ;\r\n" +
-                "\tA2 -> a2 ;\r\n" +
-                "\tB -> b ;\r\n" +
-                "\tB2 -> b2 ;\r\n" +
-                ")\r\n" +
-                "\r\n" +
-                "REGULAR EXPRESSIONS (\r\n" +
-                "\tC = c\r\n" +
-                "\tC2 = c2\r\n" +
-                "\tD = d\r\n" +
-                "\tD2 = d2\r\n" +
+                "\ta" + Environment.NewLine +
+                "\ta2" + Environment.NewLine +
+                "\tb" + Environment.NewLine +
+                "\tb2" + Environment.NewLine +
+                "\tc" + Environment.NewLine +
+                "\tc2" + Environment.NewLine +
+                "\td" + Environment.NewLine +
+                "\td2" + Environment.NewLine +
+                ")" + Environment.NewLine +
+                Environment.NewLine +
+                "NON TERMINALS (" + Environment.NewLine +
+                "\tA" + Environment.NewLine +
+                "\tA2" + Environment.NewLine +
+                "\tB" + Environment.NewLine +
+                "\tB2" + Environment.NewLine +
+                "\tC" + Environment.NewLine +
+                "\tC2" + Environment.NewLine +
+                "\tD" + Environment.NewLine +
+                "\tD2" + Environment.NewLine +
+                ")" + Environment.NewLine +
+                Environment.NewLine +
+                "RULES (" + Environment.NewLine +
+                "\tA -> a ;" + Environment.NewLine +
+                "\tA2 -> a2 ;" + Environment.NewLine +
+                "\tB -> b ;" + Environment.NewLine +
+                "\tB2 -> b2 ;" + Environment.NewLine +
+                ")" + Environment.NewLine +
+                Environment.NewLine +
+                "REGULAR EXPRESSIONS (" + Environment.NewLine +
+                "\tC = c" + Environment.NewLine +
+                "\tC2 = c2" + Environment.NewLine +
+                "\tD = d" + Environment.NewLine +
+                "\tD2 = d2" + Environment.NewLine +
                 ")", result);
         }
 
@@ -96,17 +96,17 @@ namespace Nt.Tests.Syntax.Exportation
             var result = grammar.Save(ExportationMode.Grouped);
 
             Assert.Equal("" +
-                "TERMINALS (\r\n" +
-                "\ta\r\n" +
-                "\tb\r\n" +
-                ")\r\n" +
-                "\r\n" +
-                "NON TERMINALS (\r\n" +
-                "\tA\r\n" +
-                ")\r\n" +
-                "\r\n" +
-                "RULES (\r\n" +
-                "\tA -> a | b ;\r\n" +
+                "TERMINALS (" + Environment.NewLine +
+                "\ta" + Environment.NewLine +
+                "\tb" + Environment.NewLine +
+                ")" + Environment.NewLine +
+                Environment.NewLine +
+                "NON TERMINALS (" + Environment.NewLine +
+                "\tA" + Environment.NewLine +
+                ")" + Environment.NewLine +
+                Environment.NewLine +
+                "RULES (" + Environment.NewLine +
+                "\tA -> a | b ;" + Environment.NewLine +
                 ")", result);
         }
 

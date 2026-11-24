@@ -1,6 +1,6 @@
 ﻿using Nt.Syntax.Exportation;
 using Nt.Tests.Syntax.Exportation;
-
+using System.Text;
 using static Nt.Tests.Syntax.SyntaxTestUtils;
 
 namespace Nt.Tests.Syntax.Exportation
@@ -49,37 +49,40 @@ namespace Nt.Tests.Syntax.Exportation
 
             var result = grammar.ToString(mode);
 
+            var builder = new StringBuilder();
+            
+
             Assert.Equal("" +
-                "Terminals:\r\n" +
-                "- a\r\n" +
-                "- a2\r\n" +
-                "- b\r\n" +
-                "- b2\r\n" +
-                "- c\r\n" +
-                "- c2\r\n" +
-                "- d\r\n" +
-                "- d2\r\n" +
-                "\r\n" +
-                "Non terminals:\r\n" +
-                "- A\r\n" +
-                "- A2\r\n" +
-                "- B\r\n" +
-                "- B2\r\n" +
-                "- C\r\n" +
-                "- C2\r\n" +
-                "- D\r\n" +
-                "- D2\r\n" +
-                "\r\n" +
-                "Rules:\r\n" +
-                "- A -> a\r\n" +
-                "- A2 -> a2\r\n" +
-                "- B -> b\r\n" +
-                "- B2 -> b2\r\n" +
-                "\r\n" +
-                "Regular expressions:\r\n" +
-                "- C = c\r\n" +
-                "- C2 = c2\r\n" +
-                "- D = d\r\n" +
+                "Terminals:" + Environment.NewLine +
+                "- a" + Environment.NewLine +
+                "- a2" + Environment.NewLine +
+                "- b" + Environment.NewLine +
+                "- b2" + Environment.NewLine +
+                "- c" + Environment.NewLine +
+                "- c2" + Environment.NewLine +
+                "- d" + Environment.NewLine +
+                "- d2" + Environment.NewLine +
+                Environment.NewLine +
+                "Non terminals:" + Environment.NewLine +
+                "- A" + Environment.NewLine +
+                "- A2" + Environment.NewLine +
+                "- B" + Environment.NewLine +
+                "- B2" + Environment.NewLine +
+                "- C" + Environment.NewLine +
+                "- C2" + Environment.NewLine +
+                "- D" + Environment.NewLine +
+                "- D2" + Environment.NewLine +
+                Environment.NewLine +
+                "Rules:" + Environment.NewLine +
+                "- A -> a" + Environment.NewLine +
+                "- A2 -> a2" + Environment.NewLine +
+                "- B -> b" + Environment.NewLine +
+                "- B2 -> b2" + Environment.NewLine +
+                Environment.NewLine +
+                "Regular expressions:" + Environment.NewLine +
+                "- C = c" + Environment.NewLine +
+                "- C2 = c2" + Environment.NewLine +
+                "- D = d" + Environment.NewLine +
                 "- D2 = d2", result);
         }
 
@@ -91,14 +94,14 @@ namespace Nt.Tests.Syntax.Exportation
             var result = grammar.ToString(ExportationMode.Original);
 
             Assert.Equal("" +
-                "Terminals:\r\n" +
-                "- a\r\n" +
-                "- b\r\n" +
-                "\r\n" +
-                "Non terminals:\r\n" +
-                "- A\r\n" +
-                "\r\n" +
-                "Rules:\r\n" +
+                "Terminals:" + Environment.NewLine +
+                "- a" + Environment.NewLine +
+                "- b" + Environment.NewLine +
+                Environment.NewLine +
+                "Non terminals:" + Environment.NewLine +
+                "- A" + Environment.NewLine +
+                Environment.NewLine +
+                "Rules:" + Environment.NewLine +
                 "- A -> a | b", result);
         }
     }
