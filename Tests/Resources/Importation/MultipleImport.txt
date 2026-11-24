@@ -1,2 +1,2 @@
-﻿IMPORT ../../../Resources/Importation/Subgrammar1.txt
-IMPORT ../../../Resources/Importation/Subgrammar2.txt
+﻿IMPORT ../../../Resources/Importation/SubGrammar1.txt
+IMPORT ../../../Resources/Importation/SubGrammar2.txt

@@ -10,8 +10,6 @@ namespace Nt.Syntax.Exportation
         {
             var sb = new StringBuilder();
 
-            var first = true;
-
             if (types == GrammarTokenType.Terminal) sb.Append("TERMINALS (");          
             else sb.Append("NON TERMINALS (");
 
@@ -19,7 +17,7 @@ namespace Nt.Syntax.Exportation
             {
                 sb.AppendLine().Append('\t').Append(symbol.Name);
             }
-            sb.Append("\r\n)");
+            sb.AppendLine().Append(')');
             return sb.ToString();
         }
 
@@ -48,7 +46,6 @@ namespace Nt.Syntax.Exportation
                     sb.AppendLine(" ;").Append('\t').Append(rule);
                 }
             }
-
             sb.AppendLine(" ;").Append(')');
 
             return sb.ToString();
