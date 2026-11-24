@@ -51,7 +51,7 @@ namespace Nt.Tests.Syntax.Exportation
             var result = grammar.Save(mode);
 
             Assert.Equal("" +
-                "TERMINALS (" +
+                "TERMINALS (" + Environment.NewLine +
                 "\ta" + Environment.NewLine +
                 "\ta2" + Environment.NewLine +
                 "\tb" + Environment.NewLine +
